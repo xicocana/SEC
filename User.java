@@ -1,7 +1,7 @@
 public abstract class User{
 
     private int _id;
-    private int _publicKey;
+    //private int _publicKey;
     private ArrayList<Good> _userGoods;
 
     public User(int id){
