@@ -28,3 +28,5 @@ correr server & client:
 java sec.notary.server.NotaryServer.java
 java sec.notary.client.NotaryClient.java
 ```
+
+SOURCE ; https://www.codejava.net/java-ee/web-services/create-client-server-application-for-web-service-in-java
