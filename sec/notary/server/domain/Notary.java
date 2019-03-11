@@ -1,16 +1,45 @@
 package sec.notary.server.domain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Notary{
 
     private int _id;
-    private ArrayList<String> _users;
-    private Map<String, String> _userGoods;
+    private ArrayList<String> _users = new ArrayList<String>() {
+        private static final long serialVersionUID = 1L;
+        {
+        add("user0");
+        add("user1");
+        add("user2");
+    }};
 
-    public Notary(){
-        _id = 1;
+    private ArrayList<Good> _userGoods = new ArrayList<Good>() {
+        private static final long serialVersionUID = 1L;
+        {
+        add(new Good("good0", "user0"));
+        add(new Good("good1", "user2"));
+    }};
+
+    
+    //TODO : get users and goods from file instead of hardcoded !
+    //String currentDir = System.getProperty("user.dir");
+    //String pathToUsers = currentDir + "/sec/notary/server/domain/notary-folder/users.txt";
+    //String pathToGoods = currentDir + "/sec/notary/server/domain/notary-folder/user_goods.txt";
+
+    public Notary(){}
+
+    public void setId(int id){
+        _id = id;
+    }
+
+    public int getId(){
+        return _id;
+    }
+
+    public ArrayList<String> getUsers(){
+        return _users;
     }
 
     private static class SingletonHolder {
@@ -26,9 +55,20 @@ public class Notary{
 		return false;
 	}
 
-	public ArrayList<String> getStateOfGood() {
+	public String getStateOfGood(String goodId) {
         System.out.println("Client called getstateofgood ");
-        return null;
+        String res = "";
+        for (Good good : _userGoods){
+            if(good.getId().equals(goodId)){
+                if(good.getStatus()){
+                    res = "<"+good.getOwner()+":on-sale>";
+                }
+                else{
+                    res = "<"+good.getOwner()+":not-on-sale>";
+                }
+            }
+        }
+        return res;
 	}
 
 	public boolean transferGood(){

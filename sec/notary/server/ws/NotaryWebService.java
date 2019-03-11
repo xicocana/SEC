@@ -2,6 +2,9 @@ package sec.notary.server.ws;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import sec.notary.server.domain.Notary;
 
@@ -21,9 +24,9 @@ public class NotaryWebService {
 	}
 
 	@WebMethod
-	public ArrayList<String> getStateOfGood() {
+	public String getStateOfGood(String goodId) {
 		Notary notary = Notary.getInstance();
-		return notary.getStateOfGood();
+		return notary.getStateOfGood(goodId);
 	}
 
 	@WebMethod
@@ -31,4 +34,17 @@ public class NotaryWebService {
 		Notary notary = Notary.getInstance();
 		return notary.transferGood();
 	}
+
+	@WebMethod
+	public int getNotaryId(){
+		Notary notary = Notary.getInstance();
+		return notary.getId();
+	}
+
+	@WebMethod
+	public ArrayList<String> getUsers(){
+		Notary notary = Notary.getInstance();
+		return notary.getUsers();
+	}
+
 }

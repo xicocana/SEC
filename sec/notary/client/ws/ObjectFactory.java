@@ -26,12 +26,16 @@ public class ObjectFactory {
 
     private final static QName _IntentionToSellResponse_QNAME = new QName("http://ws.server.notary.sec/", "intentionToSellResponse");
     private final static QName _Test_QNAME = new QName("http://ws.server.notary.sec/", "test");
+    private final static QName _GetUsers_QNAME = new QName("http://ws.server.notary.sec/", "getUsers");
     private final static QName _IntentionToSell_QNAME = new QName("http://ws.server.notary.sec/", "intentionToSell");
     private final static QName _TransferGoodResponse_QNAME = new QName("http://ws.server.notary.sec/", "transferGoodResponse");
     private final static QName _GetStateOfGoodResponse_QNAME = new QName("http://ws.server.notary.sec/", "getStateOfGoodResponse");
     private final static QName _GetStateOfGood_QNAME = new QName("http://ws.server.notary.sec/", "getStateOfGood");
+    private final static QName _GetUsersResponse_QNAME = new QName("http://ws.server.notary.sec/", "getUsersResponse");
     private final static QName _TransferGood_QNAME = new QName("http://ws.server.notary.sec/", "transferGood");
+    private final static QName _GetNotaryIdResponse_QNAME = new QName("http://ws.server.notary.sec/", "getNotaryIdResponse");
     private final static QName _TestResponse_QNAME = new QName("http://ws.server.notary.sec/", "testResponse");
+    private final static QName _GetNotaryId_QNAME = new QName("http://ws.server.notary.sec/", "getNotaryId");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: sec.notary.client.ws
@@ -81,6 +85,22 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link GetUsers }
+     * 
+     */
+    public GetUsers createGetUsers() {
+        return new GetUsers();
+    }
+
+    /**
+     * Create an instance of {@link GetNotaryIdResponse }
+     * 
+     */
+    public GetNotaryIdResponse createGetNotaryIdResponse() {
+        return new GetNotaryIdResponse();
+    }
+
+    /**
      * Create an instance of {@link TestResponse }
      * 
      */
@@ -89,11 +109,27 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link GetNotaryId }
+     * 
+     */
+    public GetNotaryId createGetNotaryId() {
+        return new GetNotaryId();
+    }
+
+    /**
      * Create an instance of {@link GetStateOfGood }
      * 
      */
     public GetStateOfGood createGetStateOfGood() {
         return new GetStateOfGood();
+    }
+
+    /**
+     * Create an instance of {@link GetUsersResponse }
+     * 
+     */
+    public GetUsersResponse createGetUsersResponse() {
+        return new GetUsersResponse();
     }
 
     /**
@@ -120,6 +156,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://ws.server.notary.sec/", name = "test")
     public JAXBElement<Test> createTest(Test value) {
         return new JAXBElement<Test>(_Test_QNAME, Test.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetUsers }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://ws.server.notary.sec/", name = "getUsers")
+    public JAXBElement<GetUsers> createGetUsers(GetUsers value) {
+        return new JAXBElement<GetUsers>(_GetUsers_QNAME, GetUsers.class, null, value);
     }
 
     /**
@@ -159,6 +204,15 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetUsersResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://ws.server.notary.sec/", name = "getUsersResponse")
+    public JAXBElement<GetUsersResponse> createGetUsersResponse(GetUsersResponse value) {
+        return new JAXBElement<GetUsersResponse>(_GetUsersResponse_QNAME, GetUsersResponse.class, null, value);
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link TransferGood }{@code >}}
      * 
      */
@@ -168,12 +222,30 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetNotaryIdResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://ws.server.notary.sec/", name = "getNotaryIdResponse")
+    public JAXBElement<GetNotaryIdResponse> createGetNotaryIdResponse(GetNotaryIdResponse value) {
+        return new JAXBElement<GetNotaryIdResponse>(_GetNotaryIdResponse_QNAME, GetNotaryIdResponse.class, null, value);
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link TestResponse }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "http://ws.server.notary.sec/", name = "testResponse")
     public JAXBElement<TestResponse> createTestResponse(TestResponse value) {
         return new JAXBElement<TestResponse>(_TestResponse_QNAME, TestResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetNotaryId }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://ws.server.notary.sec/", name = "getNotaryId")
+    public JAXBElement<GetNotaryId> createGetNotaryId(GetNotaryId value) {
+        return new JAXBElement<GetNotaryId>(_GetNotaryId_QNAME, GetNotaryId.class, null, value);
     }
 
 }

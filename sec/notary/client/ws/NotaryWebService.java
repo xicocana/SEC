@@ -39,15 +39,18 @@ public interface NotaryWebService {
 
     /**
      * 
+     * @param arg0
      * @return
-     *     returns java.util.List<java.lang.String>
+     *     returns java.lang.String
      */
     @WebMethod
     @WebResult(targetNamespace = "")
     @RequestWrapper(localName = "getStateOfGood", targetNamespace = "http://ws.server.notary.sec/", className = "sec.notary.client.ws.GetStateOfGood")
     @ResponseWrapper(localName = "getStateOfGoodResponse", targetNamespace = "http://ws.server.notary.sec/", className = "sec.notary.client.ws.GetStateOfGoodResponse")
     @Action(input = "http://ws.server.notary.sec/NotaryWebService/getStateOfGoodRequest", output = "http://ws.server.notary.sec/NotaryWebService/getStateOfGoodResponse")
-    public List<String> getStateOfGood();
+    public String getStateOfGood(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0);
 
     /**
      * 
@@ -60,6 +63,30 @@ public interface NotaryWebService {
     @ResponseWrapper(localName = "transferGoodResponse", targetNamespace = "http://ws.server.notary.sec/", className = "sec.notary.client.ws.TransferGoodResponse")
     @Action(input = "http://ws.server.notary.sec/NotaryWebService/transferGoodRequest", output = "http://ws.server.notary.sec/NotaryWebService/transferGoodResponse")
     public boolean transferGood();
+
+    /**
+     * 
+     * @return
+     *     returns int
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "getNotaryId", targetNamespace = "http://ws.server.notary.sec/", className = "sec.notary.client.ws.GetNotaryId")
+    @ResponseWrapper(localName = "getNotaryIdResponse", targetNamespace = "http://ws.server.notary.sec/", className = "sec.notary.client.ws.GetNotaryIdResponse")
+    @Action(input = "http://ws.server.notary.sec/NotaryWebService/getNotaryIdRequest", output = "http://ws.server.notary.sec/NotaryWebService/getNotaryIdResponse")
+    public int getNotaryId();
+
+    /**
+     * 
+     * @return
+     *     returns java.util.List<java.lang.String>
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "getUsers", targetNamespace = "http://ws.server.notary.sec/", className = "sec.notary.client.ws.GetUsers")
+    @ResponseWrapper(localName = "getUsersResponse", targetNamespace = "http://ws.server.notary.sec/", className = "sec.notary.client.ws.GetUsersResponse")
+    @Action(input = "http://ws.server.notary.sec/NotaryWebService/getUsersRequest", output = "http://ws.server.notary.sec/NotaryWebService/getUsersResponse")
+    public List<String> getUsers();
 
     /**
      * 
