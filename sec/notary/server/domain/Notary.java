@@ -50,9 +50,15 @@ public class Notary{
         return SingletonHolder.INSTANCE;
 }
 
-    public boolean intentionToSell(){
+    public boolean intentionToSell(String owner, String goodId){
         System.out.println("Client called intenttosell ");
-		return false;
+        for (Good good : _userGoods) {
+            if(good.getOwner().equals(owner) && good.getId().equals(goodId)){
+                good.setStatus(true);
+                return true;
+            }
+        }
+        return false;
 	}
 
 	public String getStateOfGood(String goodId) {

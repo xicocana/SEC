@@ -27,6 +27,8 @@ public interface NotaryWebService {
 
     /**
      * 
+     * @param arg1
+     * @param arg0
      * @return
      *     returns boolean
      */
@@ -35,7 +37,11 @@ public interface NotaryWebService {
     @RequestWrapper(localName = "intentionToSell", targetNamespace = "http://ws.server.notary.sec/", className = "sec.notary.client.ws.IntentionToSell")
     @ResponseWrapper(localName = "intentionToSellResponse", targetNamespace = "http://ws.server.notary.sec/", className = "sec.notary.client.ws.IntentionToSellResponse")
     @Action(input = "http://ws.server.notary.sec/NotaryWebService/intentionToSellRequest", output = "http://ws.server.notary.sec/NotaryWebService/intentionToSellResponse")
-    public boolean intentionToSell();
+    public boolean intentionToSell(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0,
+        @WebParam(name = "arg1", targetNamespace = "")
+        String arg1);
 
     /**
      * 

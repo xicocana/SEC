@@ -18,9 +18,9 @@ public class NotaryWebService {
 	}
 
 	@WebMethod
-	public boolean intentionToSell(){
+	public boolean intentionToSell(String owner, String goodId){
 		Notary notary = Notary.getInstance();
-		return notary.intentionToSell();
+		return notary.intentionToSell(owner, goodId);
 	}
 
 	@WebMethod
