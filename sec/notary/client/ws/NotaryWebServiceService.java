@@ -1,5 +1,5 @@
 
-package sec.notary.client;
+package sec.notary.client.ws;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -17,14 +17,14 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "NotaryWebServiceService", targetNamespace = "http://server.notary.sec/", wsdlLocation = "http://localhost:9898/notaryService?wsdl")
+@WebServiceClient(name = "NotaryWebServiceService", targetNamespace = "http://ws.server.notary.sec/", wsdlLocation = "http://localhost:9898/notaryService?wsdl")
 public class NotaryWebServiceService
     extends Service
 {
 
     private final static URL NOTARYWEBSERVICESERVICE_WSDL_LOCATION;
     private final static WebServiceException NOTARYWEBSERVICESERVICE_EXCEPTION;
-    private final static QName NOTARYWEBSERVICESERVICE_QNAME = new QName("http://server.notary.sec/", "NotaryWebServiceService");
+    private final static QName NOTARYWEBSERVICESERVICE_QNAME = new QName("http://ws.server.notary.sec/", "NotaryWebServiceService");
 
     static {
         URL url = null;
@@ -69,7 +69,7 @@ public class NotaryWebServiceService
      */
     @WebEndpoint(name = "NotaryWebServicePort")
     public NotaryWebService getNotaryWebServicePort() {
-        return super.getPort(new QName("http://server.notary.sec/", "NotaryWebServicePort"), NotaryWebService.class);
+        return super.getPort(new QName("http://ws.server.notary.sec/", "NotaryWebServicePort"), NotaryWebService.class);
     }
 
     /**
@@ -81,7 +81,7 @@ public class NotaryWebServiceService
      */
     @WebEndpoint(name = "NotaryWebServicePort")
     public NotaryWebService getNotaryWebServicePort(WebServiceFeature... features) {
-        return super.getPort(new QName("http://server.notary.sec/", "NotaryWebServicePort"), NotaryWebService.class, features);
+        return super.getPort(new QName("http://ws.server.notary.sec/", "NotaryWebServicePort"), NotaryWebService.class, features);
     }
 
     private static URL __getWsdlLocation() {

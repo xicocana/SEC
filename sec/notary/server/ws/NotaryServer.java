@@ -1,5 +1,5 @@
-package sec.notary.server;
- 
+package sec.notary.server.ws;
+
 import javax.xml.ws.Endpoint;
  
 public class NotaryServer {

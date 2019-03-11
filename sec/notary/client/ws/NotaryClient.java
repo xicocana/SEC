@@ -1,4 +1,4 @@
-package sec.notary.client;
+package sec.notary.client.ws;
  
 public class NotaryClient {
  
@@ -8,7 +8,7 @@ public class NotaryClient {
     public static void main(String[] args) {
         NotaryWebServiceService client = new NotaryWebServiceService();
         NotaryWebService notaryWebservice = client.getNotaryWebServicePort();
-        String teste = notaryWebservice.test("admin");
-        System.out.println("teste admin -> " + teste);
+        boolean teste = notaryWebservice.intentionToSell();
+        System.out.println("teste intenttosell -> " + teste);
     }
 }

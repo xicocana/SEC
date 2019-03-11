@@ -1,5 +1,5 @@
 
-package sec.notary.client;
+package sec.notary.client.ws;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

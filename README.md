@@ -18,7 +18,7 @@ javac sec/notary/server/NotaryServer.java
 criar client usando o wsdl criado:
 
 ```sh
-wsimport -keep -p sec.notary.client http://localhost:9898/notaryWebService?wsdl
+wsimport -keep -p sec.notary.client http://localhost:9898/notaryService?wsdl
 ```
 
 
