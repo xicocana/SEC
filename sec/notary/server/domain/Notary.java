@@ -1,8 +1,6 @@
 package sec.notary.server.domain;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Notary{
 
@@ -77,8 +75,16 @@ public class Notary{
         return res;
 	}
 
-	public boolean transferGood(){
+	public boolean transferGood(String sellerId, String buyerId, String goodId){
         System.out.println("Client called transfergood ");
+        for (Good good : _userGoods){
+            if(good.getId().equals(goodId)){
+                if(good.getStatus()){
+                    //Tocar good entre os users
+                    return true;
+                }
+            }
+        }
         return false;
 	}
 }

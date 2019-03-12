@@ -3,12 +3,8 @@ package sec.notary.server.ws;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import sec.notary.server.domain.Notary;
-
-import java.util.*;
 
 @WebService
 public class NotaryWebService {
