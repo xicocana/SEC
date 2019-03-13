@@ -36,7 +36,7 @@ public class NotaryClient {
         System.out.println("NotaryClient option:");
         System.out.println("1 -> intentToSell(owner, good)");
         System.out.println("2 -> getStateGood(good)");
-        System.out.println("3 -> buyGood(???)");
+        System.out.println("3 -> buyGood(sellerId, buyerId, goodId)");
         System.out.println("4 -> exit");
 
         System.out.print("select option: ");
