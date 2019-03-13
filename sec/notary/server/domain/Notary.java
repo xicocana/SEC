@@ -79,8 +79,10 @@ public class Notary{
         System.out.println("Client called transfergood ");
         for (Good good : _userGoods){
             if(good.getId().equals(goodId)){
-                if(good.getStatus()){
+                if(good.getStatus() && good.getOwner().equals(sellerId) ){
                     //Tocar good entre os users
+                    good.setOwner(buyerId);
+                    good.setStatus(false);
                     return true;
                 }
             }

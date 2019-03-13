@@ -1,5 +1,8 @@
 package sec.notary.client.domain;
 
+import sec.notary.client.resources.NotaryWebService;
+import sec.notary.client.resources.NotaryWebServiceService;
+import sec.notary.client.resources.ObjectFactory;
 import sec.notary.server.domain.Notary;
 
 public class Client{
@@ -31,8 +34,9 @@ public class Client{
         return Id+"executed at client side !";
     }
 
-    public Boolean buyGood(String sellerId, String buyerId, String GoodId) {
-        Notary notary = Notary.getInstance();
-        return notary.transferGood(sellerId, buyerId, GoodId);
+    public Boolean buyGood(String sellerId, String buyerId, String goodId) {
+        NotaryWebServiceService client = new NotaryWebServiceService();
+        NotaryWebService notaryWebservice = client.getNotaryWebServicePort();
+        return notaryWebservice.transferGood(sellerId, buyerId, goodId);
     }
 }
