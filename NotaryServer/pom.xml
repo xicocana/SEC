@@ -13,6 +13,14 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>my</id>
+            <url>file://${basedir}/lib</url>
+        </repository>
+    </repositories>
+
+
     <dependencies>
         <!-- https://mvnrepository.com/artifact/javax.xml.ws/jaxws-api -->
         <dependency>
@@ -25,10 +33,38 @@
             <artifactId>rt</artifactId>
             <version>2.3.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.roufid.tutorials</groupId>
+            <artifactId>example-app</artifactId>
+            <version>1.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>com.roufid.tutorials</groupId>
+                            <artifactId>example-app</artifactId>
+                            <version>1.0</version>
+                            <packaging>jar</packaging>
+                            <file>${basedir}/lib/pteidlibj.jar</file>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
 
             <plugin>
@@ -54,6 +90,30 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>hack-binary</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <file>${basedir}/lib/pteidlibj.jar</file>
+                            <repositoryLayout>default</repositoryLayout>
+                            <groupId>pt.sec.sec</groupId>
+                            <artifactId>pteidlibj</artifactId>
+                            <version>0.1</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 

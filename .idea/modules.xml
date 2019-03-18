@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/NotaryClient/NotaryClient.iml" filepath="$PROJECT_DIR$/NotaryClient/NotaryClient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/NotaryServer/NotaryServer.iml" filepath="$PROJECT_DIR$/NotaryServer/NotaryServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SEC.iml" filepath="$PROJECT_DIR$/SEC.iml" />
+    </modules>
+  </component>
+</project>

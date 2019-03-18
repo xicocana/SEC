@@ -30,3 +30,5 @@ java sec.notary.client.NotaryClient.java
 ```
 
 SOURCE ; https://www.codejava.net/java-ee/web-services/create-client-server-application-for-web-service-in-java
+
+ java  -Djava.library.path=/usr/local/lib/ -jar NotaryServer-1.0-SNAPSHOT-jar-with-dependencies.jar 
