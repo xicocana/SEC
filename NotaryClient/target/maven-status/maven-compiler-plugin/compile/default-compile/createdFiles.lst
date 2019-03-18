@@ -1,0 +1,6 @@
+ws/impl/ClientWebServiceImpl.class
+domain/Client.class
+client/ClientDummy.class
+client/NotaryClient.class
+ws/Interfaces/ClientWebServices.class
+domain/Client$SingletonHolder.class
