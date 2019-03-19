@@ -34,10 +34,10 @@ public class NotaryClient {
 
         System.out.println("NotaryClient running with id: " + input);
 
-        System.out.print("Please insert Client server port: ");
-        String port = scanner.next();
+        //System.out.print("Please insert Client server port: ");
+        //String port = scanner.next();
 
-        String bindingURI = "http://localhost:" + port + "/" + input + "WebService";
+        String bindingURI = "http://localhost:909" + input.substring(input.length() - 1) + "/" + input + "WebService";
         ClientWebServiceImpl webService = new ClientWebServiceImpl();
         Endpoint.publish(bindingURI, webService);
         System.out.println("Server started at: " + bindingURI);
@@ -74,13 +74,11 @@ public class NotaryClient {
             case 3:
                 System.out.print("Please insert seller server ID: ");
                 String name2 =  scanner.next();
-                System.out.print("Please insert seller port: ");
-                String port2 =  scanner.next();
                 System.out.print("Please insert goodId: ");
                 goodId = scanner.next();
                 
 
-                String mywebserviceURL = "http://localhost:"+port2+"/"+name2+"WebService?wsdl";
+                String mywebserviceURL = "http://localhost:909"+name2.substring(name2.length() -1)+"/"+name2+"WebService?wsdl";
                 URL WsURL;
                 try {
                     WsURL = new URL(mywebserviceURL);
