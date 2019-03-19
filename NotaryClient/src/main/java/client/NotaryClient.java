@@ -1,6 +1,7 @@
 package client;
 
-
+import javax.crypto.*;
+import java.security.*;
 
 import clientWS.ClientWebServiceImplService;
 import domain.Client;
@@ -33,9 +34,6 @@ public class NotaryClient {
         notaryClient.setId(input);
 
         System.out.println("NotaryClient running with id: " + input);
-
-        //System.out.print("Please insert Client server port: ");
-        //String port = scanner.next();
 
         String bindingURI = "http://localhost:909" + input.substring(input.length() - 1) + "/" + input + "WebService";
         ClientWebServiceImpl webService = new ClientWebServiceImpl();
@@ -105,6 +103,4 @@ public class NotaryClient {
 
         }while (flag);
     }
-
-
 }
