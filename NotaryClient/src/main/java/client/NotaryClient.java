@@ -1,14 +1,12 @@
 package client;
 
-import javax.crypto.*;
-import java.security.*;
-
 import Handlers.RSAKeyGenerator;
-import clientWS.ClientWebServiceImplService;
 import domain.*;
 import serverWS.NotaryWebService;
 import serverWS.NotaryWebServiceImplService;
 import ws.impl.ClientWebServiceImpl;
+
+import clientWS.ClientWebServiceImplService;
 
 import java.io.File;
 import java.net.MalformedURLException;

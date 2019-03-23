@@ -2,22 +2,182 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="533baaf9-7f04-4585-9338-3ebbcd54b909" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_xml_ws_rt_2_3_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jaxb_txw2_2_4_0_b180608_0325.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/NotaryClient.iml" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/NotaryClient.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/jaxws/Chain-binding.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/jaxws/Service_Handler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/java/client/NotaryClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/src/main/java/client/NotaryClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/BuyGood.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/BuyGood.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/BuyGoodResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/BuyGoodResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/ClientWebServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/ClientWebServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/ClientWebServiceImplService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/ClientWebServiceImplService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/ObjectFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/ObjectFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/Test.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/Test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/TestResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/TestResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/package-info.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/package-info.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/keys/user0/keystore.jks" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryServer/src/main/resources/keys/keystore.jks" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/keys/user0/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/keys/user0/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/keys/user1/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/keys/user1/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/keys/user2/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/keys/user2/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/keys/user3/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/keys/user3/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/keys/user4/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/keys/user4/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/keys/user5/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/keys/user5/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/GetNotaryId.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/GetNotaryId.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/GetNotaryIdResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/GetNotaryIdResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/GetStateOfGood.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/GetStateOfGood.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/GetStateOfGoodResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/GetStateOfGoodResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/GetUsers.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/GetUsers.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/GetUsersResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/GetUsersResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/IntentionToSell.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/IntentionToSell.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/IntentionToSellResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/IntentionToSellResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/NotaryWebService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/NotaryWebService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/NotaryWebServiceImplService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/NotaryWebServiceImplService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/ObjectFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/ObjectFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/Test.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/Test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/TestResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/TestResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/TransferGood.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/TransferGood.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/TransferGoodResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/TransferGoodResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/package-info.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/package-info.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/NotaryClient/target/NotaryClient-1.0-SNAPSHOT-jar-with-dependencies.jar" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/NotaryClient-1.0-SNAPSHOT-jar-with-dependencies.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NotaryClient/target/NotaryClient-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/NotaryClient-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/client/NotaryClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/client/NotaryClient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/BuyGood.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/BuyGood.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/BuyGood.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/BuyGoodResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/BuyGoodResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/BuyGoodResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/ClientWebServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/ClientWebServiceImplService.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/ClientWebServiceImplService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/ClientWebServiceImplService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/ObjectFactory.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/ObjectFactory.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/ObjectFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/Test.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/Test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/TestResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/TestResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/TestResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/clientWS/package-info.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/keys/user0/priv.key" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/keys/user0/priv.key" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/keys/user0/pub.key" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/keys/user0/pub.key" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/keys/user1/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/keys/user1/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/keys/user2/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/keys/user2/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/keys/user3/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/keys/user3/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/keys/user4/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/keys/user4/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/keys/user5/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/keys/user5/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetNotaryId.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetNotaryId.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetNotaryId.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetNotaryIdResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetNotaryIdResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetNotaryIdResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetStateOfGood.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetStateOfGood.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetStateOfGood.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetStateOfGoodResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetStateOfGoodResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetStateOfGoodResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetUsers.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetUsers.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetUsers.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetUsersResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetUsersResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/GetUsersResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/IntentionToSell.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/IntentionToSell.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/IntentionToSell.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/IntentionToSellResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/IntentionToSellResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/IntentionToSellResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/NotaryWebService.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/NotaryWebService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/NotaryWebService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/NotaryWebServiceImplService.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/NotaryWebServiceImplService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/NotaryWebServiceImplService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/ObjectFactory.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/ObjectFactory.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/ObjectFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/Test.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/Test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/TestResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/TestResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/TestResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/TransferGood.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/TransferGood.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/TransferGood.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/TransferGoodResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/TransferGoodResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/TransferGoodResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/classes/serverWS/package-info.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/NotaryClient/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/maven-archiver/pom.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryClient/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NotaryClient/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryClient/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/NotaryServer.iml" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryServer/NotaryServer.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryServer/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/src/main/java/ws/Implementacao/NotaryWebServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryServer/src/main/java/ws/Implementacao/NotaryWebServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/src/main/resources/ServerChain-binding.xml" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryServer/src/main/resources/ServerChain.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/src/main/resources/keys/user0/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/src/main/resources/keys/user0/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/src/main/resources/keys/user1/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/src/main/resources/keys/user1/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/src/main/resources/keys/user2/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/src/main/resources/keys/user2/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/src/main/resources/keys/user3/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/src/main/resources/keys/user3/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/src/main/resources/keys/user4/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/src/main/resources/keys/user4/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/src/main/resources/keys/user5/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/src/main/resources/keys/user5/pub.key" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/NotaryServer/target/NotaryServer-1.0-SNAPSHOT-jar-with-dependencies.jar" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryServer/target/NotaryServer-1.0-SNAPSHOT-jar-with-dependencies.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NotaryServer/target/NotaryServer-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryServer/target/NotaryServer-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/target/classes/ServerChain-binding.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/target/classes/keys/user0/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/target/classes/keys/user0/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/target/classes/keys/user1/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/target/classes/keys/user1/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/target/classes/keys/user2/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/target/classes/keys/user2/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/target/classes/keys/user3/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/target/classes/keys/user3/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/target/classes/keys/user4/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/target/classes/keys/user4/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/target/classes/keys/user5/priv.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/target/classes/keys/user5/pub.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/target/classes/ws/Implementacao/NotaryWebServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryServer/target/classes/ws/Implementacao/NotaryWebServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NotaryServer/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryServer/target/maven-archiver/pom.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotaryServer/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryServer/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NotaryServer/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/NotaryServer/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/RSAKeyGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/RSAKeyGenerator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/SoapHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/SoapHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ws-handlers/target/classes/Handlers/RSAKeyGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/ws-handlers/target/classes/Handlers/RSAKeyGenerator.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ws-handlers/target/classes/Handlers/SoapHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/ws-handlers/target/classes/Handlers/SoapHandler.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ws-handlers/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/ws-handlers/target/maven-archiver/pom.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ws-handlers/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/ws-handlers/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ws-handlers/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/ws-handlers/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ws-handlers/target/ws-handlers-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/ws-handlers/target/ws-handlers-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ws-handlers/ws-handlers.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ws-handlers/ws-handlers.iml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/NotaryClient/target/" />
@@ -34,20 +194,39 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/SoapHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-300">
-              <caret line="130" column="18" lean-forward="true" selection-start-line="130" selection-start-column="18" selection-end-line="130" selection-end-column="42" />
+            <state relative-caret-position="255">
+              <caret line="79" lean-forward="true" selection-start-line="79" selection-end-line="79" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#1736#1737#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/RSAKeyGenerator.java">
+        <entry file="file://$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/ServerSoapHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="99">
-              <caret line="102" column="61" selection-start-line="102" selection-start-column="61" selection-end-line="102" selection-end-column="61" />
+            <state relative-caret-position="186">
+              <caret line="75" lean-forward="true" selection-start-line="75" selection-end-line="75" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/javax/xml/crypto/dsig/dom/DOMSignContext.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="13" column="10" selection-start-line="13" selection-start-column="10" selection-end-line="13" selection-end-column="10" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/NotaryServer/src/main/java/server/NotaryServer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="564">
+              <caret line="87" column="46" selection-start-line="87" selection-start-column="46" selection-end-line="87" selection-end-column="46" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -59,8 +238,18 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>header</find>
       <find>privateKey</find>
+      <find>WebServiceClient</find>
+      <find>notaryWebservice</find>
+      <find>NotaryWebServiceImplService</find>
+      <find>Node</find>
+      <find>header</find>
+      <find>keypair</find>
+      <find>Validate the signature...</find>
+      <find>smc</find>
+      <find>soapPart</find>
+      <find>root</find>
+      <find>dumpDocument</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -71,16 +260,25 @@
       <list>
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/NotaryServer/src/main/java/server/NotaryServer.java" />
-        <option value="$PROJECT_DIR$/NotaryClient/src/main/java/client/NotaryClient.java" />
-        <option value="$PROJECT_DIR$/NotaryServer/pom.xml" />
-        <option value="$PROJECT_DIR$/NotaryClient/src/jaxws/Service_Handler.xml" />
         <option value="$PROJECT_DIR$/NotaryClient/src/jaxws/teste.xml" />
         <option value="$PROJECT_DIR$/NotaryClient/src/jaxws/Chain-binding.xml" />
         <option value="$PROJECT_DIR$/NotaryServer/src/main/resources/jaxws/ServerChain-binding.xml" />
-        <option value="$PROJECT_DIR$/NotaryServer/src/main/java/ws/Implementacao/NotaryWebServiceImpl.java" />
         <option value="$PROJECT_DIR$/NotaryServer/target/classes/jaxws/ServerChain-binding.xml" />
-        <option value="$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/SoapHandler.java" />
+        <option value="$PROJECT_DIR$/NotaryClient/src/main/resources/ClientChain-binding.xml" />
+        <option value="$PROJECT_DIR$/NotaryClient/src/jaxws/Service_Handler.xml" />
+        <option value="$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/NotaryWebServiceImplService.java" />
+        <option value="$PROJECT_DIR$/NotaryClient/src/jaxws/BinasImplService_handler.xml" />
+        <option value="$PROJECT_DIR$/NotaryServer/pom.xml" />
+        <option value="$PROJECT_DIR$/NotaryServer/src/main/java/ws/Implementacao/NotaryWebServiceImpl.java" />
+        <option value="$PROJECT_DIR$/NotaryClient/pom.xml" />
+        <option value="$PROJECT_DIR$/NotaryClient/src/main/resources/binas-ws_handler-chain-binding.xml" />
+        <option value="$PROJECT_DIR$/NotaryClient/src/main/java/domain/Client.java" />
+        <option value="$PROJECT_DIR$/NotaryClient/src/main/java/ws/serverWS/NotaryWebServiceImplService.java" />
+        <option value="$PROJECT_DIR$/NotaryClient/src/main/java/client/NotaryClient.java" />
         <option value="$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/RSAKeyGenerator.java" />
+        <option value="$PROJECT_DIR$/NotaryServer/src/main/resources/ServerChain.xml" />
+        <option value="$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/SoapHandler.java" />
+        <option value="$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/ServerSoapHandler.java" />
       </list>
     </option>
   </component>
@@ -105,13 +303,47 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="SEC" type="b2602c69:ProjectViewProjectNode" />
               <item name="SEC" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SEC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SEC" type="462c0819:PsiDirectoryNode" />
+              <item name="NotaryServer" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SEC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SEC" type="462c0819:PsiDirectoryNode" />
+              <item name="NotaryServer" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SEC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SEC" type="462c0819:PsiDirectoryNode" />
+              <item name="NotaryServer" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SEC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SEC" type="462c0819:PsiDirectoryNode" />
+              <item name="NotaryServer" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SEC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SEC" type="462c0819:PsiDirectoryNode" />
+              <item name="NotaryServer" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="SEC" type="b2602c69:ProjectViewProjectNode" />
@@ -148,18 +380,25 @@
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="Handlers" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="SEC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SEC" type="462c0819:PsiDirectoryNode" />
+              <item name="ws-handlers" type="462c0819:PsiDirectoryNode" />
+              <item name="target" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1553361046006" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1553375581383" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../teste/SD_P3" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -169,17 +408,21 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/NotaryServer/src/main/resources" />
-      <recent name="$PROJECT_DIR$/ws-handlers/src/main/java/Handlers" />
-      <recent name="$PROJECT_DIR$/NotaryServer/lib" />
+      <recent name="$PROJECT_DIR$/NotaryServer/src/main/resources/keys" />
+      <recent name="$PROJECT_DIR$/NotaryClient/src/main/resources/keys" />
+      <recent name="$PROJECT_DIR$/NotaryClient/src/main/resources" />
+      <recent name="$PROJECT_DIR$/NotaryClient/src/main/java/ws" />
+      <recent name="$PROJECT_DIR$/ws-handlers/src/main/resources/keys" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="Handlers" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/NotaryServer/src/main/java" />
+      <recent name="$PROJECT_DIR$/NotaryClient/src/main/resources/keys" />
       <recent name="$PROJECT_DIR$/NotaryClient/src/jaxws" />
-      <recent name="$PROJECT_DIR$/ws-handlers" />
+      <recent name="$PROJECT_DIR$/NotaryClient/src/main/resources" />
+      <recent name="$PROJECT_DIR$/ws-handlers/src/main" />
+      <recent name="$PROJECT_DIR$/NotaryServer/src/main/java" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -194,11 +437,25 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.RSAKeyGenerator">
+  <component name="RunManager" selected="Application.Unnamed (1)">
     <configuration name="RSAKeyGenerator" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Handlers.RSAKeyGenerator" />
       <module name="ws-handlers" />
       <option name="PROGRAM_PARAMETERS" value="s s s" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Unnamed (1)" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="client.NotaryClient" />
+      <module name="NotaryClient" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="client.ClientDummy" />
+      <module name="NotaryClient" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -218,7 +475,9 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Application.Unnamed (1)" />
       <item itemvalue="Application.RSAKeyGenerator" />
+      <item itemvalue="Application.Unnamed" />
       <item itemvalue="Remote.testeRemote" />
     </list>
   </component>
@@ -236,11 +495,13 @@
       <workItem from="1553340707864" duration="3281000" />
       <workItem from="1553347928577" duration="4662000" />
       <workItem from="1553358548014" duration="2434000" />
+      <workItem from="1553361231301" duration="7414000" />
+      <workItem from="1553369285055" duration="6347000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14678000" />
+    <option name="totallyTimeSpent" value="28439000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -252,10 +513,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="10" width="1366" height="758" extended-state="6" />
+    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2118003" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18262313" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -264,16 +525,16 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3984496" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32937366" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39740822" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32937366" />
-      <window_info anchor="bottom" id="Terminal" order="7" weight="0.32352942" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.32181427" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" order="10" />
-      <window_info anchor="bottom" id="Java Enterprise" order="11" />
+      <window_info anchor="bottom" id="Messages" order="10" weight="0.32937366" />
+      <window_info anchor="bottom" id="Java Enterprise" order="11" weight="0.32937366" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
       <window_info anchor="bottom" id="Version Control" order="13" />
       <window_info anchor="bottom" id="Duplicate detector" order="14" weight="0.32937366" />
@@ -296,36 +557,89 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/RSAKeyGenerator.java</url>
-          <line>36</line>
+          <line>33</line>
           <properties />
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/RSAKeyGenerator.java</url>
-          <line>34</line>
+          <line>31</line>
           <properties />
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/RSAKeyGenerator.java</url>
-          <line>112</line>
+          <line>114</line>
           <properties />
           <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/RSAKeyGenerator.java</url>
+          <line>97</line>
+          <properties />
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/RSAKeyGenerator.java</url>
+          <line>102</line>
+          <properties />
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/RSAKeyGenerator.java</url>
+          <line>113</line>
+          <properties />
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/SoapHandler.java</url>
+          <line>177</line>
+          <properties />
+          <option name="timeStamp" value="15" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="evaluateExpression">
+      <expression>
+        <expression-string>currentDir + &quot;/ws-handlers/src/main/resources/keystore.jks&quot;</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>InputStream ins = new FileInputStream(initialFile);</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>InputStream ins = new FileInputStream(&quot;/home/dc/Desktop/IST/SEC/proj1/SEC/SEC/NotaryClient/src/main/resources/keys/user0/keystore.jks&quot;);</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>new FileInputStream(&quot;/home/dc/Desktop/IST/SEC/proj1/SEC/SEC/NotaryClient/src/main/resources/keys/user0/keystore.jks&quot;);</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>new FileInputStream(&quot;&quot;);</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>new FileInputStream(initialFile);</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>keyStore</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/NotaryServer/src/main/java/server/NotaryServer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="990">
-          <caret line="87" column="46" lean-forward="true" selection-start-line="87" selection-start-column="46" selection-end-line="87" selection-end-column="46" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -336,54 +650,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/NotaryWebServiceImplService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="709">
-          <caret line="70" column="28" selection-start-line="70" selection-start-column="28" selection-end-line="70" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/ClientWebServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="39" column="19" selection-start-line="39" selection-start-column="19" selection-end-line="39" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/ClientWebServiceImpl.java" />
     <entry file="file://$PROJECT_DIR$/pom.xml" />
     <entry file="file://$PROJECT_DIR$/ws-handlers/src/main/java/ws/Interfaces/NotaryWebService.java" />
     <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/javax/xml/soap/SOAPBody.class" />
     <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/java/domain/RSAKeyGenerator.java" />
-    <entry file="file://$PROJECT_DIR$/ws-handlers/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="38" selection-start-line="10" selection-start-column="38" selection-end-line="10" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/java/domain/Client.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="36" column="58" selection-start-line="36" selection-start-column="58" selection-end-line="36" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/java/security/PublicKey.class" />
     <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/javax/xml/ws/handler/soap/SOAPHandler.class" />
-    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/java/client/NotaryClient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="79" column="57" lean-forward="true" selection-start-line="79" selection-start-column="57" selection-end-line="79" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/NotaryWebService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="99" column="19" selection-start-line="99" selection-start-column="19" selection-end-line="99" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/NotaryServer/src/main/java/ws/Interfaces/NotaryWebService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -391,42 +664,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/NotaryServer/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="41" selection-start-line="41" selection-end-line="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/NotaryClient/src/jaxws/Service_Handler.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="52" selection-end-line="7" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/NotaryClient/src/jaxws/teste.xml" />
-    <entry file="file://$PROJECT_DIR$/NotaryClient/src/jaxws/Chain-binding.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="38" lean-forward="true" selection-start-line="17" selection-start-column="38" selection-end-line="17" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/NotaryClient/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="37" column="21" selection-start-line="37" selection-start-column="21" selection-end-line="37" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/NotaryServer/src/main/resources/ServerChain-binding.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="20" lean-forward="true" selection-start-line="21" selection-start-column="20" selection-end-line="21" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/NotaryServer/target/classes/ws/Implementacao/NotaryWebServiceImpl.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="345">
@@ -439,33 +677,252 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/NotaryServer/target/classes/jaxws/ServerChain-binding.xml" />
     <entry file="file://$PROJECT_DIR$/NotaryServer/target/classes/jaxws/Service_Handler.xml" />
+    <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/java/security/KeyPair.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="19" column="20" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="20" />
+          <folding>
+            <element signature="e#511#512#0" expanded="true" />
+            <element signature="e#548#549#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/javax/xml/ws/WebServiceClient.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="19" column="3" selection-start-line="19" selection-start-column="3" selection-end-line="19" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/jaxws/Chain-binding.xml" />
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/jaxws/Service_Handler.xml" />
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/resources/ClientChain-binding.xml" />
+    <entry file="file://$PROJECT_DIR$/ws-handlers/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="38" selection-start-line="10" selection-start-column="38" selection-end-line="10" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryServer/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="42" selection-start-line="42" selection-end-line="47" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/resources/clientWS/ClientWebServiceImplService.java" />
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/NotaryWebService.java" />
+    <entry file="file://$PROJECT_DIR$/NotaryClient/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="59" column="30" selection-start-line="59" selection-start-column="30" selection-end-line="59" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/resources/BinasImplService_handler.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-70">
+          <caret line="5" column="51" selection-start-line="5" selection-start-column="51" selection-end-line="5" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/resources/serverWS/NotaryWebServiceImplService.java" />
     <entry file="file://$PROJECT_DIR$/NotaryServer/src/main/java/ws/Implementacao/NotaryWebServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="15" column="14" selection-start-line="15" selection-start-column="14" selection-end-line="15" selection-end-column="14" />
+        <state relative-caret-position="165">
+          <caret line="11" selection-start-line="11" selection-end-line="11" selection-end-column="39" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/SoapHandler.java">
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/java/ws/serverWS/GetNotaryId.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-300">
-          <caret line="130" column="18" lean-forward="true" selection-start-line="130" selection-start-column="18" selection-end-line="130" selection-end-column="42" />
+        <state relative-caret-position="75">
+          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/java/ws/serverWS/GetNotaryId.class">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/java/ws/serverWS/NotaryWebServiceImplService.class">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/java/domain/Client.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="37" column="25" selection-start-line="37" selection-start-column="25" selection-end-line="37" selection-end-column="25" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/resources/binas-ws_handler-chain-binding.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="31" selection-start-line="31" selection-end-line="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/java/ws/serverWS/GetStateOfGoodResponse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/java/client/ClientDummy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="21" column="36" selection-start-line="21" selection-start-column="36" selection-end-line="21" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/java/ws/serverWS/NotaryWebService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="24" column="17" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/java/ws/clientWS/ClientWebServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="23" column="17" selection-start-line="23" selection-start-column="17" selection-end-line="23" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/java/ws/impl/ClientWebServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/java/ws/clientWS/ClientWebServiceImplService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="215">
+          <caret line="71" column="107" selection-start-line="71" selection-start-column="87" selection-end-line="71" selection-end-column="107" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryServer/src/main/resources/ServerChain.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="53" selection-start-line="17" selection-start-column="53" selection-end-line="17" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/java/lang/Throwable.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="111" column="16" selection-start-line="111" selection-start-column="16" selection-end-line="111" selection-end-column="16" />
+          <folding>
+            <element signature="e#3699#3700#0" expanded="true" />
+            <element signature="e#3747#3748#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/java/ws/serverWS/NotaryWebServiceImplService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="43" selection-start-line="43" selection-end-line="43" />
+          <folding>
+            <element signature="e#1519#1520#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/RSAKeyGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="99">
-          <caret line="102" column="61" selection-start-line="102" selection-start-column="61" selection-end-line="102" selection-end-column="61" />
+        <state relative-caret-position="305">
+          <caret line="103" selection-start-line="103" selection-end-line="103" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/javax/xml/crypto/dom/DOMCryptoContext.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="106" column="74" lean-forward="true" selection-start-line="106" selection-start-column="74" selection-end-line="106" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/java/lang/Object.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="23" column="18" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="18" />
+          <folding>
+            <element signature="e#487#488#0" expanded="true" />
+            <element signature="e#580#581#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/javax/xml/crypto/dsig/XMLSignature.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="16" column="12" selection-start-line="16" selection-start-column="12" selection-end-line="16" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/javax/xml/crypto/dsig/dom/DOMSignContext.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="13" column="10" selection-start-line="13" selection-start-column="10" selection-end-line="13" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryServer/src/main/java/server/NotaryServer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="564">
+          <caret line="87" column="46" selection-start-line="87" selection-start-column="46" selection-end-line="87" selection-end-column="46" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NotaryClient/src/main/java/client/NotaryClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="24" column="7" lean-forward="true" selection-start-line="24" selection-start-column="7" selection-end-line="24" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/javax/xml/ws/handler/soap/SOAPMessageContext.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="20" column="27" lean-forward="true" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/SoapHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="79" lean-forward="true" selection-start-line="79" selection-end-line="79" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1736#1737#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ws-handlers/src/main/java/Handlers/ServerSoapHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="186">
+          <caret line="75" lean-forward="true" selection-start-line="75" selection-end-line="75" />
         </state>
       </provider>
     </entry>

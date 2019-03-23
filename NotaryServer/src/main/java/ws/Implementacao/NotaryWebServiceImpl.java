@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 
 @WebService(endpointInterface = "ws.Interfaces.NotaryWebService")
-@HandlerChain(file = "ServerChain-binding.xml")
+@HandlerChain(file = "ServerChain.xml")
 public class NotaryWebServiceImpl {
     @WebMethod
     public String test(String input) {

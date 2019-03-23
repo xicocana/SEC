@@ -1,10 +1,11 @@
 package Handlers;
 
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Collections;
-import java.util.Set;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
+
 import javax.xml.crypto.dsig.*;
 import javax.xml.crypto.dsig.dom.DOMSignContext;
 import javax.xml.crypto.dsig.dom.DOMValidateContext;
@@ -14,7 +15,6 @@ import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
@@ -23,15 +23,15 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
-import java.security.*;
+import java.io.PrintStream;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.SecureRandom;
+import java.util.Collections;
+import java.util.Set;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
+public class ServerSoapHandler implements SOAPHandler<SOAPMessageContext> {
     /**
      * Gets the names of the header blocks that can be processed by this Handler instance.
      * If null, processes all.
@@ -45,9 +45,7 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
      * outbound messages.
      */
     public boolean handleMessage(SOAPMessageContext smc) {
-
-            return SOAPProcessing(smc, System.out);
-
+        return SOAPProcessing(smc, System.out);
     }
 
     @Override
@@ -63,13 +61,11 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
         // nothing to clean up
     }
 
-    private boolean SOAPProcessing(SOAPMessageContext smc, PrintStream out){
-
+    private boolean SOAPProcessing(SOAPMessageContext smc, PrintStream out) {
 
         Boolean isRequest = (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
 
-
-        if (isRequest) {
+        if (!isRequest) {
             try {
 
                 System.out.println("Entrou no Client SIDE");
@@ -79,8 +75,7 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
                 SOAPEnvelope soapEnvelope = soapPart.getEnvelope();
 
                 SOAPHeader soapHeader = soapEnvelope.getHeader();
-                SOAPHeaderElement headerElement = soapHeader.addHeaderElement(soapEnvelope.createName(
-                        "Signature", "SOAP-SEC", "http://schemas.xmlsoap.org/soap/security/2000-12"));
+
 
                 SOAPBody soapBody = soapEnvelope.getBody();
                 soapBody.addAttribute(soapEnvelope.createName("id", "SOAP-SEC",
@@ -111,14 +106,17 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
                 XMLSignatureFactory sigFactory = XMLSignatureFactory.getInstance();
                 Reference ref = sigFactory.newReference("#Body", sigFactory.newDigestMethod(DigestMethod.SHA1,
                         null));
+
                 SignedInfo signedInfo = sigFactory.newSignedInfo(sigFactory.newCanonicalizationMethod(
                         CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS, (C14NMethodParameterSpec) null), sigFactory
                         .newSignatureMethod(SignatureMethod.RSA_SHA1, null), Collections.singletonList(ref));
+
                 KeyInfoFactory kif = sigFactory.getKeyInfoFactory();
                 KeyValue kv = kif.newKeyValue(keypair.getPublic());
                 KeyInfo keyInfo = kif.newKeyInfo(Collections.singletonList(kv));
 
                 XMLSignature sig = sigFactory.newXMLSignature(signedInfo, keyInfo);
+
 
                 System.out.println("Signing the message...");
                 PrivateKey privateKey = keypair.getPrivate();
@@ -133,30 +131,34 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
                 dumpDocument(root);
 
                 System.out.println("Validate the signature...");
+
                 Element sigElement = getFirstChildElement(header);
+                System.out.println("111");
+
                 DOMValidateContext valContext = new DOMValidateContext(keypair.getPublic(), sigElement);
                 valContext.setIdAttributeNS(getNextSiblingElement(header),
                         "http://schemas.xmlsoap.org/soap/security/2000-12", "id");
+                System.out.println("1.5");
+                System.out.println("222" + valContext.getNode().toString());
+
                 boolean valid = sig.validate(valContext);
 
                 System.out.println("Signature valid? " + valid);
 
-
             } catch (Exception e) {
-                System.err.println("Caught exception on SOAPHandler OUTBOUND : " + e);
                 e.printStackTrace();
             }
+
 
             return true;
 
         } else {
-            System.out.println("Entrou no Server SIDE");
+            System.out.println("Entrou no Server SIDE - SERVER_SOAP_HANDLER");
             String currentDir = System.getProperty("user.dir");
             System.out.println(currentDir);
 
             return true;
         }
-
     }
 
     private static void dumpDocument(Node root) throws TransformerException {
@@ -174,12 +176,10 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
     }
 
     public static Element getNextSiblingElement(Node node) {
-        System.out.println("AQUI1.5");
         Node sibling = node.getNextSibling();
         while ((sibling != null) && (sibling.getNodeType() != Node.ELEMENT_NODE)) {
             sibling = sibling.getNextSibling();
         }
-
         return (Element) sibling;
     }
 }

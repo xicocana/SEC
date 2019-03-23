@@ -1,3 +1,0 @@
-<good0,user0>
-<good1,user2>
-<good3,user4>

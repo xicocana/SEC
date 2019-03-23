@@ -1,10 +1,7 @@
 package Handlers;
 
 import javax.crypto.spec.SecretKeySpec;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.*;
@@ -43,6 +40,7 @@ public class RSAKeyGenerator {
     }
 
     public static void write(String keyPath) throws GeneralSecurityException, IOException {
+
         // get an AES private key
         System.out.println("Generating RSA key ..." );
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
@@ -100,7 +98,11 @@ public class RSAKeyGenerator {
     }
 
     public static KeyPair getKeyPairFromKeyStore() throws Exception {
-        InputStream ins =  ClassLoader.getSystemClassLoader().getResourceAsStream("/NotaryClient/src/main/resources/keys/user0/keystore.jks");
+        String currentDir = System.getProperty("user.dir");
+
+        File initialFile = new File(currentDir + "/../src/main/resources/keys/keystore.jks");
+        InputStream ins = new FileInputStream(initialFile);
+
 
         KeyStore keyStore = KeyStore.getInstance("JCEKS");
         keyStore.load(ins, "s3cr3t".toCharArray());   //Keystore password
@@ -115,4 +117,6 @@ public class RSAKeyGenerator {
 
         return new KeyPair(publicKey, privateKey);
     }
+
+
 }

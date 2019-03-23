@@ -11,7 +11,12 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+
+
+
     </properties>
+
+
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/javax.xml.ws/jaxws-api -->
@@ -22,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>com.sun.xml.ws</groupId>
-            <artifactId>rt</artifactId>
+            <artifactId>jaxws-rt</artifactId>
             <version>2.3.1</version>
         </dependency>
         <dependency>
@@ -46,6 +51,10 @@
 
     <build>
         <plugins>
+
+
+
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
