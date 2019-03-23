@@ -2,12 +2,14 @@ package ws.Implementacao;
 
 import domain.Notary;
 
+import javax.jws.HandlerChain;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import java.util.ArrayList;
 
 
 @WebService(endpointInterface = "ws.Interfaces.NotaryWebService")
+@HandlerChain(file = "ServerChain-binding.xml")
 public class NotaryWebServiceImpl {
     @WebMethod
     public String test(String input) {

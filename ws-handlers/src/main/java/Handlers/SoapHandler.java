@@ -58,6 +58,8 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
     }
 
     private boolean SOAPProcessing(SOAPMessageContext smc, PrintStream out) {
+
+
         Boolean isRequest = (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
         SOAPMessage msg;
         SOAPEnvelope se;
@@ -79,6 +81,22 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
 
         if (isRequest) {
             //CLIENT SIDE
+
+            System.out.println("Entrou no Client SIDE");
+            //SERVER SIDE
+            try {
+
+
+
+            } catch (Exception e) {
+                System.err.println("Caught exception on SOAPHandler INBOUND : " + e);
+            }
+
+            return true;
+
+        } else {
+
+
             try {
 
                 Source source = sp.getContent();
@@ -133,16 +151,6 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
                 System.err.println("Caught exception on SOAPHandler OUTBOUND : " + e);
             }
 
-            return true;
-
-        } else {
-            //SERVER SIDE
-            try {
-
-
-            } catch (Exception e) {
-                System.err.println("Caught exception on SOAPHandler INBOUND : " + e);
-            }
             return true;
         }
     }
