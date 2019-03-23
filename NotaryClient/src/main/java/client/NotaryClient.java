@@ -4,12 +4,12 @@ import javax.crypto.*;
 import java.security.*;
 
 import clientWS.ClientWebServiceImplService;
-import domain.Client;
+import domain.*;
 import serverWS.NotaryWebService;
 import serverWS.NotaryWebServiceImplService;
 import ws.impl.ClientWebServiceImpl;
 
-
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
@@ -21,8 +21,10 @@ public class NotaryClient {
 
     /**
      * Starts the web service client.
+     * 
+     * @throws Exception
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         NotaryWebServiceImplService client = new NotaryWebServiceImplService();
         NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
 
@@ -38,6 +40,22 @@ public class NotaryClient {
         String bindingURI = "http://localhost:909" + input.substring(input.length() - 1) + "/" + input + "WebService";
         ClientWebServiceImpl webService = new ClientWebServiceImpl();
         Endpoint.publish(bindingURI, webService);
+
+        //keys generation
+        String keysPath = "/../src/main/resources/keys/"+input;
+        String currentDir = System.getProperty("user.dir");
+        if(!new File(currentDir + keysPath).exists() && !new File(currentDir + keysPath).mkdirs()){
+            throw new Exception("directory not created; please try again later");
+        }
+        String pubPath = currentDir + keysPath+"/pub.key";
+        String privPath = currentDir + keysPath+"/priv.key";
+
+        if(!new File(pubPath).exists() && !new File(privPath).exists() && !new File(pubPath).isDirectory() && !new File(privPath).isDirectory()){
+            System.out.println("Generate and save keys");
+            RSAKeyGenerator.write(privPath);
+            RSAKeyGenerator.write(pubPath);
+        }
+
         System.out.println("Server started at: " + bindingURI);
 
         System.out.println("------------------------------ ");

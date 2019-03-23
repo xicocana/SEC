@@ -11,6 +11,9 @@ public class Notary{
         add("user0");
         add("user1");
         add("user2");
+        add("user3");
+        add("user4");
+        add("user5");
     }};
 
     private ArrayList<Good> _userGoods = new ArrayList<Good>() {
@@ -18,6 +21,8 @@ public class Notary{
         {
         add(new Good("good0", "user0"));
         add(new Good("good1", "user2"));
+        add(new Good("good2", "user0"));
+        add(new Good("good3", "user4"));
     }};
 
     

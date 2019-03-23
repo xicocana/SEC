@@ -13,6 +13,7 @@
         <!-- modules to include in the build reactor -->
         <module>NotaryServer</module>
         <module>NotaryClient</module>
+        <module>ws-handlers</module>
 
     </modules>
 
