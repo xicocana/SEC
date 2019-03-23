@@ -1,6 +1,5 @@
 ws/impl/ClientWebServiceImpl.class
 domain/Client.class
-domain/RSAKeyGenerator.class
 client/ClientDummy.class
 client/NotaryClient.class
 ws/Interfaces/ClientWebServices.class

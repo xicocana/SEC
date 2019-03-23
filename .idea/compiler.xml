@@ -8,12 +8,14 @@
         <outputRelativeToContentRoot value="true" />
         <module name="NotaryClient" />
         <module name="NotaryServer" />
+        <module name="ws-handlers" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="NotaryClient" target="1.8" />
       <module name="NotaryServer" target="1.8" />
       <module name="SEC" target="1.5" />
+      <module name="ws-handlers" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

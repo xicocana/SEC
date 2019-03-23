@@ -3,6 +3,7 @@ package client;
 import javax.crypto.*;
 import java.security.*;
 
+import Handlers.RSAKeyGenerator;
 import clientWS.ClientWebServiceImplService;
 import domain.*;
 import serverWS.NotaryWebService;

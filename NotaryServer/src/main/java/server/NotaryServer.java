@@ -2,7 +2,6 @@ package server;
 
 import domain.Notary;
 import pteidlib.pteid;
-import sun.security.pkcs11.wrapper.*;
 import ws.Implementacao.NotaryWebServiceImpl;
 
 import javax.xml.ws.Endpoint;
@@ -10,21 +9,14 @@ import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.util.Scanner;
 
-import pteidlib.PTEID_ADDR;
 import pteidlib.PTEID_Certif;
 import pteidlib.PTEID_ID;
 import pteidlib.PTEID_PIC;
 import pteidlib.PTEID_Pin;
 import pteidlib.PTEID_TokenInfo;
 import pteidlib.PteidException;
-import pteidlib.pteid;
 
 import java.io.FileOutputStream;
-import java.nio.charset.Charset;
-import java.lang.reflect.Method;
-import javax.crypto.*;
-import java.security.*;
-
 import java.io.IOException;
 
 import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;

@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/NotaryClient/NotaryClient.iml" filepath="$PROJECT_DIR$/NotaryClient/NotaryClient.iml" />
       <module fileurl="file://$PROJECT_DIR$/NotaryServer/NotaryServer.iml" filepath="$PROJECT_DIR$/NotaryServer/NotaryServer.iml" />
       <module fileurl="file://$PROJECT_DIR$/SEC.iml" filepath="$PROJECT_DIR$/SEC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ws-handlers/ws-handlers.iml" filepath="$PROJECT_DIR$/ws-handlers/ws-handlers.iml" />
     </modules>
   </component>
 </project>

@@ -1,8 +1,8 @@
 domain/Notary$1.class
+domain/Notary$2.class
+domain/Good.class
 domain/Notary$SingletonHolder.class
 ws/Interfaces/NotaryWebService.class
-domain/Notary$2.class
 server/NotaryServer.class
 domain/Notary.class
-domain/Good.class
 ws/Implementacao/NotaryWebServiceImpl.class
