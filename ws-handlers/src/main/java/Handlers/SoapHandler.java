@@ -21,6 +21,10 @@ import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 import java.security.*;
+import java.io.*;
+import java.nio.*;
+import java.security.*;
+import java.security.spec.*;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -114,27 +118,27 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
                     Document doc = db.parse(inSource);
                     root = doc.getDocumentElement();
                 }
-
+                System.out.println("111");
                 //keys generation
                 String keysPath = "/../../NotaryClient/src/main/resources/keys/"+"user0";
                 String currentDir = System.getProperty("user.dir");
-
+                System.out.println("222");
                 String pubPath = currentDir + keysPath+"/pub.key";
                 String privPath = currentDir + keysPath+"/priv.key";
-
-                PublicKey publicKey = (PublicKey) RSAKeyGenerator.read(pubPath);
-                PrivateKey privateKey = (PrivateKey) RSAKeyGenerator.read(privPath);
-
+                System.out.println("333");
+                PublicKey publicKey = RSAKeyGenerator.getPublic(pubPath);
+                PrivateKey privateKey = RSAKeyGenerator.getPrivate(privPath);
+                System.out.println("444");
                 XMLSignatureFactory sigFactory = XMLSignatureFactory.getInstance();
                 Reference ref = sigFactory.newReference("#Body", sigFactory.newDigestMethod(DigestMethod.SHA1, null));
                 SignedInfo signedInfo = sigFactory.newSignedInfo(sigFactory.newCanonicalizationMethod(CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS,
-                        (C14NMethodParameterSpec) null), sigFactory.newSignatureMethod(SignatureMethod.DSA_SHA1, null), Collections.singletonList(ref));
+                        (C14NMethodParameterSpec) null), sigFactory.newSignatureMethod(SignatureMethod.RSA_SHA1, null), Collections.singletonList(ref));
                 KeyInfoFactory kif = sigFactory.getKeyInfoFactory();
                 KeyValue kv = kif.newKeyValue(publicKey);
                 KeyInfo keyInfo = kif.newKeyInfo(Collections.singletonList(kv));
-
+                System.out.println("555");
                 XMLSignature sig = sigFactory.newXMLSignature(signedInfo, keyInfo);
-
+                System.out.println("666");
                 System.out.println("Signing the message...");
 
                 Element envelope = getFirstChildElement(root);
