@@ -24,10 +24,7 @@ import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 import java.io.PrintStream;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PrivateKey;
-import java.security.SecureRandom;
+import java.security.*;
 import java.util.Collections;
 import java.util.Set;
 
@@ -77,73 +74,9 @@ public class ServerSoapHandler implements SOAPHandler<SOAPMessageContext> {
                 SOAPHeader soapHeader = soapEnvelope.getHeader();
 
 
-                SOAPBody soapBody = soapEnvelope.getBody();
-                soapBody.addAttribute(soapEnvelope.createName("id", "SOAP-SEC",
-                        "http://schemas.xmlsoap.org/soap/security/2000-12"), "Body");
-                Name bodyName = soapEnvelope.createName("FooBar", "z", "http://example.com");
-                SOAPBodyElement gltp = soapBody.addBodyElement(bodyName);
-
-                Source source = soapPart.getContent();
-                Node root = null;
-                if (source instanceof DOMSource) {
-                    root = ((DOMSource) source).getNode();
-                } else if (source instanceof SAXSource) {
-                    InputSource inSource = ((SAXSource) source).getInputSource();
-                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                    dbf.setNamespaceAware(true);
-                    DocumentBuilder db = null;
-
-                    db = dbf.newDocumentBuilder();
-
-                    Document doc = db.parse(inSource);
-                    root = (Node) doc.getDocumentElement();
-                }
-
-                //dumpDocument(root);
-
-                
-
-                XMLSignatureFactory sigFactory = XMLSignatureFactory.getInstance();
-                Reference ref = sigFactory.newReference("#Body", sigFactory.newDigestMethod(DigestMethod.SHA1,
-                        null));
-
-                SignedInfo signedInfo = sigFactory.newSignedInfo(sigFactory.newCanonicalizationMethod(
-                        CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS, (C14NMethodParameterSpec) null), sigFactory
-                        .newSignatureMethod(SignatureMethod.RSA_SHA1, null), Collections.singletonList(ref));
-
-                KeyInfoFactory kif = sigFactory.getKeyInfoFactory();
-                KeyValue kv = kif.newKeyValue(RSAKeyGenerator.getPublicKeyFromKeyStore("user0"));
-                KeyInfo keyInfo = kif.newKeyInfo(Collections.singletonList(kv));
-
-                XMLSignature sig = sigFactory.newXMLSignature(signedInfo, keyInfo);
 
 
-                System.out.println("Signing the message...");
-                PrivateKey privateKey = RSAKeyGenerator.getPrivateKeyFromKeyStore("user0", "user0user0");
-                Element envelope = getFirstChildElement(root);
-                Element header = getFirstChildElement(envelope);
-                DOMSignContext sigContext = new DOMSignContext(privateKey, header);
-                sigContext.putNamespacePrefix(XMLSignature.XMLNS, "ds");
-                sigContext.setIdAttributeNS(getNextSiblingElement(header),
-                        "http://schemas.xmlsoap.org/soap/security/2000-12", "id");
-                sig.sign(sigContext);
 
-                //dumpDocument(root);
-
-                System.out.println("Validate the signature...");
-
-                Element sigElement = getFirstChildElement(header);
-                //System.out.println("111");
-
-                DOMValidateContext valContext = new DOMValidateContext(RSAKeyGenerator.getPublicKeyFromKeyStore("user0"), sigElement);
-                valContext.setIdAttributeNS(getNextSiblingElement(header),
-                        "http://schemas.xmlsoap.org/soap/security/2000-12", "id");
-                //System.out.println("1.5");
-                //System.out.println("222" + valContext.getNode().toString());
-
-                boolean valid = sig.validate(valContext);
-
-                System.out.println("Signature valid? " + valid);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -181,5 +114,32 @@ public class ServerSoapHandler implements SOAPHandler<SOAPMessageContext> {
             sibling = sibling.getNextSibling();
         }
         return (Element) sibling;
+    }
+
+    private boolean validateSignature(Node signatureNode, Node bodyTag, PublicKey publicKey) {
+        boolean signatureIsValid = false;
+        try {
+            // Create a DOM XMLSignatureFactory that will be used to unmarshal the
+            // document containing the XMLSignature
+            String providerName = System.getProperty
+                    ("jsr105Provider", "org.jcp.xml.dsig.internal.dom.XMLDSigRI");
+            XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM",
+                    (Provider) Class.forName(providerName).newInstance());
+
+            // Create a DOMValidateContext and specify a KeyValue KeySelector
+            // and document context
+            DOMValidateContext valContext = new DOMValidateContext(publicKey, signatureNode);
+            valContext.setIdAttributeNS((Element) bodyTag, "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd", "Id");
+
+            // Unmarshal the XMLSignature.
+            XMLSignature signature = fac.unmarshalXMLSignature(valContext);
+            // Validate the XMLSignature.
+            signatureIsValid = signature.validate(valContext);
+
+        } catch (Exception ex) {
+
+        }
+
+        return signatureIsValid;
     }
 }

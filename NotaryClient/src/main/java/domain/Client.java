@@ -3,6 +3,7 @@ package domain;
 
 import serverWS.NotaryWebService;
 import serverWS.NotaryWebServiceImplService;
+import utils.RSAKeyGenerator;
 
 public class Client{
 
@@ -36,6 +37,6 @@ public class Client{
     public Boolean buyGood(String sellerId, String buyerId, String goodId) {
         NotaryWebServiceImplService client = new NotaryWebServiceImplService();
         NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
-        return notaryWebservice.transferGood(sellerId, buyerId, goodId);
+        return notaryWebservice.transferGood(sellerId, buyerId, goodId, RSAKeyGenerator.writeSign(sellerId, sellerId+sellerId));
     }
 }

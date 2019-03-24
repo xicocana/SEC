@@ -1,5 +1,7 @@
 package domain;
 
+import utils.RSAKeyGenerator;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,21 +10,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.security.Signature;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Date;
 
 public class Notary {
 
     private int _id;
-    /*
-     * private ArrayList<String> _users = new ArrayList<String>() { private static
-     * final long serialVersionUID = 1L; { add("user0"); add("user1"); add("user2");
-     * add("user3"); add("user4"); add("user5"); }};
-     * 
-     * private ArrayList<Good> _userGoods = new ArrayList<Good>() { private static
-     * final long serialVersionUID = 1L; { add(new Good("good0", "user0")); add(new
-     * Good("good1", "user2")); add(new Good("good2", "user0")); add(new
-     * Good("good3", "user4")); }};
-     */
+
 
     private ArrayList<String> _users = new ArrayList<String>();
     private ArrayList<Good> _userGoods = new ArrayList<Good>();
@@ -30,11 +27,11 @@ public class Notary {
     String currentDir = System.getProperty("user.dir");
     String pathToUsers = currentDir + "/../src/main/resources/notary-folder/users.txt";
     String pathToGoods = currentDir + "/../src/main/resources/notary-folder/user_goods.txt";
-    private int transaction_counter = new File(currentDir + "/../src/main/resources/notary-folder/").list().length-1;
+    private int transaction_counter = new File(currentDir + "/../src/main/resources/notary-folder/").list().length - 1;
 
     public Notary() {
         BufferedReader reader;
-        String newpath = pathToGoods.substring(0, pathToGoods.length()-4)+transaction_counter+".txt";
+        String newpath = pathToGoods.substring(0, pathToGoods.length() - 4) + transaction_counter + ".txt";
         try {
             reader = new BufferedReader(new FileReader(pathToUsers));
             String line = reader.readLine();
@@ -91,14 +88,27 @@ public class Notary {
         return SingletonHolder.INSTANCE;
     }
 
-    public boolean intentionToSell(String owner, String goodId) {
+    public boolean intentionToSell(String owner, String goodId, String secret) {
         System.out.println("Client called intenttosell ");
-        for (Good good : _userGoods) {
-            if (good.getOwner().equals(owner) && good.getId().equals(goodId)) {
-                good.setStatus(true);
-                return true;
+
+        try {
+
+            if (RSAKeyGenerator.verifySign(owner, secret)) {
+                for (Good good : _userGoods) {
+                    if (good.getOwner().equals(owner) && good.getId().equals(goodId)) {
+                        good.setStatus(true);
+                        return true;
+                    }
+                }
+            } else {
+                System.out.println("Error: Message Tampered");
             }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return false;
     }
 
@@ -117,33 +127,38 @@ public class Notary {
         return res;
     }
 
-    public boolean transferGood(String sellerId, String buyerId, String goodId) {
+    public boolean transferGood(String sellerId, String buyerId, String goodId, String secret) {
         System.out.println("Client called transfergood ");
-        for (Good good : _userGoods) {
-            if (good.getId().equals(goodId)) {
-                if (good.getStatus() && good.getOwner().equals(sellerId)) {
-                    // Tocar good entre os users
-                    good.setOwner(buyerId);
-                    good.setStatus(false);
-                    try{
-                        this.WriteNewFile();
-                    }catch(Exception e){
-                        e.printStackTrace();
+        if (RSAKeyGenerator.verifySign(sellerId, secret)) {
+            for (Good good : _userGoods) {
+                if (good.getId().equals(goodId)) {
+                    if (good.getStatus() && good.getOwner().equals(sellerId)) {
+                        // Tocar good entre os users
+                        good.setOwner(buyerId);
+                        good.setStatus(false);
+                        try {
+                            this.WriteNewFile();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return true;
                     }
-                    return true;
                 }
             }
+        } else {
+            System.out.println("Error: Message Tampered");
         }
+
         return false;
     }
 
     public void WriteNewFile() throws FileNotFoundException, UnsupportedEncodingException {
-        transaction_counter ++;
-        PrintWriter writer = new PrintWriter(pathToGoods.substring(0, pathToGoods.length()-4)+transaction_counter+".txt", "UTF-8");
+        transaction_counter++;
+        PrintWriter writer = new PrintWriter(pathToGoods.substring(0, pathToGoods.length() - 4) + transaction_counter + ".txt", "UTF-8");
         //writer.println("The first line");
         //writer.println("The second line");
-        for(int i=0; i<_userGoods.size(); i++){
-            writer.println(_userGoods.get(i).getId()+":"+_userGoods.get(i).getOwner());
+        for (int i = 0; i < _userGoods.size(); i++) {
+            writer.println(_userGoods.get(i).getId() + ":" + _userGoods.get(i).getOwner());
         }
         writer.close();
     }

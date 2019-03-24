@@ -9,11 +9,11 @@ import java.util.ArrayList;
 public interface NotaryWebService {
     @WebMethod public String test(String input);
 
-    @WebMethod public boolean intentionToSell(String owner, String goodId);
+    @WebMethod public boolean intentionToSell(String owner, String goodId,String secret);
 
     @WebMethod public String getStateOfGood(String goodId) ;
 
-    @WebMethod  public boolean transferGood(String sellerId, String buyerId, String goodId);
+    @WebMethod  public boolean transferGood(String sellerId, String buyerId, String goodId,String secret);
 
     @WebMethod public int getNotaryId();
 

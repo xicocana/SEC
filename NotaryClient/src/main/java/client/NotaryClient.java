@@ -1,17 +1,20 @@
 package client;
 
-import Handlers.RSAKeyGenerator;
+
+
 import domain.*;
 import serverWS.NotaryWebService;
 import serverWS.NotaryWebServiceImplService;
+import sun.misc.BASE64Encoder;
+import utils.RSAKeyGenerator;
 import ws.impl.ClientWebServiceImpl;
-
-import clientWS.ClientWebServiceImplService;
-
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.Signature;
+import java.util.Date;
 import java.util.Scanner;
+import clientWS.ClientWebServiceImplService;
+import java.util.Base64;
 
 import javax.xml.ws.Endpoint;
 
@@ -26,6 +29,7 @@ public class NotaryClient {
     public static void main(String[] args) throws Exception {
         NotaryWebServiceImplService client = new NotaryWebServiceImplService();
         NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
+        String SYGN_KEY_WORD = "SYGN_KEY_WORD";
 
         Scanner scanner = new Scanner(System.in);
 
@@ -39,24 +43,6 @@ public class NotaryClient {
         String bindingURI = "http://localhost:909" + input.substring(input.length() - 1) + "/" + input + "WebService";
         ClientWebServiceImpl webService = new ClientWebServiceImpl();
         Endpoint.publish(bindingURI, webService);
-
-        //keys generation
-        //String keysPath = "/../src/main/resources/keys/"+input;
-        //String currentDir = System.getProperty("user.dir");
-        //if(!new File(currentDir + keysPath).exists() && !new File(currentDir + keysPath).mkdirs()){
-        //    throw new Exception("directory not created; please try again later");
-        //}
-        //String pubPath = currentDir + keysPath+"/pub.key";
-        //String privPath = currentDir + keysPath+"/priv.key";
-
-        //if(!new File(pubPath).exists() && !new File(privPath).exists() && !new File(pubPath).isDirectory() && !new File(privPath).isDirectory()){
-        //    System.out.println("Generate and save keys");
-        //    RSAKeyGenerator.write(privPath);
-        //    RSAKeyGenerator.write(pubPath);
-        //}
-
-        //key verification / creation (keystore)
-        
 
         System.out.println("Server started at: " + bindingURI);
 
@@ -78,7 +64,7 @@ public class NotaryClient {
             case 1:
                 System.out.print("insert good ID: ");
                 goodId =  scanner.next();
-                boolean b = notaryWebservice.intentionToSell(input, goodId);
+                boolean b = notaryWebservice.intentionToSell(input, goodId,RSAKeyGenerator.writeSign(input, input+input));
                 System.out.println(b);
                 System.out.println(" ");
                 break;
@@ -103,7 +89,7 @@ public class NotaryClient {
                     ClientWebServiceImplService webService2 = new ClientWebServiceImplService(WsURL);
                     clientWS.ClientWebServiceImpl clientWebservice = webService2.getClientWebServiceImplPort();
 
-                    Boolean bb = clientWebservice.buyGood(name2, input, goodId);
+                    Boolean bb = clientWebservice.buyGood(name2, input, goodId, "");
                     System.out.println(bb);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();

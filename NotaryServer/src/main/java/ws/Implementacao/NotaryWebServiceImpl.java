@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 
 @WebService(endpointInterface = "ws.Interfaces.NotaryWebService")
-@HandlerChain(file = "ServerChain.xml")
 public class NotaryWebServiceImpl {
     @WebMethod
     public String test(String input) {
@@ -17,9 +16,9 @@ public class NotaryWebServiceImpl {
     }
 
     @WebMethod
-    public boolean intentionToSell(String owner, String goodId){
+    public boolean intentionToSell(String owner, String goodId, String secret){
         Notary notary = Notary.getInstance();
-        return notary.intentionToSell(owner, goodId);
+        return notary.intentionToSell(owner, goodId, secret);
     }
 
     @WebMethod
@@ -29,9 +28,9 @@ public class NotaryWebServiceImpl {
     }
 
     @WebMethod
-    public boolean transferGood(String sellerId, String buyerId, String goodId){
+    public boolean transferGood(String sellerId, String buyerId, String goodId, String secret){
         Notary notary = Notary.getInstance();
-        return notary.transferGood(sellerId,buyerId,goodId);
+        return notary.transferGood(sellerId,buyerId,goodId, secret);
     }
 
     @WebMethod
