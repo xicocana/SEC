@@ -29,9 +29,9 @@ public class RSAKeyGenerator {
             write(pubkeyPath);
         } else {
             System.out.println("Load keys");
-            KeyPair kp = getKeyPairFromKeyStore();
-            kp.getPrivate();
-            kp.getPublic();
+            //KeyPair kp = getKeyPairFromKeyStore();
+            //kp.getPrivate();
+            //kp.getPublic();
             //read(privkeyPath);
             //read(pubkeyPath);
         }

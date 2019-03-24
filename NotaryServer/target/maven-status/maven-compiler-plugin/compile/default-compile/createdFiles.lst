@@ -1,4 +1,3 @@
-domain/Notary$1.class
 serverWS/package-info.class
 serverWS/IntentionToSell.class
 serverWS/TestResponse.class
@@ -13,7 +12,6 @@ serverWS/IntentionToSellResponse.class
 server/NotaryServer.class
 serverWS/GetUsers.class
 serverWS/GetStateOfGood.class
-domain/Notary$2.class
 serverWS/GetStateOfGoodResponse.class
 serverWS/TransferGood.class
 domain/Notary.class

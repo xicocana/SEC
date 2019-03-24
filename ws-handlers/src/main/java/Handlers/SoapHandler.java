@@ -106,7 +106,7 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
 
                 //dumpDocument(root);
 
-                KeyPair keypair = RSAKeyGenerator.getKeyPairFromKeyStore();
+                
 
                 XMLSignatureFactory sigFactory = XMLSignatureFactory.getInstance();
                 Reference ref = sigFactory.newReference("#Body", sigFactory.newDigestMethod(DigestMethod.SHA1,
@@ -115,13 +115,13 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
                         CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS, (C14NMethodParameterSpec) null), sigFactory
                         .newSignatureMethod(SignatureMethod.RSA_SHA1, null), Collections.singletonList(ref));
                 KeyInfoFactory kif = sigFactory.getKeyInfoFactory();
-                KeyValue kv = kif.newKeyValue(keypair.getPublic());
+                KeyValue kv = kif.newKeyValue(RSAKeyGenerator.getPublicKeyFromKeyStore("user0"));
                 KeyInfo keyInfo = kif.newKeyInfo(Collections.singletonList(kv));
 
                 XMLSignature sig = sigFactory.newXMLSignature(signedInfo, keyInfo);
 
                 System.out.println("Signing the message...");
-                PrivateKey privateKey = keypair.getPrivate();
+                PrivateKey privateKey = RSAKeyGenerator.getPrivateKeyFromKeyStore("user0", "user0user0");
                 Element envelope = getFirstChildElement(root);
                 Element header = getFirstChildElement(envelope);
                 DOMSignContext sigContext = new DOMSignContext(privateKey, header);
@@ -134,7 +134,7 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
 
                 System.out.println("Validate the signature...");
                 Element sigElement = getFirstChildElement(header);
-                DOMValidateContext valContext = new DOMValidateContext(keypair.getPublic(), sigElement);
+                DOMValidateContext valContext = new DOMValidateContext(RSAKeyGenerator.getPublicKeyFromKeyStore("user0"), sigElement);
                 valContext.setIdAttributeNS(getNextSiblingElement(header),
                         "http://schemas.xmlsoap.org/soap/security/2000-12", "id");
                 boolean valid = sig.validate(valContext);

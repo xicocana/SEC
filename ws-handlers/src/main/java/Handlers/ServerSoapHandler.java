@@ -101,7 +101,7 @@ public class ServerSoapHandler implements SOAPHandler<SOAPMessageContext> {
 
                 //dumpDocument(root);
 
-                KeyPair keypair = RSAKeyGenerator.getKeyPairFromKeyStore();
+                
 
                 XMLSignatureFactory sigFactory = XMLSignatureFactory.getInstance();
                 Reference ref = sigFactory.newReference("#Body", sigFactory.newDigestMethod(DigestMethod.SHA1,
@@ -112,14 +112,14 @@ public class ServerSoapHandler implements SOAPHandler<SOAPMessageContext> {
                         .newSignatureMethod(SignatureMethod.RSA_SHA1, null), Collections.singletonList(ref));
 
                 KeyInfoFactory kif = sigFactory.getKeyInfoFactory();
-                KeyValue kv = kif.newKeyValue(keypair.getPublic());
+                KeyValue kv = kif.newKeyValue(RSAKeyGenerator.getPublicKeyFromKeyStore("user0"));
                 KeyInfo keyInfo = kif.newKeyInfo(Collections.singletonList(kv));
 
                 XMLSignature sig = sigFactory.newXMLSignature(signedInfo, keyInfo);
 
 
                 System.out.println("Signing the message...");
-                PrivateKey privateKey = keypair.getPrivate();
+                PrivateKey privateKey = RSAKeyGenerator.getPrivateKeyFromKeyStore("user0", "user0user0");
                 Element envelope = getFirstChildElement(root);
                 Element header = getFirstChildElement(envelope);
                 DOMSignContext sigContext = new DOMSignContext(privateKey, header);
@@ -135,7 +135,7 @@ public class ServerSoapHandler implements SOAPHandler<SOAPMessageContext> {
                 Element sigElement = getFirstChildElement(header);
                 //System.out.println("111");
 
-                DOMValidateContext valContext = new DOMValidateContext(keypair.getPublic(), sigElement);
+                DOMValidateContext valContext = new DOMValidateContext(RSAKeyGenerator.getPublicKeyFromKeyStore("user0"), sigElement);
                 valContext.setIdAttributeNS(getNextSiblingElement(header),
                         "http://schemas.xmlsoap.org/soap/security/2000-12", "id");
                 //System.out.println("1.5");

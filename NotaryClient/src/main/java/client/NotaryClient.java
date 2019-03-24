@@ -55,13 +55,16 @@ public class NotaryClient {
         //    RSAKeyGenerator.write(pubPath);
         //}
 
+        //key verification / creation (keystore)
+        
+
         System.out.println("Server started at: " + bindingURI);
 
         System.out.println("------------------------------ ");
         System.out.println("NotaryClient option:");
         System.out.println("1 -> intentToSell(owner, good)");
         System.out.println("2 -> getStateGood(good)");
-        System.out.println("3 -> buyGood(???)");
+        System.out.println("3 -> buyGood(seller, good)");
         System.out.println("4 -> exit");
 
         boolean flag = true;
