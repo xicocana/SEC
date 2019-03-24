@@ -41,19 +41,19 @@ public class NotaryClient {
         Endpoint.publish(bindingURI, webService);
 
         //keys generation
-        String keysPath = "/../src/main/resources/keys/"+input;
-        String currentDir = System.getProperty("user.dir");
-        if(!new File(currentDir + keysPath).exists() && !new File(currentDir + keysPath).mkdirs()){
-            throw new Exception("directory not created; please try again later");
-        }
-        String pubPath = currentDir + keysPath+"/pub.key";
-        String privPath = currentDir + keysPath+"/priv.key";
+        //String keysPath = "/../src/main/resources/keys/"+input;
+        //String currentDir = System.getProperty("user.dir");
+        //if(!new File(currentDir + keysPath).exists() && !new File(currentDir + keysPath).mkdirs()){
+        //    throw new Exception("directory not created; please try again later");
+        //}
+        //String pubPath = currentDir + keysPath+"/pub.key";
+        //String privPath = currentDir + keysPath+"/priv.key";
 
-        if(!new File(pubPath).exists() && !new File(privPath).exists() && !new File(pubPath).isDirectory() && !new File(privPath).isDirectory()){
-            System.out.println("Generate and save keys");
-            RSAKeyGenerator.write(privPath);
-            RSAKeyGenerator.write(pubPath);
-        }
+        //if(!new File(pubPath).exists() && !new File(privPath).exists() && !new File(pubPath).isDirectory() && !new File(privPath).isDirectory()){
+        //    System.out.println("Generate and save keys");
+        //    RSAKeyGenerator.write(privPath);
+        //    RSAKeyGenerator.write(pubPath);
+        //}
 
         System.out.println("Server started at: " + bindingURI);
 

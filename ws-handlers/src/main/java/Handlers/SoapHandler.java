@@ -72,7 +72,7 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
         if (isRequest) {
             try {
 
-                System.out.println("Entrou no Client SIDE");
+                //System.out.println("Entrou no Client SIDE");
 
                 SOAPMessage soapMessage = smc.getMessage();
                 SOAPPart soapPart = soapMessage.getSOAPPart();
@@ -104,7 +104,7 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
                     root = (Node) doc.getDocumentElement();
                 }
 
-                dumpDocument(root);
+                //dumpDocument(root);
 
                 KeyPair keypair = RSAKeyGenerator.getKeyPairFromKeyStore();
 
@@ -130,7 +130,7 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
                         "http://schemas.xmlsoap.org/soap/security/2000-12", "id");
                 sig.sign(sigContext);
 
-                dumpDocument(root);
+                //dumpDocument(root);
 
                 System.out.println("Validate the signature...");
                 Element sigElement = getFirstChildElement(header);
@@ -150,7 +150,7 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
             return true;
 
         } else {
-            System.out.println("Entrou no Server SIDE");
+            //System.out.println("Entrou no Server SIDE");
             String currentDir = System.getProperty("user.dir");
             System.out.println(currentDir);
 
@@ -174,7 +174,7 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
     }
 
     public static Element getNextSiblingElement(Node node) {
-        System.out.println("AQUI1.5");
+        //System.out.println("AQUI1.5");
         Node sibling = node.getNextSibling();
         while ((sibling != null) && (sibling.getNodeType() != Node.ELEMENT_NODE)) {
             sibling = sibling.getNextSibling();

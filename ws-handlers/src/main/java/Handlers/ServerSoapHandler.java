@@ -68,7 +68,7 @@ public class ServerSoapHandler implements SOAPHandler<SOAPMessageContext> {
         if (!isRequest) {
             try {
 
-                System.out.println("Entrou no Client SIDE");
+                //System.out.println("Entrou no Client SIDE");
 
                 SOAPMessage soapMessage = smc.getMessage();
                 SOAPPart soapPart = soapMessage.getSOAPPart();
@@ -99,7 +99,7 @@ public class ServerSoapHandler implements SOAPHandler<SOAPMessageContext> {
                     root = (Node) doc.getDocumentElement();
                 }
 
-                dumpDocument(root);
+                //dumpDocument(root);
 
                 KeyPair keypair = RSAKeyGenerator.getKeyPairFromKeyStore();
 
@@ -128,18 +128,18 @@ public class ServerSoapHandler implements SOAPHandler<SOAPMessageContext> {
                         "http://schemas.xmlsoap.org/soap/security/2000-12", "id");
                 sig.sign(sigContext);
 
-                dumpDocument(root);
+                //dumpDocument(root);
 
                 System.out.println("Validate the signature...");
 
                 Element sigElement = getFirstChildElement(header);
-                System.out.println("111");
+                //System.out.println("111");
 
                 DOMValidateContext valContext = new DOMValidateContext(keypair.getPublic(), sigElement);
                 valContext.setIdAttributeNS(getNextSiblingElement(header),
                         "http://schemas.xmlsoap.org/soap/security/2000-12", "id");
-                System.out.println("1.5");
-                System.out.println("222" + valContext.getNode().toString());
+                //System.out.println("1.5");
+                //System.out.println("222" + valContext.getNode().toString());
 
                 boolean valid = sig.validate(valContext);
 
@@ -153,7 +153,7 @@ public class ServerSoapHandler implements SOAPHandler<SOAPMessageContext> {
             return true;
 
         } else {
-            System.out.println("Entrou no Server SIDE - SERVER_SOAP_HANDLER");
+            //System.out.println("Entrou no Server SIDE - SERVER_SOAP_HANDLER");
             String currentDir = System.getProperty("user.dir");
             System.out.println(currentDir);
 
