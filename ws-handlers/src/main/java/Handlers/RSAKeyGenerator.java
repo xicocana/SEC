@@ -77,29 +77,23 @@ public class RSAKeyGenerator {
         return new SecretKeySpec(encoded, "RSA");
     }
 
-    public static PrivateKey getPrivate(String filename) throws Exception {
-        System.out.println("Reading key from file " + filename + " ...");
-        byte[] keyBytes = Files.readAllBytes(Paths.get(filename));
-
-        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-        System.out.println("Speeeeec : "+spec);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-        System.out.println(kf);
-        return kf.generatePrivate(spec);
-    }
-
-    public static PublicKey getPublic(String filename) throws Exception {
-        System.out.println("Reading key from file " + filename + " ...");
-        byte[] keyBytes = Files.readAllBytes(Paths.get(filename));
-
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-        return kf.generatePublic(spec);
-    }
-
-    public static KeyPair getKeyPairFromKeyStore() throws Exception {
+    public static PublicKey getPublicKeyFromKeyStore(String alias) throws Exception {
         String currentDir = System.getProperty("user.dir");
+        File initialFile = new File(currentDir + "/../src/main/resources/keys/keystore.jks");
+        InputStream ins = new FileInputStream(initialFile);
 
+
+        KeyStore keyStore = KeyStore.getInstance("JCEKS");
+        keyStore.load(ins, "s3cr3t".toCharArray());   //Keystore password
+        
+        java.security.cert.Certificate cert = keyStore.getCertificate(alias);
+        PublicKey publicKey = cert.getPublicKey();
+
+        return publicKey;
+    }
+
+    public static PrivateKey getPrivateKeyFromKeyStore(String alias, String passwd) throws Exception {
+        String currentDir = System.getProperty("user.dir");
         File initialFile = new File(currentDir + "/../src/main/resources/keys/keystore.jks");
         InputStream ins = new FileInputStream(initialFile);
 
@@ -107,16 +101,12 @@ public class RSAKeyGenerator {
         KeyStore keyStore = KeyStore.getInstance("JCEKS");
         keyStore.load(ins, "s3cr3t".toCharArray());   //Keystore password
         KeyStore.PasswordProtection keyPassword =       //Key password
-                new KeyStore.PasswordProtection("s3cr3t".toCharArray());
+                new KeyStore.PasswordProtection(passwd.toCharArray());
 
-        KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry("mykey", keyPassword);
+        KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(alias, keyPassword);
 
-        java.security.cert.Certificate cert = keyStore.getCertificate("mykey");
-        PublicKey publicKey = cert.getPublicKey();
         PrivateKey privateKey = privateKeyEntry.getPrivateKey();
 
-        return new KeyPair(publicKey, privateKey);
+        return privateKey;
     }
-
-
 }
