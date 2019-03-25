@@ -3,32 +3,28 @@ Sistemas Elevada Confiabilidade 18/19
 
 ## How To
 
-compilar webservice:
+compilar:
 
 ```sh
-javac sec/notary/server/NotaryWebService.java
+cd SEC && mvn clean install
 ```
 
-compilar notary server:
+wsimport caso alteracoes no webservice:
 
 ```sh
-javac sec/notary/server/NotaryServer.java
-```
-
-criar client usando o wsdl criado:
-
-```sh
-wsimport -keep -p sec.notary.client http://localhost:9898/notaryService?wsdl
+cd path
+wsimport -keep -p serverWS http://localhost:9898/notaryService?wsdl
 ```
 
 
 correr server & client:
 
 ```sh
-java sec.notary.server.NotaryServer.java
-java sec.notary.client.NotaryClient.java
+cd NotaryServer/target   :   java -jar NotaryServer-1.0-SNAPSHOT-jar-with-dependencies.jar 
+cd NotaryClient/target   :   java -jar NotaryClient-1.0-SNAPSHOT-jar-with-dependencies.jar
+
+(com cc a funcionar)
+java  -Djava.library.path=/usr/local/lib/ -jar NotaryServer-1.0-SNAPSHOT-jar-with-dependencies.jar 
 ```
 
-SOURCE ; https://www.codejava.net/java-ee/web-services/create-client-server-application-for-web-service-in-java
-
- java  -Djava.library.path=/usr/local/lib/ -jar NotaryServer-1.0-SNAPSHOT-jar-with-dependencies.jar 
+SOURCE JAVA WS ; https://www.codejava.net/java-ee/web-services/create-client-server-application-for-web-service-in-java
