@@ -127,9 +127,9 @@ public class Notary {
         return res;
     }
 
-    public boolean transferGood(String sellerId, String buyerId, String goodId, String secret) {
+    public boolean transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2) {
         System.out.println("Client called transfergood ");
-        if (RSAKeyGenerator.verifySign(sellerId, secret)) {
+        if ((RSAKeyGenerator.verifySign(sellerId, secret)) && (RSAKeyGenerator.verifySign(buyerId, secret2))) {
             for (Good good : _userGoods) {
                 if (good.getId().equals(goodId)) {
                     if (good.getStatus() && good.getOwner().equals(sellerId)) {

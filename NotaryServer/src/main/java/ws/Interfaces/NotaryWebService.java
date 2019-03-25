@@ -13,7 +13,7 @@ public interface NotaryWebService {
 
     @WebMethod public String getStateOfGood(String goodId) ;
 
-    @WebMethod  public boolean transferGood(String sellerId, String buyerId, String goodId,String secret);
+    @WebMethod  public boolean transferGood(String sellerId, String buyerId, String goodId,String secret, String secret2);
 
     @WebMethod public int getNotaryId();
 

@@ -17,6 +17,6 @@ public class ClientWebServiceImpl {
 	@WebMethod
 	public Boolean buyGood(String sellerId, String buyerId, String goodId, String secret) {
 		Client client = Client.getInstance();
-		return client.buyGood(sellerId, buyerId, goodId);
+		return client.buyGood(sellerId, buyerId, goodId, secret);
 	}
 }

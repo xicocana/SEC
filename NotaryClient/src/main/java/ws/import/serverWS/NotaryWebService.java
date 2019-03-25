@@ -65,6 +65,7 @@ public interface NotaryWebService {
      * 
      * @param arg3
      * @param arg2
+     * @param arg4
      * @param arg1
      * @param arg0
      * @return
@@ -83,7 +84,9 @@ public interface NotaryWebService {
         @WebParam(name = "arg2", targetNamespace = "")
         String arg2,
         @WebParam(name = "arg3", targetNamespace = "")
-        String arg3);
+        String arg3,
+        @WebParam(name = "arg4", targetNamespace = "")
+        String arg4);
 
     /**
      * 

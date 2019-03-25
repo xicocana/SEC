@@ -34,9 +34,15 @@ public class Client{
         return Id+"executed at client side !";
     }
 
-    public Boolean buyGood(String sellerId, String buyerId, String goodId) {
-        NotaryWebServiceImplService client = new NotaryWebServiceImplService();
-        NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
-        return notaryWebservice.transferGood(sellerId, buyerId, goodId, RSAKeyGenerator.writeSign(sellerId, sellerId+sellerId));
+    public Boolean buyGood(String sellerId, String buyerId, String goodId, String secret) {
+        if (RSAKeyGenerator.verifySign(buyerId, secret)) {
+            NotaryWebServiceImplService client = new NotaryWebServiceImplService();
+            NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
+            return notaryWebservice.transferGood(sellerId, buyerId, goodId, RSAKeyGenerator.writeSign(sellerId, sellerId+sellerId), secret);
+        }
+        else{
+            System.out.println("Error: Message Tampered");
+            return false;
+        }
     }
 }

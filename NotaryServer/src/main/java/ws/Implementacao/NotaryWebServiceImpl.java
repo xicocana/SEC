@@ -28,9 +28,9 @@ public class NotaryWebServiceImpl {
     }
 
     @WebMethod
-    public boolean transferGood(String sellerId, String buyerId, String goodId, String secret){
+    public boolean transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2){
         Notary notary = Notary.getInstance();
-        return notary.transferGood(sellerId,buyerId,goodId, secret);
+        return notary.transferGood(sellerId,buyerId,goodId, secret, secret2);
     }
 
     @WebMethod

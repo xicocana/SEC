@@ -64,7 +64,7 @@ public class NotaryClient {
             case 1:
                 System.out.print("insert good ID: ");
                 goodId =  scanner.next();
-                boolean b = notaryWebservice.intentionToSell(input, goodId,RSAKeyGenerator.writeSign(input, input+input));
+                boolean b = notaryWebservice.intentionToSell(input, goodId, RSAKeyGenerator.writeSign(input, input+input));
                 System.out.println(b);
                 System.out.println(" ");
                 break;
@@ -89,7 +89,7 @@ public class NotaryClient {
                     ClientWebServiceImplService webService2 = new ClientWebServiceImplService(WsURL);
                     clientWS.ClientWebServiceImpl clientWebservice = webService2.getClientWebServiceImplPort();
 
-                    Boolean bb = clientWebservice.buyGood(name2, input, goodId, "");
+                    Boolean bb = clientWebservice.buyGood(name2, input, goodId, RSAKeyGenerator.writeSign(input, input+input));
                     System.out.println(bb);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
