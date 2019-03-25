@@ -1,7 +1,5 @@
 package client;
 
-
-
 import domain.*;
 import serverWS.NotaryWebService;
 import serverWS.NotaryWebServiceImplService;
@@ -17,7 +15,6 @@ import clientWS.ClientWebServiceImplService;
 import java.util.Base64;
 
 import javax.xml.ws.Endpoint;
-
 
 public class NotaryClient {
 
@@ -48,7 +45,7 @@ public class NotaryClient {
 
         System.out.println("------------------------------ ");
         System.out.println("NotaryClient option:");
-        System.out.println("1 -> intentToSell(owner, good)");
+        System.out.println("1 -> intentToSell(good)");
         System.out.println("2 -> getStateGood(good)");
         System.out.println("3 -> buyGood(seller, good)");
         System.out.println("4 -> exit");
@@ -62,36 +59,48 @@ public class NotaryClient {
             String goodId;
             switch (opt) {
             case 1:
-                System.out.print("insert good ID: ");
+                System.out.print("Please insert good ID: ");
                 goodId =  scanner.next();
                 boolean b = notaryWebservice.intentionToSell(input, goodId, RSAKeyGenerator.writeSign(input, input+input));
-                System.out.println(b);
-                System.out.println(" ");
+                if(b){
+                    System.out.println("-> " + goodId + " is now for sale");
+                    System.out.println(" ");
+                }else{
+                    System.out.println("-> Something went wrong :( please try again later");
+                    System.out.println(" ");
+                }
                 break;
             case 2:
-                System.out.print("insert good ID: ");
+                System.out.print("Please insert good ID: ");
                 goodId =  scanner.next();
                 String res = notaryWebservice.getStateOfGood(goodId);
-                System.out.println(res);
+                String[] ress = res.split(":");
+                System.out.println("-> " + goodId + " owner  : " + ress[0].substring(1));
+                System.out.println("-> " + goodId + " status : " + ress[1].substring(0, ress[1].length()-1));
                 System.out.println(" ");
                 break;
             case 3:
-                System.out.print("Please insert seller server ID: ");
+                System.out.print("Please insert sellerId: ");
                 String name2 =  scanner.next();
                 System.out.print("Please insert goodId: ");
                 goodId = scanner.next();
                 
-
                 String mywebserviceURL = "http://localhost:909"+name2.substring(name2.length() -1)+"/"+name2+"WebService?wsdl";
                 URL WsURL;
                 try {
                     WsURL = new URL(mywebserviceURL);
                     ClientWebServiceImplService webService2 = new ClientWebServiceImplService(WsURL);
                     clientWS.ClientWebServiceImpl clientWebservice = webService2.getClientWebServiceImplPort();
-
                     Boolean bb = clientWebservice.buyGood(name2, input, goodId, RSAKeyGenerator.writeSign(input, input+input));
-                    System.out.println(bb);
+                    //System.out.println(bb);
+                    if(bb){
+                        System.out.println("-> Purchase successful");
+                    }else{
+                        System.out.println("-> Something went wrong :( please try again later");
+                        System.out.println(" ");
+                    }
                 } catch (MalformedURLException e) {
+                    System.out.println("Caught exception while contacting seller server: ");
                     e.printStackTrace();
                 }
                         
@@ -101,6 +110,7 @@ public class NotaryClient {
                 flag = false;
                 System.out.println("notary client terminated.");
                 System.out.println(" ");
+                System.exit(0);
                 break;
             default :
                 System.out.println("Invalid option");

@@ -144,6 +144,7 @@ public class NotaryServer {
 
         }catch (Exception e){
             //TODO - Só para testar
+            System.out.println("Server will continue whitout Portuguese Citizen Card Support");
         }
     }
 

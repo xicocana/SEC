@@ -20,7 +20,6 @@ public class Notary {
 
     private int _id;
 
-
     private ArrayList<String> _users = new ArrayList<String>();
     private ArrayList<Good> _userGoods = new ArrayList<Good>();
 
@@ -43,8 +42,8 @@ public class Notary {
             }
             reader.close();
         } catch (IOException e) {
+            System.out.println("Caught exception while reading users file:");
             e.printStackTrace();
-            ;
         }
 
         BufferedReader reader2;
@@ -63,8 +62,8 @@ public class Notary {
             }
             reader2.close();
         } catch (IOException e) {
+            System.out.println("Caught exception while reading most recent transfers file:");
             e.printStackTrace();
-            ;
         }
     }
 
@@ -89,10 +88,9 @@ public class Notary {
     }
 
     public boolean intentionToSell(String owner, String goodId, String secret) {
-        System.out.println("Client called intenttosell ");
+        System.out.println("Client " + owner + " called intentionToSell");
 
         try {
-
             if (RSAKeyGenerator.verifySign(owner, secret)) {
                 for (Good good : _userGoods) {
                     if (good.getOwner().equals(owner) && good.getId().equals(goodId)) {
@@ -104,16 +102,15 @@ public class Notary {
                 System.out.println("Error: Message Tampered");
             }
 
-
         } catch (Exception e) {
+            System.out.println("Caught exception on intentToSell:");
             e.printStackTrace();
         }
-
         return false;
     }
 
     public String getStateOfGood(String goodId) {
-        System.out.println("Client called getstateofgood ");
+        System.out.println("Recieved request on " + goodId + " status");
         String res = "";
         for (Good good : _userGoods) {
             if (good.getId().equals(goodId)) {
@@ -128,7 +125,7 @@ public class Notary {
     }
 
     public boolean transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2) {
-        System.out.println("Client called transfergood ");
+        System.out.println("Client " + sellerId + " called transferGood");
         if ((RSAKeyGenerator.verifySign(sellerId, secret)) && (RSAKeyGenerator.verifySign(buyerId, secret2))) {
             for (Good good : _userGoods) {
                 if (good.getId().equals(goodId)) {
@@ -139,6 +136,7 @@ public class Notary {
                         try {
                             this.WriteNewFile();
                         } catch (Exception e) {
+                            System.out.println("Caught exception while writing new transfers file :");
                             e.printStackTrace();
                         }
                         return true;
@@ -148,7 +146,6 @@ public class Notary {
         } else {
             System.out.println("Error: Message Tampered");
         }
-
         return false;
     }
 

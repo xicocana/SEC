@@ -120,6 +120,7 @@ public class RSAKeyGenerator {
             sig.update(messageBytes);
             return  sig.verify(data);
         } catch (Exception e) {
+            System.out.println("Caught exception while verifying message signature:");
             e.printStackTrace();
         }
         return false;

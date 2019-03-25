@@ -123,6 +123,7 @@ public class RSAKeyGenerator {
             sig.update(messageBytes);
             return sig.verify(data);
         } catch (Exception e) {
+            System.out.println("Caught exception while verifying message signature:");
             e.printStackTrace();
         }
         return false;
@@ -139,6 +140,7 @@ public class RSAKeyGenerator {
             byte[] signatureBytes = sig.sign();
             return Base64.getEncoder().encodeToString(signatureBytes);
         } catch (Exception e) {
+            System.out.println("Caught exception while writing message signature:");
             e.printStackTrace();
         }
         return "";
