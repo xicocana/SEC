@@ -1,0 +1,28 @@
+{
+"instanceName": "NotaryMain",
+"version" : "version",
+"timestamp" : "2019.03.25.17.29.56"
+"userList" : [
+	{
+	"name":"user0",
+	"id":"0"
+	"goodList" : [
+		{
+		"name":"good0"
+		"timestamp" : "2019.03.25.17.29.56"
+
+		}
+		]
+	},
+	{
+	"name":"user1",
+	"id":"1"
+	"goodList" : [
+		{
+		"name":"good1"
+		"timestamp" : "2019.03.25.17.29.56"
+		}
+		]
+	}
+	]
+}
