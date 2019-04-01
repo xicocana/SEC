@@ -55,7 +55,9 @@ public class Notary {
                 String[] args = line.split(":");
                 String good = args[0];
                 String usr = args[1];
+                Boolean status = new Boolean(args[2]);
                 Good g = new Good(good, usr);
+                g.setStatus(status);
                 _userGoods.add(g);
                 // read next line
                 line = reader2.readLine();
@@ -96,6 +98,13 @@ public class Notary {
                 for (Good good : _userGoods) {
                     if (good.getOwner().equals(owner) && good.getId().equals(goodId)) {
                         good.setStatus(true);
+                        try {
+                            this.WriteNewFile();
+                        } catch (Exception e) {
+                            System.out.println("Caught exception while writing new transfers file :");
+                            e.printStackTrace();
+                            return false;
+                        }
                         return true;
                     }
                 }
@@ -141,6 +150,7 @@ public class Notary {
                         } catch (Exception e) {
                             System.out.println("Caught exception while writing new transfers file :");
                             e.printStackTrace();
+                            return false;
                         }
                         return true;
                     }
@@ -158,7 +168,7 @@ public class Notary {
         //writer.println("The first line");
         //writer.println("The second line");
         for (int i = 0; i < _userGoods.size(); i++) {
-            writer.println(_userGoods.get(i).getId() + ":" + _userGoods.get(i).getOwner());
+            writer.println(_userGoods.get(i).getId() + ":" + _userGoods.get(i).getOwner() + ":" + _userGoods.get(i).getStatus());
         }
         writer.close();
     }
