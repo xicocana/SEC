@@ -61,7 +61,8 @@ public class NotaryClient {
             case 1:
                 System.out.print("Please insert good ID: ");
                 goodId =  scanner.next();
-                boolean b = notaryWebservice.intentionToSell(input, goodId, RSAKeyGenerator.writeSign(input, input+input));
+                String[] args2 = new String[]{input, goodId};
+                boolean b = notaryWebservice.intentionToSell(input, goodId, RSAKeyGenerator.writeSign(input, input+input, args2));
                 if(b){
                     System.out.println("-> " + goodId + " is now for sale");
                     System.out.println(" ");
@@ -91,7 +92,8 @@ public class NotaryClient {
                     WsURL = new URL(mywebserviceURL);
                     ClientWebServiceImplService webService2 = new ClientWebServiceImplService(WsURL);
                     clientWS.ClientWebServiceImpl clientWebservice = webService2.getClientWebServiceImplPort();
-                    Boolean bb = clientWebservice.buyGood(name2, input, goodId, RSAKeyGenerator.writeSign(input, input+input));
+                    String[] args3 = new String[]{input, goodId};
+                    Boolean bb = clientWebservice.buyGood(name2, input, goodId, RSAKeyGenerator.writeSign(input, input+input, args3));
                     //System.out.println(bb);
                     if(bb){
                         System.out.println("-> Purchase successful");

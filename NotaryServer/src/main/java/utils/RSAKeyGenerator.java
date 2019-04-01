@@ -107,13 +107,15 @@ public class RSAKeyGenerator {
         return privateKey;
     }
 
-    private static final String SYGN_KEY_WORD = "SYGN_KEY_WORD";
-
-    public static boolean verifySign (String owner, String secret){
+    public static boolean verifySign (String owner, String secret, String ...args){
         Signature sig;
 
         try {
-            byte[] messageBytes = SYGN_KEY_WORD.getBytes("UTF8");
+            String msg = null;
+            for (String s : args) {
+                msg = msg + s;
+            }
+            byte[] messageBytes = msg.getBytes("UTF8");
             byte[] data =  Base64.getDecoder().decode(secret);
             sig = Signature.getInstance("SHA1WithRSA");
             sig.initVerify( RSAKeyGenerator.getPublicKeyFromKeyStore(owner));

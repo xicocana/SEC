@@ -91,7 +91,8 @@ public class Notary {
         System.out.println("Client " + owner + " called intentionToSell");
 
         try {
-            if (RSAKeyGenerator.verifySign(owner, secret)) {
+            String[] msg = new String[]{owner, goodId};
+            if (RSAKeyGenerator.verifySign(owner, secret, msg)) {
                 for (Good good : _userGoods) {
                     if (good.getOwner().equals(owner) && good.getId().equals(goodId)) {
                         good.setStatus(true);
@@ -126,7 +127,9 @@ public class Notary {
 
     public boolean transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2) {
         System.out.println("Client " + sellerId + " called transferGood");
-        if ((RSAKeyGenerator.verifySign(sellerId, secret)) && (RSAKeyGenerator.verifySign(buyerId, secret2))) {
+        String[] msg = new String[]{sellerId, buyerId, goodId};
+        String[] msg2 = new String[]{buyerId, goodId};
+        if ((RSAKeyGenerator.verifySign(sellerId, secret, msg)) && (RSAKeyGenerator.verifySign(buyerId, secret2, msg2))) {
             for (Good good : _userGoods) {
                 if (good.getId().equals(goodId)) {
                     if (good.getStatus() && good.getOwner().equals(sellerId)) {

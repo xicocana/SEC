@@ -35,10 +35,12 @@ public class Client{
     }
 
     public Boolean buyGood(String sellerId, String buyerId, String goodId, String secret) {
-        if (RSAKeyGenerator.verifySign(buyerId, secret)) {
+        String[] msg = new String[]{buyerId, goodId};
+        if (RSAKeyGenerator.verifySign(buyerId, secret, msg)) {
             NotaryWebServiceImplService client = new NotaryWebServiceImplService();
             NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
-            return notaryWebservice.transferGood(sellerId, buyerId, goodId, RSAKeyGenerator.writeSign(sellerId, sellerId+sellerId), secret);
+            String[] args = new String[]{sellerId, buyerId, goodId};
+            return notaryWebservice.transferGood(sellerId, buyerId, goodId, RSAKeyGenerator.writeSign(sellerId, sellerId+sellerId, args), secret);
         }
         else{
             System.out.println("Error: Message Tampered");

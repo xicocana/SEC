@@ -9,9 +9,6 @@ import static javax.xml.bind.DatatypeConverter.printHexBinary;
 
 public class RSAKeyGenerator {
 
-    private static final String SYGN_KEY_WORD = "SYGN_KEY_WORD";
-
-
     public static void main(String[] args) throws Exception {
 
         // check args
@@ -112,11 +109,15 @@ public class RSAKeyGenerator {
     }
 
 
-    public static boolean verifySign(String owner, String secret) {
+    public static boolean verifySign(String owner, String secret, String ...args) {
         Signature sig;
 
         try {
-            byte[] messageBytes = SYGN_KEY_WORD.getBytes("UTF8");
+            String msg = null;
+            for (String s : args) {
+                msg = msg + s;
+            }
+            byte[] messageBytes = msg.getBytes("UTF8");
             byte[] data = Base64.getDecoder().decode(secret);
             sig = Signature.getInstance("SHA1WithRSA");
             sig.initVerify(RSAKeyGenerator.getPublicKeyFromKeyStore(owner));
@@ -129,11 +130,15 @@ public class RSAKeyGenerator {
         return false;
     }
 
-    public static String writeSign(String alias, String pass) {
+    public static String writeSign(String alias, String pass, String ...args) {
 
         try {
             Signature sig;
-            byte[] messageBytes = SYGN_KEY_WORD.getBytes("UTF8");
+            String msg = null;
+            for (String s : args) {
+                msg = msg + s;
+            }
+            byte[] messageBytes = msg.getBytes("UTF8");
             sig = Signature.getInstance("SHA1WithRSA");
             sig.initSign(RSAKeyGenerator.getPrivateKeyFromKeyStore(alias, pass));
             sig.update(messageBytes);
