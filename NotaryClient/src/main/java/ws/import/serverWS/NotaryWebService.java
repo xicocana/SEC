@@ -2,10 +2,7 @@
 package serverWS;
 
 import java.util.List;
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
-import javax.jws.WebService;
+import javax.jws.*;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.Action;
 import javax.xml.ws.RequestWrapper;
@@ -42,6 +39,27 @@ public interface NotaryWebService {
 
     /**
      * 
+     * @param arg2
+     * @param arg1
+     * @param arg0
+     * @return
+     *     returns java.util.List<java.lang.String>
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "intentionToSell", targetNamespace = "http://Interfaces.ws/", className = "serverWS.IntentionToSell")
+    @ResponseWrapper(localName = "intentionToSellResponse", targetNamespace = "http://Interfaces.ws/", className = "serverWS.IntentionToSellResponse")
+    @Action(input = "http://Interfaces.ws/NotaryWebService/intentionToSellRequest", output = "http://Interfaces.ws/NotaryWebService/intentionToSellResponse")
+    public List<String> intentionToSell(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0,
+        @WebParam(name = "arg1", targetNamespace = "")
+        String arg1,
+        @WebParam(name = "arg2", targetNamespace = "")
+        String arg2);
+
+    /**
+     * 
      * @param arg3
      * @param arg2
      * @param arg4
@@ -66,27 +84,6 @@ public interface NotaryWebService {
         String arg3,
         @WebParam(name = "arg4", targetNamespace = "")
         String arg4);
-
-    /**
-     * 
-     * @param arg2
-     * @param arg1
-     * @param arg0
-     * @return
-     *     returns java.util.List<java.lang.String>
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "intentionToSell", targetNamespace = "http://Interfaces.ws/", className = "serverWS.IntentionToSell")
-    @ResponseWrapper(localName = "intentionToSellResponse", targetNamespace = "http://Interfaces.ws/", className = "serverWS.IntentionToSellResponse")
-    @Action(input = "http://Interfaces.ws/NotaryWebService/intentionToSellRequest", output = "http://Interfaces.ws/NotaryWebService/intentionToSellResponse")
-    public List<String> intentionToSell(
-        @WebParam(name = "arg0", targetNamespace = "")
-        String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        String arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        String arg2);
 
     /**
      * 

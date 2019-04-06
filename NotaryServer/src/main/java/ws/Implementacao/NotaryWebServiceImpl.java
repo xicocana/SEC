@@ -11,6 +11,7 @@ import java.util.List;
 
 
 @WebService(endpointInterface = "ws.Interfaces.NotaryWebService")
+@HandlerChain(file = "/ServerChain.xml")
 public class NotaryWebServiceImpl implements NotaryWebService {
     @WebMethod
     public String test(String input) {

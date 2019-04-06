@@ -15,7 +15,7 @@
     <handler-chain>
 
         <handler>
-            <handler-class>Handlers.ServerSoapHandler</handler-class>
+            <handler-class>Handlers.SoapHandler</handler-class>
         </handler>
 
 
