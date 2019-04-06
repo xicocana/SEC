@@ -27,37 +27,16 @@ public interface NotaryWebService {
 
     /**
      * 
-     * @param arg2
-     * @param arg1
      * @param arg0
      * @return
-     *     returns boolean
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "intentionToSell", targetNamespace = "http://Interfaces.ws/", className = "serverWS.IntentionToSell")
-    @ResponseWrapper(localName = "intentionToSellResponse", targetNamespace = "http://Interfaces.ws/", className = "serverWS.IntentionToSellResponse")
-    @Action(input = "http://Interfaces.ws/NotaryWebService/intentionToSellRequest", output = "http://Interfaces.ws/NotaryWebService/intentionToSellResponse")
-    public boolean intentionToSell(
-        @WebParam(name = "arg0", targetNamespace = "")
-        String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        String arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        String arg2);
-
-    /**
-     * 
-     * @param arg0
-     * @return
-     *     returns java.lang.String
+     *     returns java.util.List<java.lang.String>
      */
     @WebMethod
     @WebResult(targetNamespace = "")
     @RequestWrapper(localName = "getStateOfGood", targetNamespace = "http://Interfaces.ws/", className = "serverWS.GetStateOfGood")
     @ResponseWrapper(localName = "getStateOfGoodResponse", targetNamespace = "http://Interfaces.ws/", className = "serverWS.GetStateOfGoodResponse")
     @Action(input = "http://Interfaces.ws/NotaryWebService/getStateOfGoodRequest", output = "http://Interfaces.ws/NotaryWebService/getStateOfGoodResponse")
-    public String getStateOfGood(
+    public List<String> getStateOfGood(
         @WebParam(name = "arg0", targetNamespace = "")
         String arg0);
 
@@ -69,14 +48,14 @@ public interface NotaryWebService {
      * @param arg1
      * @param arg0
      * @return
-     *     returns boolean
+     *     returns java.util.List<java.lang.String>
      */
     @WebMethod
     @WebResult(targetNamespace = "")
     @RequestWrapper(localName = "transferGood", targetNamespace = "http://Interfaces.ws/", className = "serverWS.TransferGood")
     @ResponseWrapper(localName = "transferGoodResponse", targetNamespace = "http://Interfaces.ws/", className = "serverWS.TransferGoodResponse")
     @Action(input = "http://Interfaces.ws/NotaryWebService/transferGoodRequest", output = "http://Interfaces.ws/NotaryWebService/transferGoodResponse")
-    public boolean transferGood(
+    public List<String> transferGood(
         @WebParam(name = "arg0", targetNamespace = "")
         String arg0,
         @WebParam(name = "arg1", targetNamespace = "")
@@ -87,6 +66,27 @@ public interface NotaryWebService {
         String arg3,
         @WebParam(name = "arg4", targetNamespace = "")
         String arg4);
+
+    /**
+     * 
+     * @param arg2
+     * @param arg1
+     * @param arg0
+     * @return
+     *     returns java.util.List<java.lang.String>
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "intentionToSell", targetNamespace = "http://Interfaces.ws/", className = "serverWS.IntentionToSell")
+    @ResponseWrapper(localName = "intentionToSellResponse", targetNamespace = "http://Interfaces.ws/", className = "serverWS.IntentionToSellResponse")
+    @Action(input = "http://Interfaces.ws/NotaryWebService/intentionToSellRequest", output = "http://Interfaces.ws/NotaryWebService/intentionToSellResponse")
+    public List<String> intentionToSell(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0,
+        @WebParam(name = "arg1", targetNamespace = "")
+        String arg1,
+        @WebParam(name = "arg2", targetNamespace = "")
+        String arg2);
 
     /**
      * 

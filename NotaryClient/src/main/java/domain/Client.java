@@ -5,6 +5,8 @@ import serverWS.NotaryWebService;
 import serverWS.NotaryWebServiceImplService;
 import utils.RSAKeyGenerator;
 
+import java.util.List;
+
 public class Client{
 
     private String _id;
@@ -40,10 +42,18 @@ public class Client{
             NotaryWebServiceImplService client = new NotaryWebServiceImplService();
             NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
             String[] args = new String[]{sellerId, buyerId, goodId};
-            return notaryWebservice.transferGood(sellerId, buyerId, goodId, RSAKeyGenerator.writeSign(sellerId, sellerId+sellerId, args), secret);
+
+            List<String> result = notaryWebservice.transferGood(sellerId, buyerId, goodId, RSAKeyGenerator.writeSign(sellerId, sellerId+sellerId, args), secret);
+            if (result.get(0).equals("SIGN")){
+                return Boolean.valueOf(result.get(1));
+            }else{
+                System.out.println("Error: NotaryServer Message Tampered");
+                return false;
+            }
+
         }
         else{
-            System.out.println("Error: Message Tampered");
+            System.out.println("Error: Buyer Message Tampered ");
             return false;
         }
     }

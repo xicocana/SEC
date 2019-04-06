@@ -4,18 +4,25 @@ package ws.Interfaces;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import java.util.ArrayList;
+import java.util.List;
 
 @WebService
 public interface NotaryWebService {
-    @WebMethod public String test(String input);
+    @WebMethod
+    String test(String input);
 
-    @WebMethod public boolean intentionToSell(String owner, String goodId,String secret);
+    @WebMethod
+    List<String> intentionToSell(String owner, String goodId, String secret);
 
-    @WebMethod public String getStateOfGood(String goodId) ;
+    @WebMethod
+    List<String> getStateOfGood(String goodId) ;
 
-    @WebMethod  public boolean transferGood(String sellerId, String buyerId, String goodId,String secret, String secret2);
+    @WebMethod
+    List<String> transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2);
 
-    @WebMethod public int getNotaryId();
+    @WebMethod
+    int getNotaryId();
 
-    @WebMethod public ArrayList<String> getUsers();
+    @WebMethod
+    ArrayList<String> getUsers();
 }

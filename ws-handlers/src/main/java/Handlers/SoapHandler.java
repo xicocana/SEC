@@ -72,79 +72,12 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
         if (isRequest) {
             try {
 
-                //System.out.println("Entrou no Client SIDE");
 
-                SOAPMessage soapMessage = smc.getMessage();
-                SOAPPart soapPart = soapMessage.getSOAPPart();
-                SOAPEnvelope soapEnvelope = soapPart.getEnvelope();
-
-                SOAPHeader soapHeader = soapEnvelope.getHeader();
-                SOAPHeaderElement headerElement = soapHeader.addHeaderElement(soapEnvelope.createName(
-                        "Signature", "SOAP-SEC", "http://schemas.xmlsoap.org/soap/security/2000-12"));
-
-                SOAPBody soapBody = soapEnvelope.getBody();
-                soapBody.addAttribute(soapEnvelope.createName("id", "SOAP-SEC",
-                        "http://schemas.xmlsoap.org/soap/security/2000-12"), "Body");
-                Name bodyName = soapEnvelope.createName("FooBar", "z", "http://example.com");
-                SOAPBodyElement gltp = soapBody.addBodyElement(bodyName);
-
-                Source source = soapPart.getContent();
-                Node root = null;
-                if (source instanceof DOMSource) {
-                    root = ((DOMSource) source).getNode();
-                } else if (source instanceof SAXSource) {
-                    InputSource inSource = ((SAXSource) source).getInputSource();
-                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                    dbf.setNamespaceAware(true);
-                    DocumentBuilder db = null;
-
-                    db = dbf.newDocumentBuilder();
-
-                    Document doc = db.parse(inSource);
-                    root = (Node) doc.getDocumentElement();
-                }
-
-                //dumpDocument(root);
-
-                
-
-                XMLSignatureFactory sigFactory = XMLSignatureFactory.getInstance();
-                Reference ref = sigFactory.newReference("#Body", sigFactory.newDigestMethod(DigestMethod.SHA1,
-                        null));
-                SignedInfo signedInfo = sigFactory.newSignedInfo(sigFactory.newCanonicalizationMethod(
-                        CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS, (C14NMethodParameterSpec) null), sigFactory
-                        .newSignatureMethod(SignatureMethod.RSA_SHA1, null), Collections.singletonList(ref));
-                KeyInfoFactory kif = sigFactory.getKeyInfoFactory();
-                KeyValue kv = kif.newKeyValue(RSAKeyGenerator.getPublicKeyFromKeyStore("user0"));
-                KeyInfo keyInfo = kif.newKeyInfo(Collections.singletonList(kv));
-
-                XMLSignature sig = sigFactory.newXMLSignature(signedInfo, keyInfo);
-
-                System.out.println("Signing the message...");
-                PrivateKey privateKey = RSAKeyGenerator.getPrivateKeyFromKeyStore("user0", "user0user0");
-                Element envelope = getFirstChildElement(root);
-                Element header = getFirstChildElement(envelope);
-                DOMSignContext sigContext = new DOMSignContext(privateKey, header);
-                sigContext.putNamespacePrefix(XMLSignature.XMLNS, "ds");
-                sigContext.setIdAttributeNS(getNextSiblingElement(header),
-                        "http://schemas.xmlsoap.org/soap/security/2000-12", "id");
-                sig.sign(sigContext);
-
-                //dumpDocument(root);
-
-                System.out.println("Validate the signature...");
-                Element sigElement = getFirstChildElement(header);
-                DOMValidateContext valContext = new DOMValidateContext(RSAKeyGenerator.getPublicKeyFromKeyStore("user0"), sigElement);
-                valContext.setIdAttributeNS(getNextSiblingElement(header),
-                        "http://schemas.xmlsoap.org/soap/security/2000-12", "id");
-                boolean valid = sig.validate(valContext);
-
-                System.out.println("Signature valid? " + valid);
 
 
             } catch (Exception e) {
                 System.err.println("Caught exception on SOAPHandler OUTBOUND : " + e);
-                e.printStackTrace();
+                e.printStackmvn Trace();
             }
 
             return true;
