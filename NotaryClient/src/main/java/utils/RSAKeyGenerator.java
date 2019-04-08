@@ -3,6 +3,9 @@ package utils;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.security.*;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.util.Base64;
 
 import static javax.xml.bind.DatatypeConverter.printHexBinary;
@@ -149,5 +152,34 @@ public class RSAKeyGenerator {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static boolean verifySignWithCert( String secret ,String ...args) throws CertificateException, FileNotFoundException {
+        String currentDir = System.getProperty("user.dir");
+        File initialFile = new File(currentDir + "/../src/main/resources/keys/cert.cer");
+        InputStream ins = new FileInputStream(initialFile);
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        Certificate cer = cf.generateCertificate(ins);
+
+        Signature sig;
+
+        try {
+            StringBuilder sb = new StringBuilder();
+            for (String s : args) {
+                sb.append(s);
+            }
+            byte[] messageBytes = sb.toString().getBytes("UTF8");
+            byte[] data = Base64.getDecoder().decode(secret);
+
+            sig = Signature.getInstance("SHA1WithRSA");
+            sig.initVerify(cer);
+            sig.update(messageBytes);
+            return sig.verify(data);
+        } catch (Exception e) {
+            System.out.println("Caught exception while verifying message signature:");
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

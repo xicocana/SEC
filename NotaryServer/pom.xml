@@ -56,28 +56,6 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>2.5</version>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <groupId>com.roufid.tutorials</groupId>
-                            <artifactId>example-app</artifactId>
-                            <version>1.0</version>
-                            <packaging>jar</packaging>
-                            <file>${basedir}/lib/pteidlibj.jar</file>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
@@ -101,26 +79,23 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
                 <executions>
                     <execution>
-                        <id>hack-binary</id>
-                        <phase>validate</phase>
-                        <configuration>
-                            <file>${basedir}/lib/pteidlibj.jar</file>
-                            <repositoryLayout>default</repositoryLayout>
-                            <groupId>pt.sec.sec</groupId>
-                            <artifactId>pteidlibj</artifactId>
-                            <version>0.1</version>
-                            <packaging>jar</packaging>
-                            <generatePom>true</generatePom>
-                        </configuration>
                         <goals>
-                            <goal>install-file</goal>
+                            <goal>java</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <mainClass>server.NotaryServer</mainClass>
+                    <arguments>
+                        <argument>-Djava.library.path=/usr/local/lib/</argument>
+                    </arguments>
+
+                </configuration>
             </plugin>
 
         </plugins>

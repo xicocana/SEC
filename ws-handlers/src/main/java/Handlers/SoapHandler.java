@@ -11,6 +11,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -29,7 +30,7 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
      */
     public boolean handleMessage(SOAPMessageContext smc) {
 
-            return SOAPProcessing(smc, System.out);
+        return SOAPProcessing(smc, System.out);
 
     }
 
@@ -46,19 +47,18 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
         // nothing to clean up
     }
 
-    static int i  = 0;
+    static int i = 0;
 
-    private boolean SOAPProcessing(SOAPMessageContext smc, PrintStream out){
+    private boolean SOAPProcessing(SOAPMessageContext smc, PrintStream out) {
 
-        System.out.println("AQUIIIII");
         Boolean isRequest = (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
 
 
         if (isRequest) {
             try {
-
-                System.out.println("Entrou no Client SIDE" + new Date().getTime());
-
+                System.out.println();
+                System.out.println("Entrou no Client SIDE : " + new Date().getTime());
+                System.out.println();
 
                 SOAPMessage soapMessage;
                 soapMessage = smc.getMessage();
@@ -76,9 +76,6 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
                 SOAPBodyElement gltp = soapBody.addBodyElement(bodyName);
 
 
-
-
-
             } catch (Exception e) {
                 System.err.println("Caught exception on SOAPHandler OUTBOUND : " + e);
                 e.printStackTrace();
@@ -89,10 +86,10 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
         } else {
 
             try {
-                System.out.println("Entrou no Server SIDE"  + new Date().getTime());
+                System.out.println();
+                System.out.println("Entrou no Server SIDE : " + new Date().getTime());
+                System.out.println();
 
-                String currentDir = System.getProperty("user.dir");
-                System.out.println(currentDir);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -11,25 +11,29 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 public class Notary {
 
     private int _id;
 
-    private ArrayList<String> _users = new ArrayList<String>();
-    private ArrayList<Good> _userGoods = new ArrayList<Good>();
+    private ArrayList<String> _users = new ArrayList<>();
+    private ArrayList<Good> _userGoods = new ArrayList<>();
 
     private String currentDir = System.getProperty("user.dir");
     private String pathToUsers = currentDir + "/../src/main/resources/notary-folder/users.txt";
     private String pathToGoods = currentDir + "/../src/main/resources/notary-folder/user_goods.txt";
-    private int transaction_counter = new File(currentDir + "/../src/main/resources/notary-folder/").list().length - 1;
+    private int transaction_counter;
 
     private PKCS11 pkcs11;
     private long p11_session;
+    long signatureKey;
 
     public Notary() {
         BufferedReader reader;
+        transaction_counter = new File(currentDir + "/../src/main/resources/notary-folder/").list().length - 1;
+
         String newpath = pathToGoods.substring(0, pathToGoods.length() - 4) + transaction_counter + ".txt";
         try {
             reader = new BufferedReader(new FileReader(pathToUsers));
@@ -92,22 +96,26 @@ public class Notary {
     public List<String> intentionToSell(String owner, String goodId, String secret) {
         System.out.println("Client " + owner + " called intentionToSell");
         List<String> result = new ArrayList<>();
-        result.add("SIGN");
+        List<String> resultError;
+
         try {
+
             String[] msg = new String[]{owner, goodId};
             if (RSAKeyGenerator.verifySign(owner, secret, msg)) {
                 for (Good good : _userGoods) {
                     if (good.getOwner().equals(owner) && good.getId().equals(goodId)) {
                         good.setStatus(true);
-                        try {
-                            this.WriteNewFile();
-                        } catch (Exception e) {
-                            System.out.println("Caught exception while writing new transfers file :");
-                            e.printStackTrace();
-                            result.add("false");
-                            return result;
-                        }
+                        this.WriteNewFile();
+
+                        //CREATE SIGN
+                        String signedMessage = true + good.getOwner() + good.getId();
+                        byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
+                        result.add(Base64.getEncoder().encodeToString(signatureBytes));
+                        //
                         result.add("true");
+                        result.add(good.getOwner());
+                        result.add(good.getId());
+
                         return result;
                     }
                 }
@@ -119,22 +127,58 @@ public class Notary {
             System.out.println("Caught exception on intentToSell:");
             e.printStackTrace();
         }
-        result.add("false");
-        return result;
+
+        resultError = initializeErrorList();
+
+        return resultError;
+    }
+
+    private List<String> initializeErrorList()  {
+        //CREATE Error SIGN
+        List<String> resultError = new ArrayList<>();
+        String signedMessage = "false";
+        byte[] signatureBytes = new byte[0];
+        try {
+            signatureBytes = signWithCC(signatureKey, signedMessage);
+        } catch (PKCS11Exception e) {
+            e.printStackTrace();
+        }
+        resultError.add(Base64.getEncoder().encodeToString(signatureBytes));
+        resultError.add("false");
+        //
+
+        return resultError;
     }
 
     public List<String> getStateOfGood(String goodId) {
         System.out.println("Recieved request on " + goodId + " status");
         List<String> result = new ArrayList<>();
-        result.add("SIGN");
+        List<String> resultError;
 
-        for (Good good : _userGoods) {
-            if (good.getId().equals(goodId)) {
-                result.add(Boolean.toString(good.getStatus()));
-                result.add(good.getOwner());
+        try {
+
+            for (Good good : _userGoods) {
+                if (good.getId().equals(goodId)) {
+
+                    //CREATE SIGN
+                    String signedMessage = good.getStatus() + good.getOwner();
+                    byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
+                    result.add(Base64.getEncoder().encodeToString(signatureBytes));
+                    //
+                    result.add(Boolean.toString(good.getStatus()));
+                    result.add(good.getOwner());
+
+                    return result;
+                }
             }
+        } catch (PKCS11Exception e) {
+            e.printStackTrace();
+            System.out.println("Error Signing the message");
         }
-        return result;
+
+        resultError = initializeErrorList();
+
+        return resultError;
     }
 
     public List<String> transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2) {
@@ -199,12 +243,11 @@ public class Notary {
 
             java.util.Base64.Encoder encoder = java.util.Base64.getEncoder();
 
-            String libName = "libbeidpkcs11.so";
+            String libName = "libpteidpkcs11.so";
 
             // access the ID and Address data via the pteidlib
             System.out.println("            -- accessing the ID  data via the pteidlib interface");
 
-            showInfo();
 
             X509Certificate cert = getCertFromByteArray(getCertificateInBytes(0));
             System.out.println("Citized Authentication Certificate " + cert);
@@ -219,10 +262,10 @@ public class Notary {
                 libName = "pteidpkcs11.dylib";
             Class pkcs11Class = Class.forName("sun.security.pkcs11.wrapper.PKCS11");
             if (javaVersion.startsWith("1.5.")) {
-                Method getInstanceMethode = pkcs11Class.getDeclaredMethod("getInstance", new Class[]{String.class, CK_C_INITIALIZE_ARGS.class, boolean.class});
+                Method getInstanceMethode = pkcs11Class.getDeclaredMethod("getInstance", String.class, CK_C_INITIALIZE_ARGS.class, boolean.class);
                 pkcs11 = (PKCS11) getInstanceMethode.invoke(null, new Object[]{libName, null, false});
             } else {
-                Method getInstanceMethode = pkcs11Class.getDeclaredMethod("getInstance", new Class[]{String.class, String.class, CK_C_INITIALIZE_ARGS.class, boolean.class});
+                Method getInstanceMethode = pkcs11Class.getDeclaredMethod("getInstance", String.class, String.class, CK_C_INITIALIZE_ARGS.class, boolean.class);
                 pkcs11 = (PKCS11) getInstanceMethode.invoke(null, new Object[]{libName, "C_GetFunctionList", null, false});
             }
 
@@ -233,7 +276,6 @@ public class Notary {
             // Token login
             System.out.println("            //Token login");
             pkcs11.C_Login(p11_session, 1, null);
-            CK_SESSION_INFO info = pkcs11.C_GetSessionInfo(p11_session);
 
             // Get available keys
             System.out.println("            //Get available keys");
@@ -248,95 +290,31 @@ public class Notary {
             // points to auth_key
             System.out.println("            //points to auth_key. No. of keys:" + keyHandles.length);
 
-            long signatureKey = keyHandles[0];        //test with other keys to see what you get
+            signatureKey = keyHandles[0];        //test with other keys to see what you get
+
             pkcs11.C_FindObjectsFinal(p11_session);
 
-            // initialize the signature method
-            System.out.println("            //initialize the signature method");
-            CK_MECHANISM mechanism = new CK_MECHANISM();
-            mechanism.mechanism = PKCS11Constants.CKM_SHA1_RSA_PKCS;
-            mechanism.pParameter = null;
-            pkcs11.C_SignInit(p11_session, mechanism, signatureKey);
-
-
-            //...
-
-            // sign
-            System.out.println("            //sign");
-            byte[] signature = pkcs11.C_Sign(p11_session, "data".getBytes(Charset.forName("UTF-8")));
-            System.out.println("            //signature:" + encoder.encode(signature));
-
-            //...
-
-            pteid.Exit(pteid.PTEID_EXIT_LEAVE_CARD); //OBRIGATORIO Termina a eID Lib
+            //signWithCC(signatureKey);
+            //getCitizenAuthCertInBytes();
+            // pteid.Exit(pteid.PTEID_EXIT_LEAVE_CARD); //OBRIGATORIO Termina a eID Lib
 
         } catch (Exception e) {
             //TODO - Só para testar
+            e.printStackTrace();
             System.out.println("Server will continue whitout Portuguese Citizen Card Support");
         }
     }
 
-    public static void showInfo() {
-        try {
-
-            int cardtype = pteid.GetCardType();
-            switch (cardtype) {
-                case pteid.CARD_TYPE_IAS07:
-                    System.out.println("IAS 0.7 card\n");
-                    break;
-                case pteid.CARD_TYPE_IAS101:
-                    System.out.println("IAS 1.0.1 card\n");
-                    break;
-                case pteid.CARD_TYPE_ERR:
-                    System.out.println("Unable to get the card type\n");
-                    break;
-                default:
-                    System.out.println("Unknown card type\n");
-            }
-
-            // Read ID Data
-            PTEID_ID idData = pteid.GetID();
-            if (null != idData)
-                PrintIDData(idData);
-
-
-            // Read Picture Data
-            PTEID_PIC picData = pteid.GetPic();
-            if (null != picData) {
-                String photo = "photo.jp2";
-                FileOutputStream oFile = new FileOutputStream(photo);
-                oFile.write(picData.picture);
-                oFile.close();
-                System.out.println("Created " + photo);
-            }
-
-            // Read Pins
-            PTEID_Pin[] pins = pteid.GetPINs();
-
-            // Read TokenInfo
-            PTEID_TokenInfo token = pteid.GetTokenInfo();
-
-            // Read personal Data
-            byte[] filein = {0x3F, 0x00, 0x5F, 0x00, (byte) 0xEF, 0x07};
-            byte[] file = pteid.ReadFile(filein, (byte) 0x81);
-
-        } catch (PteidException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void PrintIDData(PTEID_ID idData) {
-        System.out.println("DeliveryEntity : " + idData.deliveryEntity);
-        System.out.println("PAN : " + idData.cardNumberPAN);
-        System.out.println("...");
-    }
-
-
-    //Returns the CITIZEN AUTHENTICATION CERTIFICATE
-    public static byte[] getCitizenAuthCertInBytes() {
-        return getCertificateInBytes(0); //certificado 0 no Cartao do Cidadao eh o de autenticacao
+    private byte[] signWithCC(long signatureKey, String signedMessage) throws PKCS11Exception {
+        // initialize the signature method
+        System.out.println("//initialize the signature method");
+        CK_MECHANISM mechanism = new CK_MECHANISM();
+        mechanism.mechanism = PKCS11Constants.CKM_SHA1_RSA_PKCS;
+        mechanism.pParameter = null;
+        pkcs11.C_SignInit(p11_session, mechanism, signatureKey);
+        // sign
+        System.out.println("//Sign ");
+        return pkcs11.C_Sign(p11_session, signedMessage.getBytes(Charset.forName("UTF-8")));
     }
 
     // Returns the n-th certificate, starting from 0
@@ -357,6 +335,20 @@ public class Notary {
         } catch (PteidException e) {
             e.printStackTrace();
         }
+
+        //TODO - WRITE TO FILE
+        final FileOutputStream os;
+        try {
+            os = new FileOutputStream("cert.cer");
+            os.write(certificate_bytes);
+            os.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         return certificate_bytes;
     }
 

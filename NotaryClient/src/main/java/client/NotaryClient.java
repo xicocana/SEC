@@ -6,8 +6,16 @@ import serverWS.NotaryWebServiceImplService;
 import utils.RSAKeyGenerator;
 import ws.impl.ClientWebServiceImpl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.KeyStore;
+import java.security.Signature;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Scanner;
 
@@ -63,19 +71,21 @@ public class NotaryClient {
                     String[] args2 = new String[]{input, goodId};
 
                     List<String> result = notaryWebservice.intentionToSell(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args2));
-
-                    if (result.get(0).equals("SIGN")) {
-                        if (Boolean.valueOf(result.get(1))) {
-                            System.out.println("-> " + goodId + " is now for sale");
-                            System.out.println(" ");
+                    if (result.size() == 4) {
+                        if (RSAKeyGenerator.verifySignWithCert(result.get(0), new String[]{result.get(1), result.get(2),result.get(3)})) {
+                            if (Boolean.valueOf(result.get(1))) {
+                                System.out.println("-> " + goodId + " is now for sale");
+                                System.out.println(" ");
+                            } else {
+                                System.out.println("-> Something went wrong :( please try again later");
+                                System.out.println(" ");
+                            }
                         } else {
-                            System.out.println("-> Something went wrong :( please try again later");
-                            System.out.println(" ");
+                            System.out.println("Error: NotaryServer Message Tampered");
                         }
                     } else {
-                        System.out.println("Error: NotaryServer Message Tampered");
+                        System.out.println("Error: Something REALLY Wrong with NotaryServer");
                     }
-
 
                     break;
                 case 2:
@@ -83,14 +93,28 @@ public class NotaryClient {
                     goodId = scanner.next();
 
                     result = notaryWebservice.getStateOfGood(goodId);
-                    if (result.get(0).equals("SIGN")) {
-                        System.out.println("-> " + goodId + " owner  : " + result.get(2));
+                    try {
+                        if (result.size() == 3) {
+                            if (RSAKeyGenerator.verifySignWithCert(result.get(0), new String[]{result.get(1), result.get(2)})) {
+                                System.out.println("-> " + goodId + " owner  : " + result.get(2));
 
-                        String onSale = Boolean.valueOf(result.get(1)) ? "on-sale" : "not-on-sale";
-                        System.out.println("-> " + goodId + " status : " + onSale);
-                        System.out.println(" ");
-                    } else {
-                        System.out.println("Error: NotaryServer Message Tampered");
+                                String onSale = Boolean.valueOf(result.get(1)) ? "on-sale" : "not-on-sale";
+                                System.out.println("-> " + goodId + " status : " + onSale);
+                                System.out.println(" ");
+                            } else {
+                                System.out.println("Error: NotaryServer Message Tampered");
+                            }
+                        } else if (result.size() == 2) {
+                            if (RSAKeyGenerator.verifySignWithCert(result.get(0), new String[]{result.get(1)})) {
+                                System.out.println("Error: Something Wrong with NotaryServer");
+                            } else {
+                                System.out.println("Error: NotaryServer Message Tampered");
+                            }
+                        } else {
+                            System.out.println("Error: Something REALLY Wrong with NotaryServer");
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                     }
                     break;
                 case 3:
@@ -133,5 +157,27 @@ public class NotaryClient {
             }
 
         } while (flag);
+    }
+
+
+    private static Certificate getTrustedSigner(Certificate cert, KeyStore ks)
+            throws Exception {
+        if (ks.getCertificateAlias(cert) != null) {
+            return cert;
+        }
+        for (Enumeration<String> aliases = ks.aliases();
+             aliases.hasMoreElements(); ) {
+            String name = aliases.nextElement();
+            Certificate trustedCert = ks.getCertificate(name);
+            if (trustedCert != null) {
+                try {
+                    cert.verify(trustedCert.getPublicKey());
+                    return trustedCert;
+                } catch (Exception e) {
+                    // Not verified, skip to the next one
+                }
+            }
+        }
+        return null;
     }
 }
