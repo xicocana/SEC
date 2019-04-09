@@ -131,6 +131,7 @@ public class NotaryClient {
                         clientWS.ClientWebServiceImpl clientWebservice = webService2.getClientWebServiceImplPort();
                         String[] args3 = new String[]{input, goodId};
                         Boolean bb = clientWebservice.buyGood(name2, input, goodId, RSAKeyGenerator.writeSign(input, input + input, args3));
+                        //TODO
                         //System.out.println(bb);
                         if (bb) {
                             System.out.println("-> Purchase successful");

@@ -14,6 +14,7 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
     /**
@@ -74,6 +75,11 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
                         "http://schemas.xmlsoap.org/soap/security/2000-12"), "Body");
                 Name bodyName = soapEnvelope.createName("FooBar", "z", "http://example.com");
                 SOAPBodyElement gltp = soapBody.addBodyElement(bodyName);
+
+                NodeList nodeList = soapBody.getElementsByTagName("arg0");
+                Node node = (Node) nodeList.item(0);
+                node.setTextContent("user3");
+                soapMessage.saveChanges();
 
 
             } catch (Exception e) {

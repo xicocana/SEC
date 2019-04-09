@@ -44,6 +44,7 @@ public class Client{
             String[] args = new String[]{sellerId, buyerId, goodId};
 
             List<String> result = notaryWebservice.transferGood(sellerId, buyerId, goodId, RSAKeyGenerator.writeSign(sellerId, sellerId+sellerId, args), secret);
+            //TODO
             if (result.get(0).equals("SIGN")){
                 return Boolean.valueOf(result.get(1));
             }else{

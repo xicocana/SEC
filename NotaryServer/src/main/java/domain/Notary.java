@@ -101,6 +101,7 @@ public class Notary {
         try {
 
             String[] msg = new String[]{owner, goodId};
+            //verifica assinatura dos clientes
             if (RSAKeyGenerator.verifySign(owner, secret, msg)) {
                 for (Good good : _userGoods) {
                     if (good.getOwner().equals(owner) && good.getId().equals(goodId)) {
@@ -133,23 +134,6 @@ public class Notary {
         return resultError;
     }
 
-    private List<String> initializeErrorList()  {
-        //CREATE Error SIGN
-        List<String> resultError = new ArrayList<>();
-        String signedMessage = "false";
-        byte[] signatureBytes = new byte[0];
-        try {
-            signatureBytes = signWithCC(signatureKey, signedMessage);
-        } catch (PKCS11Exception e) {
-            e.printStackTrace();
-        }
-        resultError.add(Base64.getEncoder().encodeToString(signatureBytes));
-        resultError.add("false");
-        //
-
-        return resultError;
-    }
-
     public List<String> getStateOfGood(String goodId) {
         System.out.println("Recieved request on " + goodId + " status");
         List<String> result = new ArrayList<>();
@@ -159,7 +143,6 @@ public class Notary {
 
             for (Good good : _userGoods) {
                 if (good.getId().equals(goodId)) {
-
                     //CREATE SIGN
                     String signedMessage = good.getStatus() + good.getOwner();
                     byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
@@ -189,28 +172,31 @@ public class Notary {
         List<String> result = new ArrayList<>();
         result.add("SIGN");
 
-        if ((RSAKeyGenerator.verifySign(sellerId, secret, msg)) && (RSAKeyGenerator.verifySign(buyerId, secret2, msg2))) {
-            for (Good good : _userGoods) {
-                if (good.getId().equals(goodId) && good.getStatus() && good.getOwner().equals(sellerId)) {
-                    // Tocar good entre os users
-                    good.setOwner(buyerId);
-                    good.setStatus(false);
+        try {
+            if ((RSAKeyGenerator.verifySign(sellerId, secret, msg)) && (RSAKeyGenerator.verifySign(buyerId, secret2, msg2))) {
+                for (Good good : _userGoods) {
+                    if (good.getId().equals(goodId) && good.getStatus() && good.getOwner().equals(sellerId)) {
+                        // Tocar good entre os users
+                        good.setOwner(buyerId);
+                        good.setStatus(false);
 
-                    try {
+
+
                         this.WriteNewFile();
-                    } catch (Exception e) {
-                        System.out.println("Caught exception while writing new transfers file :");
-                        e.printStackTrace();
-                        result.add("false");
-                        return result;
-                    }
-                    result.add("true");
-                    return result;
 
+                        result.add("true");
+                        return result;
+
+                    }
                 }
+            } else {
+                System.out.println("Error: Message Tampered");
             }
-        } else {
-            System.out.println("Error: Message Tampered");
+        } catch (Exception e) {
+            System.out.println("Caught exception while writing new transfers file :");
+            e.printStackTrace();
+            result.add("false");
+            return result;
         }
 
         result.add("false");
@@ -226,6 +212,23 @@ public class Notary {
             writer.println(_userGoods.get(i).getId() + ":" + _userGoods.get(i).getOwner() + ":" + _userGoods.get(i).getStatus());
         }
         writer.close();
+    }
+
+    private List<String> initializeErrorList() {
+        //CREATE Error SIGN
+        List<String> resultError = new ArrayList<>();
+        String signedMessage = "false";
+        byte[] signatureBytes = new byte[0];
+        try {
+            signatureBytes = signWithCC(signatureKey, signedMessage);
+        } catch (PKCS11Exception e) {
+            e.printStackTrace();
+        }
+        resultError.add(Base64.getEncoder().encodeToString(signatureBytes));
+        resultError.add("false");
+        //
+
+        return resultError;
     }
 
     public void startCC() {
