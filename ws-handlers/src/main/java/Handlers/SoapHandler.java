@@ -1,20 +1,15 @@
 package Handlers;
 
 
-import java.io.PrintStream;
+import org.w3c.dom.NodeList;
+
+import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.Set;
 import javax.xml.soap.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
     /**
@@ -31,7 +26,7 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
      */
     public boolean handleMessage(SOAPMessageContext smc) {
 
-        return SOAPProcessing(smc, System.out);
+        return SOAPProcessing(smc);
 
     }
 
@@ -50,7 +45,7 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
 
     static int i = 0;
 
-    private boolean SOAPProcessing(SOAPMessageContext smc, PrintStream out) {
+    private boolean SOAPProcessing(SOAPMessageContext smc) {
 
         Boolean isRequest = (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
 
@@ -66,15 +61,8 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
                 SOAPPart soapPart = soapMessage.getSOAPPart();
                 SOAPEnvelope soapEnvelope = soapPart.getEnvelope();
 
-                SOAPHeader soapHeader = soapEnvelope.getHeader();
-                SOAPHeaderElement headerElement = soapHeader.addHeaderElement(soapEnvelope.createName(
-                        "Signature", "SOAP-SEC", "http://schemas.xmlsoap.org/soap/security/2000-12"));
 
                 SOAPBody soapBody = soapEnvelope.getBody();
-                soapBody.addAttribute(soapEnvelope.createName("id", "SOAP-SEC",
-                        "http://schemas.xmlsoap.org/soap/security/2000-12"), "Body");
-                Name bodyName = soapEnvelope.createName("FooBar", "z", "http://example.com");
-                SOAPBodyElement gltp = soapBody.addBodyElement(bodyName);
 
                 NodeList nodeList = soapBody.getElementsByTagName("arg0");
                 Node node = (Node) nodeList.item(0);
@@ -82,27 +70,15 @@ public class SoapHandler implements SOAPHandler<SOAPMessageContext> {
                 soapMessage.saveChanges();
 
 
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                soapMessage.writeTo(out);
+                System.out.println(new String(out.toByteArray()));
+
             } catch (Exception e) {
                 System.err.println("Caught exception on SOAPHandler OUTBOUND : " + e);
                 e.printStackTrace();
             }
-
-            return true;
-
-        } else {
-
-            try {
-                System.out.println();
-                System.out.println("Entrou no Server SIDE : " + new Date().getTime());
-                System.out.println();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
-            return true;
         }
-
+        return true;
     }
 }

@@ -83,6 +83,12 @@ public class NotaryClient {
                         } else {
                             System.out.println("Error: NotaryServer Message Tampered");
                         }
+                    } else if (result.size() == 2) {
+                        if (RSAKeyGenerator.verifySignWithCert(result.get(0), new String[]{result.get(1)})) {
+                            System.out.println("Error: Something Wrong with NotaryServer");
+                        } else {
+                            System.out.println("Error: NotaryServer Message Tampered");
+                        }
                     } else {
                         System.out.println("Error: Something REALLY Wrong with NotaryServer");
                     }

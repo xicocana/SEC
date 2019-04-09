@@ -168,9 +168,9 @@ public class Notary {
         System.out.println("Client " + sellerId + " called transferGood");
         String[] msg = new String[]{sellerId, buyerId, goodId};
         String[] msg2 = new String[]{buyerId, goodId};
+        List<String> resultError;
 
         List<String> result = new ArrayList<>();
-        result.add("SIGN");
 
         try {
             if ((RSAKeyGenerator.verifySign(sellerId, secret, msg)) && (RSAKeyGenerator.verifySign(buyerId, secret2, msg2))) {
@@ -179,10 +179,13 @@ public class Notary {
                         // Tocar good entre os users
                         good.setOwner(buyerId);
                         good.setStatus(false);
-
-
-
                         this.WriteNewFile();
+
+                        //CREATE SIGN
+                        String signedMessage = "true" ;
+                        byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
+                        result.add(Base64.getEncoder().encodeToString(signatureBytes));
+                        //
 
                         result.add("true");
                         return result;
@@ -195,12 +198,11 @@ public class Notary {
         } catch (Exception e) {
             System.out.println("Caught exception while writing new transfers file :");
             e.printStackTrace();
-            result.add("false");
-            return result;
         }
 
-        result.add("false");
-        return result;
+        resultError = initializeErrorList();
+
+        return resultError;
     }
 
     public void WriteNewFile() throws FileNotFoundException, UnsupportedEncodingException {
@@ -215,6 +217,7 @@ public class Notary {
     }
 
     private List<String> initializeErrorList() {
+        System.out.println("//Error - Sign");
         //CREATE Error SIGN
         List<String> resultError = new ArrayList<>();
         String signedMessage = "false";
