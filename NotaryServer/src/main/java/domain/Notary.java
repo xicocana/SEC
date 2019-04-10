@@ -7,12 +7,16 @@ import utils.RSAKeyGenerator;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Notary {
 
@@ -93,33 +97,40 @@ public class Notary {
         return SingletonHolder.INSTANCE;
     }
 
-    public List<String> intentionToSell(String owner, String goodId, String secret) {
+    public List<String> intentionToSell(String owner, String goodId, String secret, String message_id) {
         System.out.println("Client " + owner + " called intentionToSell");
         List<String> result = new ArrayList<>();
         List<String> resultError;
 
         try {
 
-            String[] msg = new String[]{owner, goodId};
+            String[] msg = new String[]{owner, goodId, message_id};
             //verifica assinatura dos clientes
             if (RSAKeyGenerator.verifySign(owner, secret, msg)) {
-                for (Good good : _userGoods) {
-                    if (good.getOwner().equals(owner) && good.getId().equals(goodId)) {
-                        good.setStatus(true);
-                        this.WriteNewFile();
+                if (!readMessageIdFile(owner, message_id)) {
+                    writeMessageIdFile(owner, message_id);
+                    for (Good good : _userGoods) {
+                        if (good.getOwner().equals(owner) && good.getId().equals(goodId)) {
+                            good.setStatus(true);
+                            this.WriteNewFile();
 
-                        //CREATE SIGN
-                        String signedMessage = true + good.getOwner() + good.getId();
-                        byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
-                        result.add(Base64.getEncoder().encodeToString(signatureBytes));
-                        //
-                        result.add("true");
-                        result.add(good.getOwner());
-                        result.add(good.getId());
+                            //CREATE SIGN
+                            String signedMessage = true + good.getOwner() + good.getId();
+                            byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
+                            result.add(Base64.getEncoder().encodeToString(signatureBytes));
+                            //
+                            result.add("true");
+                            result.add(good.getOwner());
+                            result.add(good.getId());
 
-                        return result;
+                            return result;
+                        }
                     }
+                } else {
+                    System.out.println("Replay Attack !!");
                 }
+
+
             } else {
                 System.out.println("Error: Message Tampered");
             }
@@ -182,7 +193,7 @@ public class Notary {
                         this.WriteNewFile();
 
                         //CREATE SIGN
-                        String signedMessage = "true" ;
+                        String signedMessage = "true";
                         byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
                         //
 
@@ -363,5 +374,34 @@ public class Notary {
         InputStream in = new ByteArrayInputStream(certificateEncoded);
         X509Certificate cert = (X509Certificate) f.generateCertificate(in);
         return cert;
+    }
+
+
+    private synchronized Boolean readMessageIdFile(String userId, String message_id) {
+        try {
+            String path = currentDir + "/../src/main/resources/message-ids/" + userId + ".txt";
+
+            if (!Files.exists(Paths.get(path))) {
+                Files.createFile(Paths.get(path));
+            }
+
+            Stream<String> stream = Files.lines(Paths.get(path));
+            return stream.anyMatch(x -> x.equals(message_id));
+
+        } catch (IOException e) {
+            System.out.println("Caught exception while reading users file:");
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    private synchronized void writeMessageIdFile(String userId, String message_id) throws IOException {
+        String path = currentDir + "/../src/main/resources/message-ids/" + userId + ".txt";
+        FileWriter fileWriter = new FileWriter(path, true);
+        PrintWriter writer = new PrintWriter(fileWriter);
+        writer.println(message_id);
+        writer.close();
+        fileWriter.close();
     }
 }

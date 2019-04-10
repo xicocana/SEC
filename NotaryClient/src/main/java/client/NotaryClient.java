@@ -6,6 +6,7 @@ import serverWS.NotaryWebServiceImplService;
 import utils.RSAKeyGenerator;
 import ws.impl.ClientWebServiceImpl;
 
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyStore;
@@ -20,6 +21,11 @@ import clientWS.ClientWebServiceImplService;
 import javax.xml.ws.Endpoint;
 
 public class NotaryClient {
+
+    private static int message_id = 0;
+    private static BufferedReader reader;
+    private static String currentDir = System.getProperty("user.dir");
+    private static String pathToMessageIds;
 
     /**
      * Starts the web service client.
@@ -44,6 +50,22 @@ public class NotaryClient {
         Endpoint.publish(bindingURI, webService);
 
         System.out.println("Server started at: " + bindingURI);
+        pathToMessageIds = pathToMessageIds = currentDir + "/../src/main/resources/message-ids/"+ input +".txt";
+        try {
+            reader = new BufferedReader(new FileReader(pathToMessageIds));
+            String line = reader.readLine();
+            while (line != null) {
+                // line
+                message_id = Integer.parseInt(line);
+                // read next line
+                line = reader.readLine();
+            }
+            reader.close();
+        } catch (IOException e) {
+            //System.out.println("Caught exception while reading users file:");
+            //e.printStackTrace();
+            WriteUsedMessageId();
+        }
 
         System.out.println("------------------------------ ");
         System.out.println("NotaryClient option:");
@@ -63,8 +85,10 @@ public class NotaryClient {
                 case 1:
                     System.out.print("Please insert good ID: ");
                     goodId = scanner.next();
-                    String[] args2 = new String[]{input, goodId};
-                    List<String> argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args2));
+                    WriteUsedMessageId();
+
+                    String[] args2 = new String[]{input, goodId,Integer.toString(message_id)};
+                    List<String> argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args2), Integer.toString(message_id));
                     List<String> result = notaryWebservice.intentionToSell(argsToSend);
                     if (result.size() == 4) {
                         if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1), result.get(2), result.get(3))) {
@@ -171,25 +195,14 @@ public class NotaryClient {
         } while (flag);
     }
 
-
-    private static Certificate getTrustedSigner(Certificate cert, KeyStore ks)
-            throws Exception {
-        if (ks.getCertificateAlias(cert) != null) {
-            return cert;
-        }
-        for (Enumeration<String> aliases = ks.aliases();
-             aliases.hasMoreElements(); ) {
-            String name = aliases.nextElement();
-            Certificate trustedCert = ks.getCertificate(name);
-            if (trustedCert != null) {
-                try {
-                    cert.verify(trustedCert.getPublicKey());
-                    return trustedCert;
-                } catch (Exception e) {
-                    // Not verified, skip to the next one
-                }
-            }
-        }
-        return null;
+    public static void WriteUsedMessageId() throws FileNotFoundException, UnsupportedEncodingException, IOException {
+        message_id++;
+        FileWriter fileWriter = new FileWriter(pathToMessageIds, true);
+        PrintWriter writer = new PrintWriter(fileWriter);
+        writer.println(message_id);
+        writer.close();
+        fileWriter.close();
     }
+
+
 }

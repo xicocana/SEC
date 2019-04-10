@@ -16,7 +16,7 @@ public class NotaryWebServiceImpl implements NotaryWebService {
     @WebMethod
     public List<String> intentionToSell(List<String> args){
         Notary notary = Notary.getInstance();
-        return notary.intentionToSell(args.get(0), args.get(1), args.get(2));
+        return notary.intentionToSell(args.get(0), args.get(1), args.get(2),args.get(3));
     }
 
     @WebMethod
