@@ -7,6 +7,8 @@ import utils.RSAKeyGenerator;
 
 import java.io.FileNotFoundException;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Client {
@@ -38,19 +40,25 @@ public class Client {
         return Id + "executed at client side !";
     }
 
-    public Boolean buyGood(String sellerId, String buyerId, String goodId, String secret) {
+    public List<String> buyGood(String sellerId, String buyerId, String goodId, String secret) {
         String[] msg = new String[]{buyerId, goodId};
         try {
             if (RSAKeyGenerator.verifySign(buyerId, secret, msg)) {
                 NotaryWebServiceImplService client = new NotaryWebServiceImplService();
                 NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
-                String[] args = new String[]{sellerId, buyerId, goodId};
 
-                List<String> result = notaryWebservice.transferGood(sellerId, buyerId, goodId, RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, args), secret);
+                // Assinar o que vem do cliente(buyer) para enviar ao server
+                String[] args = new String[]{sellerId, buyerId, goodId};
+                String sellerSign = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, args);
+
+                // Chamar metodo TransferGood do NotaryServer
+                List<String> result = notaryWebservice.transferGood(Arrays.asList(sellerId, buyerId, goodId, sellerSign, secret));
 
                 if (result.size() == 2) {
                     if (RSAKeyGenerator.verifySignWithCert(result.get(0), new String[]{result.get(1)})) {
-                        return Boolean.valueOf(result.get(1));
+                        // Assinar o que vem do Server para enviar ao cliente(buyer)
+                        String sellerSignResponseFromServer = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, new String[]{result.get(0), result.get(1)});
+                        return Arrays.asList(result.get(0), result.get(1), sellerSignResponseFromServer);
                     } else {
                         System.out.println("Error: NotaryServer Message Tampered");
                     }
@@ -67,6 +75,8 @@ public class Client {
             e.printStackTrace();
         }
 
-        return false;
+        // Assinar o que vem do Server para enviar ao cliente(buyer)
+        String sellerSignResponseFromServer = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, new String[]{"false"});
+        return Arrays.asList("false", sellerSignResponseFromServer);
     }
 }

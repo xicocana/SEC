@@ -6,15 +6,11 @@ import serverWS.NotaryWebServiceImplService;
 import utils.RSAKeyGenerator;
 import ws.impl.ClientWebServiceImpl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyStore;
-import java.security.Signature;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Scanner;
@@ -33,7 +29,6 @@ public class NotaryClient {
     public static void main(String[] args) throws Exception {
         NotaryWebServiceImplService client = new NotaryWebServiceImplService();
         NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
-        String SYGN_KEY_WORD = "SYGN_KEY_WORD";
 
         Scanner scanner = new Scanner(System.in);
 
@@ -69,10 +64,10 @@ public class NotaryClient {
                     System.out.print("Please insert good ID: ");
                     goodId = scanner.next();
                     String[] args2 = new String[]{input, goodId};
-
-                    List<String> result = notaryWebservice.intentionToSell(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args2));
+                    List<String> argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args2));
+                    List<String> result = notaryWebservice.intentionToSell(argsToSend);
                     if (result.size() == 4) {
-                        if (RSAKeyGenerator.verifySignWithCert(result.get(0), new String[]{result.get(1), result.get(2),result.get(3)})) {
+                        if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1), result.get(2), result.get(3))) {
                             if (Boolean.valueOf(result.get(1))) {
                                 System.out.println("-> " + goodId + " is now for sale");
                                 System.out.println(" ");
@@ -97,11 +92,11 @@ public class NotaryClient {
                 case 2:
                     System.out.print("Please insert good ID: ");
                     goodId = scanner.next();
-
-                    result = notaryWebservice.getStateOfGood(goodId);
+                    argsToSend = Arrays.asList(goodId);
+                    result = notaryWebservice.getStateOfGood(argsToSend);
                     try {
                         if (result.size() == 3) {
-                            if (RSAKeyGenerator.verifySignWithCert(result.get(0), new String[]{result.get(1), result.get(2)})) {
+                            if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1), result.get(2))) {
                                 System.out.println("-> " + goodId + " owner  : " + result.get(2));
 
                                 String onSale = Boolean.valueOf(result.get(1)) ? "on-sale" : "not-on-sale";
@@ -111,7 +106,7 @@ public class NotaryClient {
                                 System.out.println("Error: NotaryServer Message Tampered");
                             }
                         } else if (result.size() == 2) {
-                            if (RSAKeyGenerator.verifySignWithCert(result.get(0), new String[]{result.get(1)})) {
+                            if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1))) {
                                 System.out.println("Error: Something Wrong with NotaryServer");
                             } else {
                                 System.out.println("Error: NotaryServer Message Tampered");
@@ -135,16 +130,26 @@ public class NotaryClient {
                         WsURL = new URL(mywebserviceURL);
                         ClientWebServiceImplService webService2 = new ClientWebServiceImplService(WsURL);
                         clientWS.ClientWebServiceImpl clientWebservice = webService2.getClientWebServiceImplPort();
-                        String[] args3 = new String[]{input, goodId};
-                        Boolean bb = clientWebservice.buyGood(name2, input, goodId, RSAKeyGenerator.writeSign(input, input + input, args3));
-                        //TODO
-                        //System.out.println(bb);
-                        if (bb) {
-                            System.out.println("-> Purchase successful");
+
+                        String sign = RSAKeyGenerator.writeSign(input, input + input, input, goodId);
+                        argsToSend = Arrays.asList(name2, input, goodId, sign);
+
+                        //Client(buyer) chama para outro cliente(seller)
+                        result = clientWebservice.buyGood(argsToSend);
+
+                        if (result.size() == 3) {
+                            if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1)) &&
+                                    RSAKeyGenerator.verifySign(name2, result.get(2), result.get(0), result.get(1))) {
+                                System.out.println("-> Purchase successful");
+                            } else {
+                                System.out.println("-> Something went wrong :( please try again later");
+                            }
+
                         } else {
                             System.out.println("-> Something went wrong :( please try again later");
                             System.out.println(" ");
                         }
+
                     } catch (MalformedURLException e) {
                         System.out.println("Caught exception while contacting seller server: ");
                         e.printStackTrace();

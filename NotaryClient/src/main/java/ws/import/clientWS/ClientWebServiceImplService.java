@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "ClientWebServiceImplService", targetNamespace = "http://impl.ws/", wsdlLocation = "http://localhost:9090/user0WebService?wsdl")
+@WebServiceClient(name = "ClientWebServiceImplService", targetNamespace = "http://impl.ws/", wsdlLocation = "http://localhost:9090/1/WebService?wsdl")
 public class ClientWebServiceImplService
     extends Service
 {
@@ -30,7 +30,7 @@ public class ClientWebServiceImplService
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("http://localhost:9090/user0WebService?wsdl");
+            url = new URL("http://localhost:9090/1/WebService?wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }
@@ -68,7 +68,7 @@ public class ClientWebServiceImplService
      *     returns ClientWebServiceImpl
      */
     @WebEndpoint(name = "ClientWebServiceImplPort")
-    public ClientWebServiceImpl getClientWebServiceImplPort() {
+    public clientWS.ClientWebServiceImpl getClientWebServiceImplPort() {
         return super.getPort(new QName("http://impl.ws/", "ClientWebServiceImplPort"), ClientWebServiceImpl.class);
     }
 

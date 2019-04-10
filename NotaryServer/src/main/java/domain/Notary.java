@@ -184,9 +184,9 @@ public class Notary {
                         //CREATE SIGN
                         String signedMessage = "true" ;
                         byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
-                        result.add(Base64.getEncoder().encodeToString(signatureBytes));
                         //
 
+                        result.add(Base64.getEncoder().encodeToString(signatureBytes));
                         result.add("true");
                         return result;
 

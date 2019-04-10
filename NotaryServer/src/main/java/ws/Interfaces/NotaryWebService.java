@@ -8,21 +8,14 @@ import java.util.List;
 
 @WebService
 public interface NotaryWebService {
-    @WebMethod
-    String test(String input);
 
     @WebMethod
-    List<String> intentionToSell(String owner, String goodId, String secret);
+    List<String> intentionToSell(List<String> args);
 
     @WebMethod
-    List<String> getStateOfGood(String goodId) ;
+    List<String> getStateOfGood(List<String> args) ;
 
     @WebMethod
-    List<String> transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2);
+    List<String> transferGood(List<String> args);
 
-    @WebMethod
-    int getNotaryId();
-
-    @WebMethod
-    ArrayList<String> getUsers();
 }

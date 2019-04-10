@@ -3,10 +3,10 @@
 	<handler-chain>
 
 
-       <!-- <handler>
-            <handler-class>Handlers.SoapHandler</handler-class>
+        <handler>
+            <handler-class>Handlers.ClientToServerSoapHandler</handler-class>
         </handler>
 
--->
+
 	</handler-chain>
 </handler-chains>

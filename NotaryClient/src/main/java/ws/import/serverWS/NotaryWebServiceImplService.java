@@ -3,7 +3,6 @@ package serverWS;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import javax.jws.HandlerChain;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebEndpoint;
@@ -19,7 +18,6 @@ import javax.xml.ws.WebServiceFeature;
  * 
  */
 @WebServiceClient(name = "NotaryWebServiceImplService", targetNamespace = "http://Implementacao.ws/", wsdlLocation = "http://localhost:9898/notaryService?wsdl")
-@HandlerChain(file = "/ImplService_handler.xml")
 public class NotaryWebServiceImplService
     extends Service
 {
@@ -70,7 +68,7 @@ public class NotaryWebServiceImplService
      *     returns NotaryWebService
      */
     @WebEndpoint(name = "NotaryWebServiceImplPort")
-    public NotaryWebService getNotaryWebServiceImplPort() {
+    public serverWS.NotaryWebService getNotaryWebServiceImplPort() {
         return super.getPort(new QName("http://Implementacao.ws/", "NotaryWebServiceImplPort"), NotaryWebService.class);
     }
 
@@ -82,7 +80,7 @@ public class NotaryWebServiceImplService
      *     returns NotaryWebService
      */
     @WebEndpoint(name = "NotaryWebServiceImplPort")
-    public NotaryWebService getNotaryWebServiceImplPort(WebServiceFeature... features) {
+    public serverWS.NotaryWebService getNotaryWebServiceImplPort(WebServiceFeature... features) {
         return super.getPort(new QName("http://Implementacao.ws/", "NotaryWebServiceImplPort"), NotaryWebService.class, features);
     }
 

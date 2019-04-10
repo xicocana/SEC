@@ -25,9 +25,7 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     private final static QName _BuyGood_QNAME = new QName("http://impl.ws/", "buyGood");
-    private final static QName _Test_QNAME = new QName("http://impl.ws/", "test");
     private final static QName _BuyGoodResponse_QNAME = new QName("http://impl.ws/", "buyGoodResponse");
-    private final static QName _TestResponse_QNAME = new QName("http://impl.ws/", "testResponse");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: clientWS
@@ -37,27 +35,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Test }
-     * 
-     */
-    public Test createTest() {
-        return new Test();
-    }
-
-    /**
      * Create an instance of {@link BuyGood }
      * 
      */
     public BuyGood createBuyGood() {
         return new BuyGood();
-    }
-
-    /**
-     * Create an instance of {@link TestResponse }
-     * 
-     */
-    public TestResponse createTestResponse() {
-        return new TestResponse();
     }
 
     /**
@@ -78,30 +60,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Test }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://impl.ws/", name = "test")
-    public JAXBElement<Test> createTest(Test value) {
-        return new JAXBElement<Test>(_Test_QNAME, Test.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link BuyGoodResponse }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "http://impl.ws/", name = "buyGoodResponse")
     public JAXBElement<BuyGoodResponse> createBuyGoodResponse(BuyGoodResponse value) {
         return new JAXBElement<BuyGoodResponse>(_BuyGoodResponse_QNAME, BuyGoodResponse.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link TestResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://impl.ws/", name = "testResponse")
-    public JAXBElement<TestResponse> createTestResponse(TestResponse value) {
-        return new JAXBElement<TestResponse>(_TestResponse_QNAME, TestResponse.class, null, value);
     }
 
 }

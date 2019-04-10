@@ -1,6 +1,7 @@
 
 package clientWS;
 
+import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -26,41 +27,17 @@ public interface ClientWebServiceImpl {
 
     /**
      * 
-     * @param arg3
-     * @param arg2
-     * @param arg1
      * @param arg0
      * @return
-     *     returns java.lang.Boolean
+     *     returns java.util.List<java.lang.String>
      */
     @WebMethod
     @WebResult(targetNamespace = "")
     @RequestWrapper(localName = "buyGood", targetNamespace = "http://impl.ws/", className = "clientWS.BuyGood")
     @ResponseWrapper(localName = "buyGoodResponse", targetNamespace = "http://impl.ws/", className = "clientWS.BuyGoodResponse")
     @Action(input = "http://impl.ws/ClientWebServiceImpl/buyGoodRequest", output = "http://impl.ws/ClientWebServiceImpl/buyGoodResponse")
-    public Boolean buyGood(
+    public List<String> buyGood(
         @WebParam(name = "arg0", targetNamespace = "")
-        String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        String arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        String arg2,
-        @WebParam(name = "arg3", targetNamespace = "")
-        String arg3);
-
-    /**
-     * 
-     * @param arg0
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "test", targetNamespace = "http://impl.ws/", className = "clientWS.Test")
-    @ResponseWrapper(localName = "testResponse", targetNamespace = "http://impl.ws/", className = "clientWS.TestResponse")
-    @Action(input = "http://impl.ws/ClientWebServiceImpl/testRequest", output = "http://impl.ws/ClientWebServiceImpl/testResponse")
-    public String test(
-        @WebParam(name = "arg0", targetNamespace = "")
-        String arg0);
+        List<String> arg0);
 
 }

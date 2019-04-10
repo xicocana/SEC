@@ -56,7 +56,7 @@ public class ClientToServerSoapHandler implements SOAPHandler<SOAPMessageContext
                 SOAPEnvelope soapEnvelope = soapPart.getEnvelope();
                 SOAPBody soapBody = soapEnvelope.getBody();
 
-                NodeList nodeListIntentToSell = soapBody.getElementsByTagName("ns2:intentToSell");
+                NodeList nodeListIntentToSell = soapBody.getElementsByTagName("ns2:intentionToSell");
                 NodeList nodeListGetStateOfGood = soapBody.getElementsByTagName("ns2:getStateOfGood");
                 NodeList nodeListTransferGood = soapBody.getElementsByTagName("ns2:transferGood");
 
@@ -94,6 +94,7 @@ public class ClientToServerSoapHandler implements SOAPHandler<SOAPMessageContext
                 }
 
                 soapMessage.saveChanges();
+
 
                 //prints the soap message
                 ByteArrayOutputStream out = new ByteArrayOutputStream();

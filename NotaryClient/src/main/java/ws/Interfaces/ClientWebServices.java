@@ -3,14 +3,13 @@ package ws.Interfaces;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
+import java.util.List;
 
 @WebService
 public interface ClientWebServices {
 
-    @WebMethod
-    public String test(String input) ;
 
     @WebMethod
-    public Boolean buyGood(String sellerId, String buyerId, String goodId) ;
+    List<String> buyGood(List<String> args) ;
 }
 
