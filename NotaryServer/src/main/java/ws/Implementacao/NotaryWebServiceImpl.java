@@ -22,13 +22,13 @@ public class NotaryWebServiceImpl implements NotaryWebService {
     @WebMethod
     public List<String> getStateOfGood(List<String> args) {
         Notary notary = Notary.getInstance();
-        return notary.getStateOfGood(args.get(0));
+        return notary.getStateOfGood(args.get(0), args.get(1), args.get(2),args.get(3));
     }
 
     @WebMethod
     public List<String> transferGood(List<String> args){
         Notary notary = Notary.getInstance();
-        return notary.transferGood(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4));
+        return notary.transferGood(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4),args.get(5));
     }
 
 }

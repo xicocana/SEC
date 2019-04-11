@@ -145,27 +145,37 @@ public class Notary {
         return resultError;
     }
 
-    public List<String> getStateOfGood(String goodId) {
+    public List<String> getStateOfGood(String user, String goodId, String secret, String message_id) {
         System.out.println("Recieved request on " + goodId + " status");
         List<String> result = new ArrayList<>();
         List<String> resultError;
 
         try {
 
-            for (Good good : _userGoods) {
-                if (good.getId().equals(goodId)) {
-                    //CREATE SIGN
-                    String signedMessage = good.getStatus() + good.getOwner();
-                    byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
-                    result.add(Base64.getEncoder().encodeToString(signatureBytes));
-                    //
-                    result.add(Boolean.toString(good.getStatus()));
-                    result.add(good.getOwner());
+            String[] msg = new String[]{user, goodId, message_id};
+            //verifica assinatura dos clientes
+            if (RSAKeyGenerator.verifySign(user, secret, msg)) {
+                if (!readMessageIdFile(user, message_id)) {
+                    writeMessageIdFile(user, message_id);
+                    for (Good good : _userGoods) {
+                        if (good.getId().equals(goodId)) {
+                            //CREATE SIGN
+                            String signedMessage = good.getStatus() + good.getOwner();
+                            byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
+                            result.add(Base64.getEncoder().encodeToString(signatureBytes));
+                            //
+                            result.add(Boolean.toString(good.getStatus()));
+                            result.add(good.getOwner());
 
-                    return result;
+                            return result;
+                        }
+                    }
+                } else {
+                    System.out.println("Replay Attack !!");
                 }
             }
-        } catch (PKCS11Exception e) {
+
+        } catch (PKCS11Exception | IOException e) {
             e.printStackTrace();
             System.out.println("Error Signing the message");
         }
@@ -175,7 +185,7 @@ public class Notary {
         return resultError;
     }
 
-    public List<String> transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2) {
+    public List<String> transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2,String message_id) {
         System.out.println("Client " + sellerId + " called transferGood");
         String[] msg = new String[]{sellerId, buyerId, goodId};
         String[] msg2 = new String[]{buyerId, goodId};
@@ -185,24 +195,30 @@ public class Notary {
 
         try {
             if ((RSAKeyGenerator.verifySign(sellerId, secret, msg)) && (RSAKeyGenerator.verifySign(buyerId, secret2, msg2))) {
-                for (Good good : _userGoods) {
-                    if (good.getId().equals(goodId) && good.getStatus() && good.getOwner().equals(sellerId)) {
-                        // Tocar good entre os users
-                        good.setOwner(buyerId);
-                        good.setStatus(false);
-                        this.WriteNewFile();
+              //  if (!readMessageIdFile(sellerId, message_id)) {
+                //    writeMessageIdFile(sellerId, message_id);
+                    for (Good good : _userGoods) {
+                        if (good.getId().equals(goodId) && good.getStatus() && good.getOwner().equals(sellerId)) {
+                            // Tocar good entre os users
+                            good.setOwner(buyerId);
+                            good.setStatus(false);
+                            this.WriteNewFile();
 
-                        //CREATE SIGN
-                        String signedMessage = "true";
-                        byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
-                        //
+                            //CREATE SIGN
+                            String signedMessage = "true";
+                            byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
+                            //
 
-                        result.add(Base64.getEncoder().encodeToString(signatureBytes));
-                        result.add("true");
-                        return result;
+                            result.add(Base64.getEncoder().encodeToString(signatureBytes));
+                            result.add("true");
+                            return result;
 
+                        }
                     }
-                }
+                //}else{
+                 //   System.out.println("Replay Attack !!");
+                //}
+
             } else {
                 System.out.println("Error: Message Tampered");
             }

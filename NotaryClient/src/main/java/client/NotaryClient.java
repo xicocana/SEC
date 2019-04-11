@@ -116,7 +116,11 @@ public class NotaryClient {
                 case 2:
                     System.out.print("Please insert good ID: ");
                     goodId = scanner.next();
-                    argsToSend = Arrays.asList(goodId);
+
+                    WriteUsedMessageId();
+
+                    args = new String[]{input, goodId, Integer.toString(message_id)};
+                    argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args), Integer.toString(message_id));
                     result = notaryWebservice.getStateOfGood(argsToSend);
                     try {
                         if (result.size() == 3) {
