@@ -1,0 +1,3 @@
+good0:user1:false
+good1:user2:false
+good3:user4:false

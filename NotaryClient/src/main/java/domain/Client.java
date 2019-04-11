@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.cert.CertificateException;
@@ -57,15 +58,19 @@ public class Client {
                     NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
 
                     String my_message_id = getMyMessageId(sellerId);
+                    int my_message_id2 = my_message_id.equals("") ? 0 : Integer.parseInt(my_message_id)+1;
                     // Assinar o que vem do cliente(buyer) para enviar ao server
-                    String[] args = new String[]{sellerId, buyerId, goodId, my_message_id};
+                    String[] args = new String[]{sellerId, buyerId, goodId, Integer.toString(my_message_id2)};
                     String sellerSign = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, args);
-
-                    // Chamar metodo TransferGood do NotaryServer
                     
-                    List<String> result = notaryWebservice.transferGood(Arrays.asList(sellerId, buyerId, goodId, sellerSign, secret, my_message_id));
-
-                    if (result.size() == 2) {
+                    writeMyMessageIdFile(sellerId, my_message_id2);
+                    
+                    // Chamar metodo TransferGood do NotaryServer
+                    List<String> result = notaryWebservice.transferGood(Arrays.asList(sellerId, buyerId, goodId, sellerSign, secret, Integer.toString(my_message_id2), message_id));
+                    if(result.get(0).equals("ERROR")){
+                        System.out.println("Error: Something REALLY Wrong with NotaryServer");
+                    }
+                    else if(result.size() == 2) {
                         if (RSAKeyGenerator.verifySignWithCert(result.get(0), new String[]{result.get(1)})) {
                             // Assinar o que vem do Server para enviar ao cliente(buyer)
                             String sellerSignResponseFromServer = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, new String[]{result.get(0), result.get(1)});
@@ -74,7 +79,7 @@ public class Client {
                             System.out.println("Error: NotaryServer Message Tampered");
                         }
                     } else {
-                        System.out.println("Error: Something REALLY Wrong with NotaryServer");
+                        System.out.println("Error: Something REALLY Wrong with NotariuyServer");
                     }
 
                 } else {
@@ -143,6 +148,16 @@ public class Client {
             e.printStackTrace();
             return "";
         }
+    }
+
+    public static void writeMyMessageIdFile(String userId, int id) throws FileNotFoundException, UnsupportedEncodingException, IOException {
+        String currentDir = System.getProperty("user.dir");
+        String path = currentDir + "/../src/main/resources/message-ids/" + userId + ".txt";
+        FileWriter fileWriter = new FileWriter(path, true);
+        PrintWriter writer = new PrintWriter(fileWriter);
+        writer.println(id);
+        writer.close();
+        fileWriter.close();
     }
 
 }

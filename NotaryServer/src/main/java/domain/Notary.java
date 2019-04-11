@@ -155,7 +155,7 @@ public class Notary {
             //verifica assinatura dos clientes
             if (RSAKeyGenerator.verifySign(user, secret, msg)) {
                 if (!readMessageIdFile(user, message_id)) {
-
+                    writeMessageIdFile(user, message_id);    
                     my_message_id = Integer.parseInt(getMyMessageId());
                     my_message_id++;
                     writeMessageIdFile("server", Integer.toString(my_message_id));
@@ -163,7 +163,7 @@ public class Notary {
                     for (Good good : _userGoods) {
                         if (good.getId().equals(goodId)) {
                             //CREATE SIGN
-                            String signedMessage = good.getStatus() + good.getOwner() + message_id;
+                            String signedMessage = good.getStatus() + good.getOwner() + my_message_id;
                             byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
                             result.add(Base64.getEncoder().encodeToString(signatureBytes));
                             //
@@ -189,25 +189,25 @@ public class Notary {
         return resultError;
     }
 
-    public List<String> transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2,String message_id) {
+    public List<String> transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2,String message_id_seller, String message_id_buyer) {
         System.out.println("Client " + sellerId + " called transferGood");
-        String[] msg = new String[]{sellerId, buyerId, goodId, message_id};
-        String[] msg2 = new String[]{buyerId, goodId};
+        String[] msg = new String[]{sellerId, buyerId, goodId, message_id_seller};
+        String[] msg2 = new String[]{buyerId, goodId, message_id_buyer};
         List<String> resultError;
 
         List<String> result = new ArrayList<>();
 
         try {
-            if ((RSAKeyGenerator.verifySign(sellerId, secret, msg)) && (RSAKeyGenerator.verifySign(buyerId, secret2, msg2))) {
-                if (!readMessageIdFile(sellerId, message_id)) {
-                    writeMessageIdFile(sellerId, message_id);
+            if ((RSAKeyGenerator.verifySign(sellerId, secret, msg)) ){//&& (RSAKeyGenerator.verifySign(buyerId, secret2, msg2))) {
+                if (!readMessageIdFile(sellerId, message_id_seller)) {
+                    writeMessageIdFile(sellerId, message_id_seller);
                     for (Good good : _userGoods) {
                         if (good.getId().equals(goodId) && good.getStatus() && good.getOwner().equals(sellerId)) {
                             // Tocar good entre os users
                             good.setOwner(buyerId);
                             good.setStatus(false);
                             this.WriteNewFile();
-
+                            writeMessageIdFile("server", Integer.toString(my_message_id));
                             //CREATE SIGN
                             String signedMessage = "true";
                             byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
@@ -257,6 +257,7 @@ public class Notary {
         } catch (PKCS11Exception e) {
             e.printStackTrace();
         }
+        resultError.add("ERROR");
         resultError.add(Base64.getEncoder().encodeToString(signatureBytes));
         resultError.add("false");
         //

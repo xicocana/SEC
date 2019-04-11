@@ -28,7 +28,7 @@ public class NotaryWebServiceImpl implements NotaryWebService {
     @WebMethod
     public List<String> transferGood(List<String> args){
         Notary notary = Notary.getInstance();
-        return notary.transferGood(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4),args.get(5));
+        return notary.transferGood(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4),args.get(5), args.get(6));
     }
 
 }

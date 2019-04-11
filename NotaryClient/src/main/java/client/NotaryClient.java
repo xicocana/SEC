@@ -179,7 +179,6 @@ public class NotaryClient {
 
                         String sign = RSAKeyGenerator.writeSign(input, input + input, input, goodId, Integer.toString(message_id));
                         argsToSend = Arrays.asList(name2, input, goodId, sign, Integer.toString(message_id));
-
                         //Client(buyer) chama para outro cliente(seller)
                         result = clientWebservice.buyGood(argsToSend);
 
