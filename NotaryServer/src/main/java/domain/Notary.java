@@ -30,6 +30,8 @@ public class Notary {
     private String pathToGoods = currentDir + "/../src/main/resources/notary-folder/user_goods.txt";
     private int transaction_counter;
 
+    private static int my_message_id = 0;
+
     private PKCS11 pkcs11;
     private long p11_session;
     long signatureKey;
@@ -37,7 +39,7 @@ public class Notary {
     public Notary() {
         BufferedReader reader;
         transaction_counter = new File(currentDir + "/../src/main/resources/notary-folder/").list().length - 1;
-
+        my_message_id = Integer.parseInt(getMyMessageId());
         String newpath = pathToGoods.substring(0, pathToGoods.length() - 4) + transaction_counter + ".txt";
         try {
             reader = new BufferedReader(new FileReader(pathToUsers));
@@ -114,15 +116,20 @@ public class Notary {
                             good.setStatus(true);
                             this.WriteNewFile();
 
+                            my_message_id = Integer.parseInt(getMyMessageId());
                             //CREATE SIGN
-                            String signedMessage = true + good.getOwner() + good.getId();
+                            String signedMessage = true + good.getOwner() + good.getId() + my_message_id;
                             byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
                             result.add(Base64.getEncoder().encodeToString(signatureBytes));
                             //
                             result.add("true");
                             result.add(good.getOwner());
                             result.add(good.getId());
-
+                            //server message id
+                            result.add(Integer.toString(my_message_id));
+                            my_message_id++;
+                            writeMessageIdFile("server", Integer.toString(my_message_id));
+                            
                             return result;
                         }
                     }
@@ -187,7 +194,7 @@ public class Notary {
 
     public List<String> transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2,String message_id) {
         System.out.println("Client " + sellerId + " called transferGood");
-        String[] msg = new String[]{sellerId, buyerId, goodId};
+        String[] msg = new String[]{sellerId, buyerId, goodId, message_id};
         String[] msg2 = new String[]{buyerId, goodId};
         List<String> resultError;
 
@@ -195,8 +202,8 @@ public class Notary {
 
         try {
             if ((RSAKeyGenerator.verifySign(sellerId, secret, msg)) && (RSAKeyGenerator.verifySign(buyerId, secret2, msg2))) {
-              //  if (!readMessageIdFile(sellerId, message_id)) {
-                //    writeMessageIdFile(sellerId, message_id);
+                if (!readMessageIdFile(sellerId, message_id)) {
+                    writeMessageIdFile(sellerId, message_id);
                     for (Good good : _userGoods) {
                         if (good.getId().equals(goodId) && good.getStatus() && good.getOwner().equals(sellerId)) {
                             // Tocar good entre os users
@@ -215,10 +222,9 @@ public class Notary {
 
                         }
                     }
-                //}else{
-                 //   System.out.println("Replay Attack !!");
-                //}
-
+                }else{
+                    System.out.println("Replay Attack !!");
+                }
             } else {
                 System.out.println("Error: Message Tampered");
             }
@@ -419,5 +425,32 @@ public class Notary {
         writer.println(message_id);
         writer.close();
         fileWriter.close();
+    }
+
+    private synchronized String getMyMessageId(){
+        String currentDir = System.getProperty("user.dir");
+        String path = currentDir + "/../src/main/resources/message-ids/server.txt";
+        String res = "";
+        try {
+            if (!Files.exists(Paths.get(path))) {
+                Files.createFile(Paths.get(path));
+                writeMessageIdFile("server", "0");
+            }
+
+            BufferedReader reader = new BufferedReader(new FileReader(path));
+            String line = reader.readLine();
+            while (line != null) {
+                // line
+                res = line;
+                // read next line
+                line = reader.readLine();
+            }
+            reader.close();
+            return res;
+        } catch (IOException e) {
+            System.out.println("Caught exception while reading users file:");
+            e.printStackTrace();
+            return "";
+        }
     }
 }
