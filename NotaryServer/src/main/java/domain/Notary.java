@@ -8,7 +8,6 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -16,6 +15,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class Notary {
@@ -36,10 +36,15 @@ public class Notary {
     private long p11_session;
     long signatureKey;
 
+    private static class SingletonHolder {
+        private static final Notary INSTANCE = new Notary();
+    }
+
     public Notary() {
         BufferedReader reader;
-        transaction_counter = new File(currentDir + "/../src/main/resources/notary-folder/").list().length - 1;
+        transaction_counter = Objects.requireNonNull(new File(currentDir + "/../src/main/resources/notary-folder/").list()).length - 1;
         my_message_id = Integer.parseInt(getMyMessageId());
+
         String newpath = pathToGoods.substring(0, pathToGoods.length() - 4) + transaction_counter + ".txt";
         try {
             reader = new BufferedReader(new FileReader(pathToUsers));
@@ -79,21 +84,7 @@ public class Notary {
         }
     }
 
-    public void setId(int id) {
-        _id = id;
-    }
 
-    public int getId() {
-        return _id;
-    }
-
-    public ArrayList<String> getUsers() {
-        return _users;
-    }
-
-    private static class SingletonHolder {
-        private static final Notary INSTANCE = new Notary();
-    }
 
     public static synchronized Notary getInstance() {
         return SingletonHolder.INSTANCE;
@@ -117,18 +108,19 @@ public class Notary {
                             this.WriteNewFile();
 
                             my_message_id = Integer.parseInt(getMyMessageId());
+                            my_message_id++;
+                            writeMessageIdFile("server", Integer.toString(my_message_id));
+
                             //CREATE SIGN
                             String signedMessage = true + good.getOwner() + good.getId() + my_message_id;
                             byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
                             result.add(Base64.getEncoder().encodeToString(signatureBytes));
                             //
+
                             result.add("true");
                             result.add(good.getOwner());
                             result.add(good.getId());
-                            //server message id
                             result.add(Integer.toString(my_message_id));
-                            my_message_id++;
-                            writeMessageIdFile("server", Integer.toString(my_message_id));
                             
                             return result;
                         }
@@ -163,16 +155,21 @@ public class Notary {
             //verifica assinatura dos clientes
             if (RSAKeyGenerator.verifySign(user, secret, msg)) {
                 if (!readMessageIdFile(user, message_id)) {
-                    writeMessageIdFile(user, message_id);
+
+                    my_message_id = Integer.parseInt(getMyMessageId());
+                    my_message_id++;
+                    writeMessageIdFile("server", Integer.toString(my_message_id));
+
                     for (Good good : _userGoods) {
                         if (good.getId().equals(goodId)) {
                             //CREATE SIGN
-                            String signedMessage = good.getStatus() + good.getOwner();
+                            String signedMessage = good.getStatus() + good.getOwner() + message_id;
                             byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
                             result.add(Base64.getEncoder().encodeToString(signatureBytes));
                             //
                             result.add(Boolean.toString(good.getStatus()));
                             result.add(good.getOwner());
+                            result.add(Integer.toString(my_message_id));
 
                             return result;
                         }

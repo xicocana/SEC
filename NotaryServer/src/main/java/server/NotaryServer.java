@@ -18,16 +18,9 @@ public class NotaryServer {
         Endpoint.publish(bindingURI, webService);
         System.out.println("Server started at: " + bindingURI);
 
-        System.out.print("Please insert Notary ID: ");
-
-        Scanner scanner = new Scanner(System.in);
-        int input = scanner.nextInt();
         Notary notary = Notary.getInstance();
-        notary.setId(input);
 
         notary.startCC();
-
-        System.out.println("Notary running with id: " + input);
 
 
     }

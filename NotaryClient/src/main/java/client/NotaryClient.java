@@ -54,22 +54,9 @@ public class NotaryClient {
 
         System.out.println("Server started at: " + bindingURI);
         pathToMessageIds = currentDir + "/../src/main/resources/message-ids/"+ input +".txt";
-        try {
-            reader = new BufferedReader(new FileReader(pathToMessageIds));
-            String line = reader.readLine();
-            while (line != null) {
-                // line
-                message_id = Integer.parseInt(line);
-                // read next line
-                line = reader.readLine();
-            }
-            reader.close();
-        } catch (IOException e) {
-            //System.out.println("Caught exception while reading users file:");
-            //e.printStackTrace();
-            WriteUsedMessageId(pathToMessageIds, message_id);
-            message_id++;
-        }
+
+        message_id = Integer.parseInt(getMyMessageId(pathToMessageIds));
+
 
         System.out.println("------------------------------ ");
         System.out.println("NotaryClient option:");
@@ -89,16 +76,20 @@ public class NotaryClient {
                 case 1:
                     System.out.print("Please insert good ID: ");
                     goodId = scanner.next();
-                    WriteUsedMessageId(pathToMessageIds, message_id);
-                    message_id++;
 
+                    //write my msg to File
+                    message_id++;
+                    WriteUsedMessageId(pathToMessageIds, message_id);
+
+                    //Call SERVER METHOD
                     String[] args2 = new String[]{input, goodId,Integer.toString(message_id)};
                     List<String> argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args2), Integer.toString(message_id));
                     List<String> result = notaryWebservice.intentionToSell(argsToSend);
+
                     if (result.size() == 5) {
                         if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1), result.get(2), result.get(3), result.get(4))){
                             if(!readMessageIdFile("server", result.get(4))){
-                                String path = currentDir + "/../src/main/resources/message-ids/server.txt";
+                                String path = currentDir + "/../src/main/resources/message-ids/other-users/server.txt";
                                 WriteUsedMessageId(path, Integer.parseInt(result.get(4)));
                                 if (Boolean.valueOf(result.get(1))) {
                                     System.out.println("-> " + goodId + " is now for sale");
@@ -129,23 +120,33 @@ public class NotaryClient {
                     System.out.print("Please insert good ID: ");
                     goodId = scanner.next();
 
-                    WriteUsedMessageId(pathToMessageIds, message_id);
+                    //write my msg to File
                     message_id++;
+                    WriteUsedMessageId(pathToMessageIds, message_id);
 
+                    //Call SERVER METHOD
                     args = new String[]{input, goodId, Integer.toString(message_id)};
                     argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args), Integer.toString(message_id));
                     result = notaryWebservice.getStateOfGood(argsToSend);
-                    try {
-                        if (result.size() == 3) {
-                            if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1), result.get(2))) {
-                                System.out.println("-> " + goodId + " owner  : " + result.get(2));
 
-                                String onSale = Boolean.valueOf(result.get(1)) ? "on-sale" : "not-on-sale";
-                                System.out.println("-> " + goodId + " status : " + onSale);
-                                System.out.println(" ");
+                    try {
+                        if (result.size() == 4) {
+                            if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1), result.get(2),result.get(3))) {
+                                if(!readMessageIdFile("server", result.get(3))) {
+                                    String path = currentDir + "/../src/main/resources/message-ids/other-users/server.txt";
+                                    WriteUsedMessageId(path, Integer.parseInt(result.get(3)));
+
+                                    System.out.println("-> " + goodId + " owner  : " + result.get(2));
+                                    String onSale = Boolean.valueOf(result.get(1)) ? "on-sale" : "not-on-sale";
+                                    System.out.println("-> " + goodId + " status : " + onSale);
+                                    System.out.println(" ");
+                                }else{
+                                    System.out.println("Replay Attack !!");
+                                }
                             } else {
                                 System.out.println("Error: NotaryServer Message Tampered");
                             }
+
                         } else if (result.size() == 2) {
                             if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1))) {
                                 System.out.println("Error: Something Wrong with NotaryServer");
@@ -165,8 +166,9 @@ public class NotaryClient {
                     System.out.print("Please insert goodId: ");
                     goodId = scanner.next();
 
-                    WriteUsedMessageId(pathToMessageIds, message_id);
+                    //write my msg to File
                     message_id++;
+                    WriteUsedMessageId(pathToMessageIds, message_id);
 
                     String mywebserviceURL = "http://localhost:909" + name2.substring(name2.length() - 1) + "/" + name2 + "WebService?wsdl";
                     URL WsURL;
@@ -241,5 +243,33 @@ public class NotaryClient {
         }
 
         return false;
+    }
+
+    private static synchronized String getMyMessageId(String path){
+        String currentDir = System.getProperty("user.dir");
+        //String path = currentDir + "/../src/main/resources/message-ids/" + userId + ".txt";
+        String res = "";
+        try {
+
+            if (!Files.exists(Paths.get(path))) {
+                Files.createFile(Paths.get(path));
+                return "0";
+            }
+
+            BufferedReader reader = new BufferedReader(new FileReader(path));
+            String line = reader.readLine();
+            while (line != null) {
+                // line
+                res = line;
+                // read next line
+                line = reader.readLine();
+            }
+            reader.close();
+            return res;
+        } catch (IOException e) {
+            System.out.println("Caught exception while reading users file:");
+            e.printStackTrace();
+            return "";
+        }
     }
 }
