@@ -16,6 +16,8 @@ public class ClientDummy {
         String input = scanner.nextLine();
         Client notaryClient = new Client();
         notaryClient.setId(input);
+        notaryClient.createDirs();
+
 
         System.out.println("NotaryClient running with id: " + input);
 

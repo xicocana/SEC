@@ -3,25 +3,18 @@ package domain;
 import serverWS.NotaryWebService;
 import serverWS.NotaryWebServiceImplService;
 import utils.RSAKeyGenerator;
+import utils.WriteReadUtils;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.cert.CertificateException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class Client {
 
     private String _id;
+
+
 
     private static class SingletonHolder {
         private static final Client INSTANCE = new Client();
@@ -32,7 +25,7 @@ public class Client {
     }
 
     public Client() {
-        //setId(id);
+
     }
 
     public void setId(String id) {
@@ -48,25 +41,40 @@ public class Client {
         return Id + "executed at client side !";
     }
 
-    public List<String> buyGood(String sellerId, String buyerId, String goodId, String secret, String message_id){
-        String[] msg = new String[]{buyerId, goodId, message_id };
+    public void createDirs() {
+        String currentDir = System.getProperty("user.dir");
+        String dirPath = currentDir + "/../src/main/resources/message-ids/"+ _id +"/other-users/";
+        WriteReadUtils.createDir(dirPath);
+    }
+
+    public List<String> buyGood(String sellerId, String buyerId, String goodId, String secret, String message_id_buyer){
+        String currentDir = System.getProperty("user.dir");
+
         try {
-            if(!readMessageIdFile(buyerId, message_id)){
-                writeMessageIdFile(buyerId, message_id);
+            String dirPath = currentDir + "/../src/main/resources/message-ids/"+ sellerId +"/other-users/"+buyerId+".txt";
+            if(!WriteReadUtils.readMessageIdFile(dirPath , message_id_buyer)){
+
+                WriteReadUtils.writeUsedMessageId(dirPath, Integer.parseInt(message_id_buyer));
+
+                String[] msg = new String[]{buyerId, goodId, message_id_buyer };
                 if (RSAKeyGenerator.verifySign(buyerId, secret, msg)) {
                     NotaryWebServiceImplService client = new NotaryWebServiceImplService();
                     NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
 
-                    String my_message_id = getMyMessageId(sellerId);
+                    String dirPath2 = currentDir + "/../src/main/resources/message-ids/"+ sellerId +"/"+sellerId+".txt";
+
+                    String my_message_id = WriteReadUtils.getMyMessageId(dirPath2);
                     int my_message_id2 = my_message_id.equals("") ? 0 : Integer.parseInt(my_message_id)+1;
                     // Assinar o que vem do cliente(buyer) para enviar ao server
                     String[] args = new String[]{sellerId, buyerId, goodId, Integer.toString(my_message_id2)};
                     String sellerSign = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, args);
-                    
-                    writeMyMessageIdFile(sellerId, my_message_id2);
-                    
+
+                    dirPath = currentDir + "/../src/main/resources/message-ids/"+ sellerId +"/"+sellerId+".txt";
+                    WriteReadUtils.writeUsedMessageId(dirPath, my_message_id2);
+
                     // Chamar metodo TransferGood do NotaryServer
-                    List<String> result = notaryWebservice.transferGood(Arrays.asList(sellerId, buyerId, goodId, sellerSign, secret, Integer.toString(my_message_id2), message_id));
+
+                    List<String> result = notaryWebservice.transferGood(Arrays.asList(sellerId, buyerId, goodId, sellerSign, secret, Integer.toString(my_message_id2), message_id_buyer));
                     if(result.get(0).equals("ERROR")){
                         System.out.println("Error: Something REALLY Wrong with NotaryServer");
                     }
@@ -74,7 +82,14 @@ public class Client {
                         if (RSAKeyGenerator.verifySignWithCert(result.get(0), new String[]{result.get(1)})) {
                             // Assinar o que vem do Server para enviar ao cliente(buyer)
                             String sellerSignResponseFromServer = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, new String[]{result.get(0), result.get(1)});
-                            return Arrays.asList(result.get(0), result.get(1), sellerSignResponseFromServer);
+
+
+                            //write messageid File to send buyer
+                            my_message_id2++;
+                            dirPath = currentDir + "/../src/main/resources/message-ids/"+ sellerId +"/"+sellerId+".txt";
+                            WriteReadUtils.writeUsedMessageId(dirPath, my_message_id2);
+
+                            return Arrays.asList(result.get(0), result.get(1), sellerSignResponseFromServer, Integer.toString(my_message_id2));
                         } else {
                             System.out.println("Error: NotaryServer Message Tampered");
                         }
@@ -96,68 +111,6 @@ public class Client {
         // Assinar o que vem do Server para enviar ao cliente(buyer)
         String sellerSignResponseFromServer = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, new String[]{"false"});
         return Arrays.asList("false", sellerSignResponseFromServer);
-    }
-
-    private synchronized Boolean readMessageIdFile(String userId, String message_id) {
-        try {
-            String currentDir = System.getProperty("user.dir");
-            String path = currentDir + "/../src/main/resources/message-ids/other-users/" + userId + ".txt";
-
-            if (!Files.exists(Paths.get(path))) {
-                Files.createFile(Paths.get(path));
-            }
-
-            Stream<String> stream = Files.lines(Paths.get(path));
-            return stream.anyMatch(x -> x.equals(message_id));
-
-        } catch (IOException e) {
-            System.out.println("Caught exception while reading users file:");
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    private synchronized void writeMessageIdFile(String userId, String message_id) throws IOException {
-        String currentDir = System.getProperty("user.dir");
-        String path = currentDir + "/../src/main/resources/message-ids/other-users/" + userId + ".txt";
-        FileWriter fileWriter = new FileWriter(path, true);
-        PrintWriter writer = new PrintWriter(fileWriter);
-        writer.println(message_id);
-        writer.close();
-        fileWriter.close();
-    }
-
-    private synchronized String getMyMessageId(String userId){
-        String currentDir = System.getProperty("user.dir");
-        String path = currentDir + "/../src/main/resources/message-ids/" + userId + ".txt";
-        String res = "";
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(path));
-            String line = reader.readLine();
-            while (line != null) {
-                // line
-                res = line;
-                // read next line
-                line = reader.readLine();
-            }
-            reader.close();
-            return res;
-        } catch (IOException e) {
-            System.out.println("Caught exception while reading users file:");
-            e.printStackTrace();
-            return "";
-        }
-    }
-
-    public static void writeMyMessageIdFile(String userId, int id) throws FileNotFoundException, UnsupportedEncodingException, IOException {
-        String currentDir = System.getProperty("user.dir");
-        String path = currentDir + "/../src/main/resources/message-ids/" + userId + ".txt";
-        FileWriter fileWriter = new FileWriter(path, true);
-        PrintWriter writer = new PrintWriter(fileWriter);
-        writer.println(id);
-        writer.close();
-        fileWriter.close();
     }
 
 }

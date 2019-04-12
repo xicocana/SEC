@@ -191,28 +191,28 @@ public class Notary {
 
     public List<String> transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2,String message_id_seller, String message_id_buyer) {
         System.out.println("Client " + sellerId + " called transferGood");
-        String[] msg = new String[]{sellerId, buyerId, goodId, message_id_seller};
-        String[] msg2 = new String[]{buyerId, goodId, message_id_buyer};
         List<String> resultError;
-
         List<String> result = new ArrayList<>();
 
         try {
-            if ((RSAKeyGenerator.verifySign(sellerId, secret, msg)) ){//&& (RSAKeyGenerator.verifySign(buyerId, secret2, msg2))) {
+            String[] msg = new String[]{sellerId, buyerId, goodId, message_id_seller};
+            String[] msg2 = new String[]{buyerId, goodId, message_id_buyer};
+            if ((RSAKeyGenerator.verifySign(sellerId, secret, msg))  && (RSAKeyGenerator.verifySign(buyerId, secret2, msg2))) {
                 if (!readMessageIdFile(sellerId, message_id_seller)) {
                     writeMessageIdFile(sellerId, message_id_seller);
+                    my_message_id = Integer.parseInt(getMyMessageId());
+                    my_message_id++;
+                    writeMessageIdFile("server", Integer.toString(my_message_id));
                     for (Good good : _userGoods) {
                         if (good.getId().equals(goodId) && good.getStatus() && good.getOwner().equals(sellerId)) {
                             // Tocar good entre os users
                             good.setOwner(buyerId);
                             good.setStatus(false);
                             this.WriteNewFile();
-                            writeMessageIdFile("server", Integer.toString(my_message_id));
                             //CREATE SIGN
                             String signedMessage = "true";
                             byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
                             //
-
                             result.add(Base64.getEncoder().encodeToString(signatureBytes));
                             result.add("true");
                             return result;
@@ -247,7 +247,7 @@ public class Notary {
     }
 
     private List<String> initializeErrorList() {
-        System.out.println("//Error - Sign");
+        System.out.println("//Error Message ");
         //CREATE Error SIGN
         List<String> resultError = new ArrayList<>();
         String signedMessage = "false";
@@ -267,9 +267,6 @@ public class Notary {
 
     public void startCC() {
         try {
-
-            System.out.println("            //Load the PTEidlibj");
-
             System.loadLibrary("pteidlibj");
             pteid.Init(""); // Initializes the eID Lib
             pteid.SetSODChecking(false); // Don't check the integrity of the ID, address and photo (!)
@@ -279,20 +276,9 @@ public class Notary {
             System.out.println("Java version: " + javaVersion);
 
             java.util.Base64.Encoder encoder = java.util.Base64.getEncoder();
-
             String libName = "libpteidpkcs11.so";
 
-            // access the ID and Address data via the pteidlib
-            System.out.println("            -- accessing the ID  data via the pteidlib interface");
-
-
             X509Certificate cert = getCertFromByteArray(getCertificateInBytes(0));
-            System.out.println("Citized Authentication Certificate " + cert);
-
-            // access the ID and Address data via the pteidlib
-            System.out.println("            -- generating signature via the PKCS11 interface");
-
-
             if (-1 != osName.indexOf("Windows"))
                 libName = "pteidpkcs11.dll";
             else if (-1 != osName.indexOf("Mac"))
@@ -305,17 +291,8 @@ public class Notary {
                 Method getInstanceMethode = pkcs11Class.getDeclaredMethod("getInstance", String.class, String.class, CK_C_INITIALIZE_ARGS.class, boolean.class);
                 pkcs11 = (PKCS11) getInstanceMethode.invoke(null, new Object[]{libName, "C_GetFunctionList", null, false});
             }
-
-            //Open the PKCS11 session
-            System.out.println("            //Open the PKCS11 session");
             p11_session = pkcs11.C_OpenSession(0, PKCS11Constants.CKF_SERIAL_SESSION, null, null);
-
-            // Token login
-            System.out.println("            //Token login");
             pkcs11.C_Login(p11_session, 1, null);
-
-            // Get available keys
-            System.out.println("            //Get available keys");
             CK_ATTRIBUTE[] attributes = new CK_ATTRIBUTE[1];
             attributes[0] = new CK_ATTRIBUTE();
             attributes[0].type = PKCS11Constants.CKA_CLASS;
@@ -323,12 +300,7 @@ public class Notary {
 
             pkcs11.C_FindObjectsInit(p11_session, attributes);
             long[] keyHandles = pkcs11.C_FindObjects(p11_session, 5);
-
-            // points to auth_key
-            System.out.println("            //points to auth_key. No. of keys:" + keyHandles.length);
-
-            signatureKey = keyHandles[0];        //test with other keys to see what you get
-
+            signatureKey = keyHandles[0];
             pkcs11.C_FindObjectsFinal(p11_session);
 
             //signWithCC(signatureKey);
@@ -344,13 +316,16 @@ public class Notary {
 
     private byte[] signWithCC(long signatureKey, String signedMessage) throws PKCS11Exception {
         // initialize the signature method
-        System.out.println("//initialize the signature method");
+        System.out.println();
+        System.out.println("initialize the signature method");
         CK_MECHANISM mechanism = new CK_MECHANISM();
         mechanism.mechanism = PKCS11Constants.CKM_SHA1_RSA_PKCS;
         mechanism.pParameter = null;
         pkcs11.C_SignInit(p11_session, mechanism, signatureKey);
         // sign
-        System.out.println("//Sign ");
+        System.out.println("Sign");
+        System.out.println();
+
         return pkcs11.C_Sign(p11_session, signedMessage.getBytes(Charset.forName("UTF-8")));
     }
 
