@@ -2,12 +2,14 @@ package client;
 
 import domain.*;
 import utils.RSAKeyGenerator;
+import utils.RoundRobin;
 import utils.WriteReadUtils;
 import ws.impl.ClientWebServiceImpl;
 
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -31,9 +33,6 @@ public class NotaryClient {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        URL url = new URL("");
-        NotaryWebServiceImplService client = new NotaryWebServiceImplService(url);
-        NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
 
         Scanner scanner = new Scanner(System.in);
         System.out.print("Please insert Client ID: ");
@@ -67,10 +66,15 @@ public class NotaryClient {
 
         boolean flag = true;
 
+        RoundRobin rr = RoundRobin.getInstance();
+        int activeServers = rr.getActiveServers();
+
+        List<String> result = new ArrayList<>();
+        List<List<String>> results = new ArrayList<>();
+
         do {
             System.out.print("select option: ");
             int opt = scanner.nextInt();
-
             String goodId;
             switch (opt) {
                 case 1:
@@ -86,7 +90,11 @@ public class NotaryClient {
                     //Call SERVER METHOD
                     String[] args2 = new String[]{input, goodId,Integer.toString(message_id)};
                     List<String> argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args2), Integer.toString(message_id));
-                    List<String> result = notaryWebservice.intentionToSell(argsToSend);
+
+                    for(int i=0; i<activeServers; i++){
+                        result = rr.getServer().intentionToSell(argsToSend);
+                        results.add(result);
+                    }
 
                     if (result.size() == 5) {
                         if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1), result.get(2), result.get(3), result.get(4))){
@@ -128,11 +136,15 @@ public class NotaryClient {
                     message_id = var.equals("") ? 0 : Integer.parseInt(var);
                     message_id++;
                     WriteReadUtils.writeUsedMessageId(pathToMessageIds, message_id);
-
+                    
                     //Call SERVER METHOD
                     args = new String[]{input, goodId, Integer.toString(message_id)};
                     argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args), Integer.toString(message_id));
-                    result = notaryWebservice.getStateOfGood(argsToSend);
+
+                    for(int i=0; i<activeServers; i++){
+                        result = rr.getServer().getStateOfGood(argsToSend);
+                        results.add(result);
+                    }
 
                     try {
                         if (result.size() == 4) {
