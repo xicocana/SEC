@@ -1,5 +1,5 @@
 
-package serverWS;
+package ws.importWS.serverWS;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "NotaryWebServiceImplService", targetNamespace = "http://Implementacao.ws/", wsdlLocation = "http://localhost:9898/notaryService?wsdl")
+@WebServiceClient(name = "NotaryWebServiceImplService", targetNamespace = "http://Implementacao.ws/", wsdlLocation = "http://localhost:9050/notaryService?wsdl")
 public class NotaryWebServiceImplService
     extends Service
 {
@@ -30,7 +30,7 @@ public class NotaryWebServiceImplService
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("http://localhost:9898/notaryService?wsdl");
+            url = new URL("http://localhost:9050/notaryService?wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }
@@ -68,7 +68,7 @@ public class NotaryWebServiceImplService
      *     returns NotaryWebService
      */
     @WebEndpoint(name = "NotaryWebServiceImplPort")
-    public serverWS.NotaryWebService getNotaryWebServiceImplPort() {
+    public NotaryWebService getNotaryWebServiceImplPort() {
         return super.getPort(new QName("http://Implementacao.ws/", "NotaryWebServiceImplPort"), NotaryWebService.class);
     }
 
@@ -80,7 +80,7 @@ public class NotaryWebServiceImplService
      *     returns NotaryWebService
      */
     @WebEndpoint(name = "NotaryWebServiceImplPort")
-    public serverWS.NotaryWebService getNotaryWebServiceImplPort(WebServiceFeature... features) {
+    public NotaryWebService getNotaryWebServiceImplPort(WebServiceFeature... features) {
         return super.getPort(new QName("http://Implementacao.ws/", "NotaryWebServiceImplPort"), NotaryWebService.class, features);
     }
 

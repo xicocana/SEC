@@ -1,8 +1,6 @@
 package client;
 
 import domain.*;
-import serverWS.NotaryWebService;
-import serverWS.NotaryWebServiceImplService;
 import utils.RSAKeyGenerator;
 import utils.WriteReadUtils;
 import ws.impl.ClientWebServiceImpl;
@@ -14,7 +12,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import clientWS.ClientWebServiceImplService;
+import ws.importWS.clientWS.ClientWebServiceImplService;
+import ws.importWS.serverWS.NotaryWebService;
+import ws.importWS.serverWS.NotaryWebServiceImplService;
 
 import javax.xml.ws.Endpoint;
 
@@ -31,11 +31,11 @@ public class NotaryClient {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        NotaryWebServiceImplService client = new NotaryWebServiceImplService();
+        URL url = new URL("");
+        NotaryWebServiceImplService client = new NotaryWebServiceImplService(url);
         NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
 
         Scanner scanner = new Scanner(System.in);
-
         System.out.print("Please insert Client ID: ");
         String input = scanner.next();
 
@@ -48,7 +48,6 @@ public class NotaryClient {
         notaryClient.setId(input);
 
         System.out.println("NotaryClient running with id: " + input);
-
         String bindingURI = "http://localhost:909" + input.substring(input.length() - 1) + "/" + input + "WebService";
         ClientWebServiceImpl webService = new ClientWebServiceImpl();
         Endpoint.publish(bindingURI, webService);
@@ -184,7 +183,7 @@ public class NotaryClient {
 
                     try {
                         ClientWebServiceImplService webService2 = new ClientWebServiceImplService(new URL(mywebserviceURL));
-                        clientWS.ClientWebServiceImpl clientWebservice = webService2.getClientWebServiceImplPort();
+                        ws.importWS.clientWS.ClientWebServiceImpl clientWebservice = webService2.getClientWebServiceImplPort();
 
                         String sign = RSAKeyGenerator.writeSign(input, input + input, input, goodId, Integer.toString(message_id));
                         argsToSend = Arrays.asList(name2, input, goodId, sign, Integer.toString(message_id));

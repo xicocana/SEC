@@ -1,2 +1,2 @@
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://impl.ws/")
-package clientWS;
+package ws.importWS.clientWS;

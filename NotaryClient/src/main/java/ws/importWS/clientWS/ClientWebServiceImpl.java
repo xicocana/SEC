@@ -1,5 +1,5 @@
 
-package clientWS;
+package ws.importWS.clientWS;
 
 import java.util.List;
 import javax.jws.WebMethod;
@@ -33,8 +33,8 @@ public interface ClientWebServiceImpl {
      */
     @WebMethod
     @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "buyGood", targetNamespace = "http://impl.ws/", className = "clientWS.BuyGood")
-    @ResponseWrapper(localName = "buyGoodResponse", targetNamespace = "http://impl.ws/", className = "clientWS.BuyGoodResponse")
+    @RequestWrapper(localName = "buyGood", targetNamespace = "http://impl.ws/", className = "ws.importWS.clientWS.BuyGood")
+    @ResponseWrapper(localName = "buyGoodResponse", targetNamespace = "http://impl.ws/", className = "ws.importWS.clientWS.BuyGoodResponse")
     @Action(input = "http://impl.ws/ClientWebServiceImpl/buyGoodRequest", output = "http://impl.ws/ClientWebServiceImpl/buyGoodResponse")
     public List<String> buyGood(
         @WebParam(name = "arg0", targetNamespace = "")

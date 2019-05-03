@@ -1,9 +1,9 @@
 package domain;
 
-import serverWS.NotaryWebService;
-import serverWS.NotaryWebServiceImplService;
 import utils.RSAKeyGenerator;
 import utils.WriteReadUtils;
+import ws.importWS.serverWS.NotaryWebService;
+import ws.importWS.serverWS.NotaryWebServiceImplService;
 
 import java.io.IOException;
 import java.security.cert.CertificateException;

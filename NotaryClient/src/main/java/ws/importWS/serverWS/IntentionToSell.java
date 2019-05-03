@@ -1,5 +1,5 @@
 
-package serverWS;
+package ws.importWS.serverWS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,12 +9,12 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for getStateOfGood complex type.
+ * <p>Java class for intentionToSell complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="getStateOfGood">
+ * &lt;complexType name="intentionToSell">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
@@ -28,10 +28,10 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "getStateOfGood", propOrder = {
+@XmlType(name = "intentionToSell", propOrder = {
     "arg0"
 })
-public class GetStateOfGood {
+public class IntentionToSell {
 
     protected List<String> arg0;
 

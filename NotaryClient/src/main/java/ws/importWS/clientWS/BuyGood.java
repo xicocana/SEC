@@ -1,25 +1,24 @@
 
-package serverWS;
+package ws.importWS.clientWS;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for transferGoodResponse complex type.
+ * <p>Java class for buyGood complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="transferGoodResponse">
+ * &lt;complexType name="buyGood">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="return" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="arg0" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -29,27 +28,26 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "transferGoodResponse", propOrder = {
-    "_return"
+@XmlType(name = "buyGood", propOrder = {
+    "arg0"
 })
-public class TransferGoodResponse {
+public class BuyGood {
 
-    @XmlElement(name = "return")
-    protected List<String> _return;
+    protected List<String> arg0;
 
     /**
-     * Gets the value of the return property.
+     * Gets the value of the arg0 property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the return property.
+     * This is why there is not a <CODE>set</CODE> method for the arg0 property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getReturn().add(newItem);
+     *    getArg0().add(newItem);
      * </pre>
      * 
      * 
@@ -59,11 +57,11 @@ public class TransferGoodResponse {
      * 
      * 
      */
-    public List<String> getReturn() {
-        if (_return == null) {
-            _return = new ArrayList<String>();
+    public List<String> getArg0() {
+        if (arg0 == null) {
+            arg0 = new ArrayList<String>();
         }
-        return this._return;
+        return this.arg0;
     }
 
 }
