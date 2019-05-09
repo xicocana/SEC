@@ -111,28 +111,6 @@ public class RSAKeyGenerator {
         return privateKey;
     }
 
-
-    public static boolean verifySign(String owner, String secret, String ...args) {
-        Signature sig;
-
-        try {
-            String msg = null;
-            for (String s : args) {
-                msg = msg + s;
-            }
-            byte[] messageBytes = msg.getBytes("UTF8");
-            byte[] data = Base64.getDecoder().decode(secret);
-            sig = Signature.getInstance("SHA1WithRSA");
-            sig.initVerify(RSAKeyGenerator.getPublicKeyFromKeyStore(owner));
-            sig.update(messageBytes);
-            return sig.verify(data);
-        } catch (Exception e) {
-            System.out.println("Caught exception while verifying message signature:");
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public static String writeSign(String alias, String pass, String ...args) {
 
         try {
@@ -155,6 +133,7 @@ public class RSAKeyGenerator {
     }
 
     public static boolean verifySignWithCert( String secret ,String ...args) throws CertificateException, FileNotFoundException {
+
         String currentDir = System.getProperty("user.dir");
         File initialFile = new File(currentDir + "/../src/main/resources/keys/cert.cer");
         InputStream ins = new FileInputStream(initialFile);
@@ -180,6 +159,27 @@ public class RSAKeyGenerator {
             e.printStackTrace();
         }
 
+        return false;
+    }
+
+    public static boolean verifySign(String owner, String secret, String ...args) {
+        Signature sig;
+
+        try {
+            String msg = null;
+            for (String s : args) {
+                msg = msg + s;
+            }
+            byte[] messageBytes = msg.getBytes("UTF8");
+            byte[] data = Base64.getDecoder().decode(secret);
+            sig = Signature.getInstance("SHA1WithRSA");
+            sig.initVerify(RSAKeyGenerator.getPublicKeyFromKeyStore(owner));
+            sig.update(messageBytes);
+            return sig.verify(data);
+        } catch (Exception e) {
+            System.out.println("Caught exception while verifying message signature:");
+            e.printStackTrace();
+        }
         return false;
     }
 }

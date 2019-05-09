@@ -1,7 +1,12 @@
 package utils;
 
+import sun.security.pkcs11.wrapper.CK_MECHANISM;
+import sun.security.pkcs11.wrapper.PKCS11Constants;
+import sun.security.pkcs11.wrapper.PKCS11Exception;
+
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.security.*;
 import java.util.Base64;
 
@@ -75,6 +80,9 @@ public class RSAKeyGenerator {
         return new SecretKeySpec(encoded, "RSA");
     }
 
+
+    //Security
+
     public static PublicKey getPublicKeyFromKeyStore(String alias) throws Exception {
         String currentDir = System.getProperty("user.dir");
         File initialFile = new File(currentDir + "/../src/main/resources/keys/keystore.jks");
@@ -87,6 +95,27 @@ public class RSAKeyGenerator {
         PublicKey publicKey = cert.getPublicKey();
 
         return publicKey;
+    }
+
+    public static String writeSign(String alias, String pass, String ...args) {
+
+        try {
+            Signature sig;
+            String msg = null;
+            for (String s : args) {
+                msg = msg + s;
+            }
+            byte[] messageBytes = msg.getBytes("UTF8");
+            sig = Signature.getInstance("SHA1WithRSA");
+            sig.initSign(RSAKeyGenerator.getPrivateKeyFromKeyStore(alias, pass));
+            sig.update(messageBytes);
+            byte[] signatureBytes = sig.sign();
+            return Base64.getEncoder().encodeToString(signatureBytes);
+        } catch (Exception e) {
+            System.out.println("Caught exception while writing message signature:");
+            e.printStackTrace();
+        }
+        return "";
     }
 
     public static PrivateKey getPrivateKeyFromKeyStore(String alias, String passwd) throws Exception {

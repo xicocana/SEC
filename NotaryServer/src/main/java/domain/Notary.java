@@ -20,13 +20,9 @@ import java.util.stream.Stream;
 
 public class Notary {
 
-    private int _id;
-
-    private ArrayList<String> _users = new ArrayList<>();
     private ArrayList<Good> _userGoods = new ArrayList<>();
 
     private String currentDir = System.getProperty("user.dir");
-    private String pathToUsers = currentDir + "/../src/main/resources/notary-folder/users.txt";
     private String pathToGoods = currentDir + "/../src/main/resources/notary-folder/user_goods.txt";
     private int transaction_counter;
 
@@ -34,23 +30,35 @@ public class Notary {
 
     private PKCS11 pkcs11;
     private long p11_session;
-    long signatureKey;
+    private long signatureKey;
+
+    private   ArrayList<String> _users = new ArrayList<>();
+
+    //DEFAULT WITH CC
+    private boolean withCC = true;
+
+    public void withCC(boolean value) {
+        withCC = value;
+    }
 
     private static class SingletonHolder {
         private static final Notary INSTANCE = new Notary();
     }
 
-    public Notary() {
+    private Notary() {
         BufferedReader reader;
         transaction_counter = Objects.requireNonNull(new File(currentDir + "/../src/main/resources/notary-folder/").list()).length - 1;
         my_message_id = Integer.parseInt(getMyMessageId());
 
         String newpath = pathToGoods.substring(0, pathToGoods.length() - 4) + transaction_counter + ".txt";
-        try {
+
+         try {
+            String pathToUsers = currentDir + "/../src/main/resources/notary-folder/users.txt";
             reader = new BufferedReader(new FileReader(pathToUsers));
             String line = reader.readLine();
             while (line != null) {
                 // line
+
                 _users.add(line);
                 // read next line
                 line = reader.readLine();
@@ -70,7 +78,7 @@ public class Notary {
                 String[] args = line.split(":");
                 String good = args[0];
                 String usr = args[1];
-                Boolean status = new Boolean(args[2]);
+                Boolean status = Boolean.valueOf(args[2]);
                 Good g = new Good(good, usr);
                 g.setStatus(status);
                 _userGoods.add(g);
@@ -83,7 +91,6 @@ public class Notary {
             e.printStackTrace();
         }
     }
-
 
 
     public static synchronized Notary getInstance() {
@@ -113,15 +120,14 @@ public class Notary {
 
                             //CREATE SIGN
                             String signedMessage = true + good.getOwner() + good.getId() + my_message_id;
-                            byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
-                            result.add(Base64.getEncoder().encodeToString(signatureBytes));
+                            result.add(signGeneric(signatureKey, signedMessage));
                             //
 
                             result.add("true");
                             result.add(good.getOwner());
                             result.add(good.getId());
                             result.add(Integer.toString(my_message_id));
-                            
+
                             return result;
                         }
                     }
@@ -155,7 +161,7 @@ public class Notary {
             //verifica assinatura dos clientes
             if (RSAKeyGenerator.verifySign(user, secret, msg)) {
                 if (!readMessageIdFile(user, message_id)) {
-                    writeMessageIdFile(user, message_id);    
+                    writeMessageIdFile(user, message_id);
                     my_message_id = Integer.parseInt(getMyMessageId());
                     my_message_id++;
                     writeMessageIdFile("server", Integer.toString(my_message_id));
@@ -164,8 +170,7 @@ public class Notary {
                         if (good.getId().equals(goodId)) {
                             //CREATE SIGN
                             String signedMessage = good.getStatus() + good.getOwner() + my_message_id;
-                            byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
-                            result.add(Base64.getEncoder().encodeToString(signatureBytes));
+                            result.add(signGeneric(signatureKey, signedMessage));
                             //
                             result.add(Boolean.toString(good.getStatus()));
                             result.add(good.getOwner());
@@ -189,7 +194,7 @@ public class Notary {
         return resultError;
     }
 
-    public List<String> transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2,String message_id_seller, String message_id_buyer) {
+    public List<String> transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2, String message_id_seller, String message_id_buyer) {
         System.out.println("Client " + sellerId + " called transferGood");
         List<String> resultError;
         List<String> result = new ArrayList<>();
@@ -197,7 +202,7 @@ public class Notary {
         try {
             String[] msg = new String[]{sellerId, buyerId, goodId, message_id_seller};
             String[] msg2 = new String[]{buyerId, goodId, message_id_buyer};
-            if ((RSAKeyGenerator.verifySign(sellerId, secret, msg))  && (RSAKeyGenerator.verifySign(buyerId, secret2, msg2))) {
+            if ((RSAKeyGenerator.verifySign(sellerId, secret, msg)) && (RSAKeyGenerator.verifySign(buyerId, secret2, msg2))) {
                 if (!readMessageIdFile(sellerId, message_id_seller)) {
                     writeMessageIdFile(sellerId, message_id_seller);
                     my_message_id = Integer.parseInt(getMyMessageId());
@@ -211,15 +216,14 @@ public class Notary {
                             this.WriteNewFile();
                             //CREATE SIGN
                             String signedMessage = "true";
-                            byte[] signatureBytes = signWithCC(signatureKey, signedMessage);
                             //
-                            result.add(Base64.getEncoder().encodeToString(signatureBytes));
+                            result.add(signGeneric(signatureKey, signedMessage));
                             result.add("true");
                             return result;
 
                         }
                     }
-                }else{
+                } else {
                     System.out.println("Replay Attack !!");
                 }
             } else {
@@ -235,6 +239,93 @@ public class Notary {
         return resultError;
     }
 
+    private List<String> initializeErrorList() {
+        //CREATE Error SIGN
+        System.out.println("//Error Message ");
+        List<String> resultError = new ArrayList<>();
+        try {
+
+            String signedMessage = "false";
+            resultError.add("ERROR");
+            resultError.add(signGeneric(signatureKey, signedMessage));
+            resultError.add("false");
+        } catch (PKCS11Exception e) {
+            e.printStackTrace();
+        }
+
+        return resultError;
+    }
+
+
+    //////////////////////////TODO - UTILS
+
+    private String signGeneric(long signatureKey, String signedMessage) throws PKCS11Exception {
+        if (withCC) {
+            return signWithCC(signatureKey, signedMessage);
+        } else {
+            return RSAKeyGenerator.writeSign("server", "serverserver", signedMessage);
+        }
+    }
+
+    private String signWithCC(long signatureKey, String signedMessage) throws PKCS11Exception {
+        // initialize the signature method
+        System.out.println();
+        System.out.println("initialize the signature method");
+        CK_MECHANISM mechanism = new CK_MECHANISM();
+        mechanism.mechanism = PKCS11Constants.CKM_SHA1_RSA_PKCS;
+        mechanism.pParameter = null;
+        pkcs11.C_SignInit(p11_session, mechanism, signatureKey);
+        // sign
+        System.out.println("Sign");
+        System.out.println();
+
+        byte[] signatureBytes = pkcs11.C_Sign(p11_session, signedMessage.getBytes(Charset.forName("UTF-8")));
+
+        return Base64.getEncoder().encodeToString(signatureBytes);
+    }
+
+    // Returns the n-th certificate, starting from 0
+    private static byte[] getCertificateInBytes(int n) {
+        byte[] certificate_bytes = null;
+        try {
+            PTEID_Certif[] certs = pteid.GetCertificates();
+            System.out.println("Number of certs found: " + certs.length);
+            int i = 0;
+            for (PTEID_Certif cert : certs) {
+                System.out.println("-------------------------------\nCertificate #" + (i++));
+                System.out.println(cert.certifLabel);
+            }
+
+            certificate_bytes = certs[n].certif; //gets the byte[] with the n-th certif
+
+            //pteid.Exit(pteid.PTEID_EXIT_LEAVE_CARD); // OBRIGATORIO Termina a eID Lib
+        } catch (PteidException e) {
+            e.printStackTrace();
+        }
+
+        //TODO - WRITE TO FILE
+        final FileOutputStream os;
+        try {
+            os = new FileOutputStream("cert.cer");
+            os.write(certificate_bytes);
+            os.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return certificate_bytes;
+    }
+
+    public static X509Certificate getCertFromByteArray(byte[] certificateEncoded) throws CertificateException {
+        CertificateFactory f = CertificateFactory.getInstance("X.509");
+        InputStream in = new ByteArrayInputStream(certificateEncoded);
+        X509Certificate cert = (X509Certificate) f.generateCertificate(in);
+        return cert;
+    }
+
     public void WriteNewFile() throws FileNotFoundException, UnsupportedEncodingException {
         transaction_counter++;
         PrintWriter writer = new PrintWriter(pathToGoods.substring(0, pathToGoods.length() - 4) + transaction_counter + ".txt", "UTF-8");
@@ -246,23 +337,59 @@ public class Notary {
         writer.close();
     }
 
-    private List<String> initializeErrorList() {
-        System.out.println("//Error Message ");
-        //CREATE Error SIGN
-        List<String> resultError = new ArrayList<>();
-        String signedMessage = "false";
-        byte[] signatureBytes = new byte[0];
+    private synchronized void writeMessageIdFile(String userId, String message_id) throws IOException {
+        String path = currentDir + "/../src/main/resources/message-ids/" + userId + ".txt";
+        FileWriter fileWriter = new FileWriter(path, true);
+        PrintWriter writer = new PrintWriter(fileWriter);
+        writer.println(message_id);
+        writer.close();
+        fileWriter.close();
+    }
+
+    private synchronized Boolean readMessageIdFile(String userId, String message_id) {
         try {
-            signatureBytes = signWithCC(signatureKey, signedMessage);
-        } catch (PKCS11Exception e) {
+            String path = currentDir + "/../src/main/resources/message-ids/" + userId + ".txt";
+
+            if (!Files.exists(Paths.get(path))) {
+                Files.createFile(Paths.get(path));
+            }
+
+            Stream<String> stream = Files.lines(Paths.get(path));
+            return stream.anyMatch(x -> x.equals(message_id));
+
+        } catch (IOException e) {
+            System.out.println("Caught exception while reading users file:");
             e.printStackTrace();
         }
-        resultError.add("ERROR");
-        resultError.add(Base64.getEncoder().encodeToString(signatureBytes));
-        resultError.add("false");
-        //
 
-        return resultError;
+        return false;
+    }
+
+    private synchronized String getMyMessageId() {
+        String currentDir = System.getProperty("user.dir");
+        String path = currentDir + "/../src/main/resources/message-ids/server.txt";
+        String res = "";
+        try {
+            if (!Files.exists(Paths.get(path))) {
+                Files.createFile(Paths.get(path));
+                writeMessageIdFile("server", "0");
+            }
+
+            BufferedReader reader = new BufferedReader(new FileReader(path));
+            String line = reader.readLine();
+            while (line != null) {
+                // line
+                res = line;
+                // read next line
+                line = reader.readLine();
+            }
+            reader.close();
+            return res;
+        } catch (IOException e) {
+            System.out.println("Caught exception while reading users file:");
+            e.printStackTrace();
+            return "";
+        }
     }
 
     public void startCC() {
@@ -311,119 +438,6 @@ public class Notary {
             //TODO - Só para testar
             e.printStackTrace();
             System.out.println("Server will continue whitout Portuguese Citizen Card Support");
-        }
-    }
-
-    private byte[] signWithCC(long signatureKey, String signedMessage) throws PKCS11Exception {
-        // initialize the signature method
-        System.out.println();
-        System.out.println("initialize the signature method");
-        CK_MECHANISM mechanism = new CK_MECHANISM();
-        mechanism.mechanism = PKCS11Constants.CKM_SHA1_RSA_PKCS;
-        mechanism.pParameter = null;
-        pkcs11.C_SignInit(p11_session, mechanism, signatureKey);
-        // sign
-        System.out.println("Sign");
-        System.out.println();
-
-        return pkcs11.C_Sign(p11_session, signedMessage.getBytes(Charset.forName("UTF-8")));
-    }
-
-    // Returns the n-th certificate, starting from 0
-    private static byte[] getCertificateInBytes(int n) {
-        byte[] certificate_bytes = null;
-        try {
-            PTEID_Certif[] certs = pteid.GetCertificates();
-            System.out.println("Number of certs found: " + certs.length);
-            int i = 0;
-            for (PTEID_Certif cert : certs) {
-                System.out.println("-------------------------------\nCertificate #" + (i++));
-                System.out.println(cert.certifLabel);
-            }
-
-            certificate_bytes = certs[n].certif; //gets the byte[] with the n-th certif
-
-            //pteid.Exit(pteid.PTEID_EXIT_LEAVE_CARD); // OBRIGATORIO Termina a eID Lib
-        } catch (PteidException e) {
-            e.printStackTrace();
-        }
-
-        //TODO - WRITE TO FILE
-        final FileOutputStream os;
-        try {
-            os = new FileOutputStream("cert.cer");
-            os.write(certificate_bytes);
-            os.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        return certificate_bytes;
-    }
-
-    public static X509Certificate getCertFromByteArray(byte[] certificateEncoded) throws CertificateException {
-        CertificateFactory f = CertificateFactory.getInstance("X.509");
-        InputStream in = new ByteArrayInputStream(certificateEncoded);
-        X509Certificate cert = (X509Certificate) f.generateCertificate(in);
-        return cert;
-    }
-
-
-    private synchronized Boolean readMessageIdFile(String userId, String message_id) {
-        try {
-            String path = currentDir + "/../src/main/resources/message-ids/" + userId + ".txt";
-
-            if (!Files.exists(Paths.get(path))) {
-                Files.createFile(Paths.get(path));
-            }
-
-            Stream<String> stream = Files.lines(Paths.get(path));
-            return stream.anyMatch(x -> x.equals(message_id));
-
-        } catch (IOException e) {
-            System.out.println("Caught exception while reading users file:");
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    private synchronized void writeMessageIdFile(String userId, String message_id) throws IOException {
-        String path = currentDir + "/../src/main/resources/message-ids/" + userId + ".txt";
-        FileWriter fileWriter = new FileWriter(path, true);
-        PrintWriter writer = new PrintWriter(fileWriter);
-        writer.println(message_id);
-        writer.close();
-        fileWriter.close();
-    }
-
-    private synchronized String getMyMessageId(){
-        String currentDir = System.getProperty("user.dir");
-        String path = currentDir + "/../src/main/resources/message-ids/server.txt";
-        String res = "";
-        try {
-            if (!Files.exists(Paths.get(path))) {
-                Files.createFile(Paths.get(path));
-                writeMessageIdFile("server", "0");
-            }
-
-            BufferedReader reader = new BufferedReader(new FileReader(path));
-            String line = reader.readLine();
-            while (line != null) {
-                // line
-                res = line;
-                // read next line
-                line = reader.readLine();
-            }
-            reader.close();
-            return res;
-        } catch (IOException e) {
-            System.out.println("Caught exception while reading users file:");
-            e.printStackTrace();
-            return "";
         }
     }
 }

@@ -21,10 +21,14 @@ public class NotaryServer {
         NotaryWebServiceImpl webService = new NotaryWebServiceImpl();
         Endpoint.publish(bindingURI, webService);
         System.out.println("Server started at: " + bindingURI);
-
         Notary notary = Notary.getInstance();
-
-        notary.startCC();
+        System.out.println("Do you want to use CC? yes or no");
+        String value = scanner.next();
+        if (value.equalsIgnoreCase("yes")){
+            notary.startCC();
+        }else if(value.equalsIgnoreCase("no")){
+            notary.withCC(false);
+        }
 
     }
 
