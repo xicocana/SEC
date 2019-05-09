@@ -6,13 +6,13 @@ import utils.RoundRobin;
 import utils.WriteReadUtils;
 import ws.impl.ClientWebServiceImpl;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.security.cert.CertificateException;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import ws.importWS.clientWS.ClientWebServiceImplService;
 
@@ -20,24 +20,23 @@ import javax.xml.ws.Endpoint;
 
 public class NotaryClient {
 
-    private static int message_id = 0;
-    private static BufferedReader reader;
-    private static String currentDir = System.getProperty("user.dir");
-    private static String pathToMessageIds;
+    private boolean withCC = true;
 
-    /**
-     * Starts the web service client.
-     *
-     * @throws Exception
-     */
-    public static void main(String[] args) throws Exception {
+    public NotaryClient() {
+        super();
+    }
 
+    private void initializeClient() throws IOException, CertificateException {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Please insert Client ID: ");
         String input = scanner.next();
 
+        System.out.println("Do you want to use CC? yes or no");
+        String value = scanner.next();
+        withCC = value.equalsIgnoreCase("yes");
+
         String currentDir = System.getProperty("user.dir");
-        String dirPath = currentDir + "/../src/main/resources/message-ids/"+ input +"/other-users/";
+        String dirPath = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/";
         WriteReadUtils.createDir(dirPath);
 
         Client notaryClient = new Client();
@@ -49,10 +48,10 @@ public class NotaryClient {
         Endpoint.publish(bindingURI, webService);
 
         System.out.println("Server started at: " + bindingURI);
-        pathToMessageIds = currentDir + "/../src/main/resources/message-ids/"+ input +"/" + input +".txt";
+        String pathToMessageIds = currentDir + "/../src/main/resources/message-ids/" + input + "/" + input + ".txt";
 
         String var = WriteReadUtils.getMyMessageId(pathToMessageIds);
-        message_id = var.equals("") ? 0 : Integer.parseInt(var);
+        int message_id = var.equals("") ? 0 : Integer.parseInt(var);
 
         System.out.println("------------------------------ ");
         System.out.println("NotaryClient option:");
@@ -68,7 +67,7 @@ public class NotaryClient {
 
         List<String> result = new ArrayList<>();
         List<List<String>> results = new ArrayList<>();
-
+        String[] args2;
         do {
             System.out.print("select option: ");
             int opt = scanner.nextInt();
@@ -85,19 +84,19 @@ public class NotaryClient {
                     WriteReadUtils.writeUsedMessageId(pathToMessageIds, message_id);
 
                     //Call SERVER METHOD
-                    String[] args2 = new String[]{input, goodId,Integer.toString(message_id)};
+                    args2 = new String[]{input, goodId, Integer.toString(message_id)};
                     List<String> argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args2), Integer.toString(message_id));
 
-                    for(int i=0; i<activeServers; i++){
+                    for (int i = 0; i < activeServers; i++) {
                         result = rr.getServer().intentionToSell(argsToSend);
                         results.add(result);
                     }
 
                     if (result.size() == 5) {
-                        if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1), result.get(2), result.get(3), result.get(4))){
-                            dirPath = currentDir + "/../src/main/resources/message-ids/"+ input +"/other-users/server.txt";
-                            if(!WriteReadUtils.readMessageIdFile(dirPath, result.get(4))){
-                                String path = currentDir + "/../src/main/resources/message-ids/"+input+"/other-users/server.txt";
+                        if (verifyGeneric("server", result.get(0), result.get(1), result.get(2), result.get(3), result.get(4))) {
+                            dirPath = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/server.txt";
+                            if (!WriteReadUtils.readMessageIdFile(dirPath, result.get(4))) {
+                                String path = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/server.txt";
                                 WriteReadUtils.writeUsedMessageId(path, Integer.parseInt(result.get(4)));
                                 if (Boolean.valueOf(result.get(1))) {
                                     System.out.println("-> " + goodId + " is now for sale");
@@ -109,12 +108,11 @@ public class NotaryClient {
                             } else {
                                 System.out.println("Replay Attack !!");
                             }
-                        }
-                        else{
+                        } else {
                             System.out.println("Error: NotaryServer Message Tampered");
                         }
                     } else if (result.size() == 2) {
-                        if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1))) {
+                        if (verifyGeneric("server", result.get(0), result.get(1))) {
                             System.out.println("Error: Something Wrong with NotaryServer");
                         } else {
                             System.out.println("Error: NotaryServer Message Tampered");
@@ -125,6 +123,7 @@ public class NotaryClient {
 
                     break;
                 case 2:
+                    AntiSpamFunction(10);
                     System.out.print("Please insert good ID: ");
                     goodId = scanner.next();
 
@@ -133,30 +132,32 @@ public class NotaryClient {
                     message_id = var.equals("") ? 0 : Integer.parseInt(var);
                     message_id++;
                     WriteReadUtils.writeUsedMessageId(pathToMessageIds, message_id);
-                    
-                    //Call SERVER METHOD
-                    args = new String[]{input, goodId, Integer.toString(message_id)};
-                    argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args), Integer.toString(message_id));
 
-                    for(int i=0; i<activeServers; i++){
-                        result = rr.getStateOfGoodCommunication(argsToSend);
-                        results.add(result);
-                    }
+//                    //Call SERVER METHOD
+//                    args2 = new String[]{input, goodId, Integer.toString(message_id)};
+//                    argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args2), Integer.toString(message_id));
+
+
+                    result = rr.getStateOfGoodCommunication(input, goodId, Integer.toString(message_id));
+
+
+                    results.add(result);
+
 
                     try {
                         if (result.size() == 4) {
-                            if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1), result.get(2),result.get(3))) {
+                            if (verifyGeneric("server", result.get(0), result.get(1), result.get(2), result.get(3))) {
 
-                                dirPath = currentDir + "/../src/main/resources/message-ids/"+ input +"/other-users/server.txt";
-                                if(!WriteReadUtils.readMessageIdFile(dirPath, result.get(3))) {
-                                    String path = currentDir + "/../src/main/resources/message-ids/"+ input +"/other-users/server.txt";
+                                dirPath = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/server.txt";
+                                if (!WriteReadUtils.readMessageIdFile(dirPath, result.get(3))) {
+                                    String path = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/server.txt";
                                     WriteReadUtils.writeUsedMessageId(path, Integer.parseInt(result.get(3)));
 
                                     System.out.println("-> " + goodId + " owner  : " + result.get(2));
                                     String onSale = Boolean.valueOf(result.get(1)) ? "on-sale" : "not-on-sale";
                                     System.out.println("-> " + goodId + " status : " + onSale);
                                     System.out.println(" ");
-                                }else{
+                                } else {
                                     System.out.println("Replay Attack !!");
                                 }
                             } else {
@@ -164,7 +165,7 @@ public class NotaryClient {
                             }
 
                         } else if (result.size() == 2) {
-                            if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1))) {
+                            if (verifyGeneric("server", result.get(0), result.get(1))) {
                                 System.out.println("Error: Something Wrong with NotaryServer");
                             } else {
                                 System.out.println("Error: NotaryServer Message Tampered");
@@ -201,17 +202,17 @@ public class NotaryClient {
                         result = clientWebservice.buyGood(argsToSend);
 
                         if (result.size() == 4) {
-                            if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1)) &&
-                                    RSAKeyGenerator.verifySign(name2, result.get(2), result.get(0), result.get(1))) {
+                            if (verifyGeneric("server", result.get(0), result.get(1)) &&
+                                    verifyGeneric(name2, result.get(2), result.get(0), result.get(1))) {
 
-                                dirPath = currentDir + "/../src/main/resources/message-ids/"+ input +"/other-users/server.txt";
-                                if(!WriteReadUtils.readMessageIdFile(dirPath, result.get(3))) {
-                                    String path = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/"+name2+".txt";
+                                dirPath = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/server.txt";
+                                if (!WriteReadUtils.readMessageIdFile(dirPath, result.get(3))) {
+                                    String path = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/" + name2 + ".txt";
                                     WriteReadUtils.writeUsedMessageId(path, Integer.parseInt(result.get(3)));
 
                                     System.out.println("-> Purchase successful");
 
-                                }else{
+                                } else {
                                     System.out.println("Replay Attack !!");
                                 }
                             } else {
@@ -242,5 +243,59 @@ public class NotaryClient {
             }
 
         } while (flag);
+    }
+
+    private void AntiSpamFunction(int seconds) {
+
+
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+        int a = random.nextInt(100);
+        int b = random.nextInt(100);
+        System.out.println("What is " + a + " + " + b + " ?");
+        String input = scanner.next();
+
+        System.out.println("Validating answer...");
+
+        for (long stop = System.nanoTime() + TimeUnit.SECONDS.toNanos(seconds); stop > System.nanoTime(); ) {
+            /*
+             * Hammer the JVM with junk
+             */
+
+            int x = random.nextInt(100) + 100;
+            List<String> lista = new ArrayList<>();
+            for (int i = 0; i < x; i++) {
+                lista.add("A");
+            }
+            String conc = "";
+            for (int i = 0; i < lista.size(); i++) {
+                conc = conc + lista.get(i);
+            }
+        }
+        int res = a + b;
+
+        if (input.equals(Integer.toString(res))) {
+            System.out.println("Success");
+        } else {
+            System.out.println("Wrong, try again");
+            AntiSpamFunction(10);
+        }
+
+    }
+
+    public boolean verifyGeneric(String owner, String secret, String... args) throws CertificateException, FileNotFoundException {
+        if (withCC && owner.equals("server")) {
+            return RSAKeyGenerator.verifySignWithCert(secret, args);
+        } else {
+            return RSAKeyGenerator.verifySign(owner, secret, args);
+        }
+    }
+
+    /**
+     * Starts the web service client.
+     */
+    public static void main(String[] args) throws Exception {
+        NotaryClient notaryClient = new NotaryClient();
+        notaryClient.initializeClient();
     }
 }

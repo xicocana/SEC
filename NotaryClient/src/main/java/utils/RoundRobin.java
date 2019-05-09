@@ -3,50 +3,62 @@ package utils;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.*;
 
 import ws.importWS.serverWS.NotaryWebService;
 import ws.importWS.serverWS.NotaryWebServiceImplService;
-
 
 
 public class RoundRobin {
 
     private static RoundRobin INSTANCE = null;
     private String currentDir = System.getProperty("user.dir");
-    BufferedReader reader;
+    private BufferedReader reader;
     private List<NotaryWebService> servers = new ArrayList<>();
-    private int pos = 0;
+    private List<String> serversPort = new ArrayList<>();
+    private int falhas = 0;
 
-    public static synchronized RoundRobin getInstance(){
-        if(INSTANCE == null){
+    private int pos = 0;
+    private int ts = 0;
+
+    public static synchronized RoundRobin getInstance() {
+        if (INSTANCE == null) {
             INSTANCE = new RoundRobin();
         }
         return INSTANCE;
     }
 
-    private RoundRobin(){
+    private RoundRobin() {
 
-        String path = currentDir + "/../src/java/resources/replicas.txt";
+        String path = currentDir + "/classes/replicas.txt";
         try {
             reader = new BufferedReader(new FileReader(path));
             String line = reader.readLine();
             while (line != null) {
-                // line
-                URL url = null;
-                try {
-                    url = new URL(line);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (line.startsWith(":")) {
+                    falhas = Integer.parseInt(line.substring(1, line.length() - 1));
+                } else {
+
+                    // line
+                    URL url = null;
+                    try {
+                        url = new URL(line);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                    NotaryWebServiceImplService client = new NotaryWebServiceImplService(url);
+                    NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
+                    servers.add(notaryWebservice);
+                    serversPort.add(line.substring(17, 21));
+                    // read next line
+                    line = reader.readLine();
                 }
-                NotaryWebServiceImplService client = new NotaryWebServiceImplService(url);
-                NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
-                servers.add(notaryWebservice);
-                // read next line
-                line = reader.readLine();
             }
             reader.close();
         } catch (IOException e) {
@@ -56,14 +68,117 @@ public class RoundRobin {
     }
 
     public NotaryWebService getServer() {
-        return servers.get( pos++ % servers.size());
+        return servers.get(pos++ % servers.size());
     }
 
-    public int getActiveServers(){
+    public int getActiveServers() {
         return servers.size();
     }
 
-    public List<String> getStateOfGoodCommunication(List<String> argsToSend) {
-        return this.getServer().getStateOfGood(argsToSend);
+
+    private final String ACK = "ack";
+
+    public List<String> getStateOfGoodCommunication(String input, String goodId, String messageId) {
+        //Call SERVER METHOD
+        String tsInString = Integer.toString(ts);
+
+        int ackCounter = 0;
+        List<String> result = new ArrayList<>();
+
+        result = getStateOfGoodACK(input, goodId, messageId, tsInString, result);
+
+
+        //TODO READ
+        result = getStateOfGoodRead(input, goodId, messageId, tsInString, result);
+
+        return result;
+    }
+
+    private List<String> getStateOfGoodACK(String input, String goodId, String messageId, String tsInString, List<String> result) {
+        try {
+            String[] argsPre = new String[]{input, goodId, messageId, ACK, tsInString};
+            List<String> argsToSendPre = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, argsPre), messageId, ACK, tsInString);
+
+            ExecutorService WORKER_THREAD_POOL = Executors.newFixedThreadPool(10);
+
+            CompletionService<List<String>> service
+                    = new ExecutorCompletionService<>(WORKER_THREAD_POOL);
+
+            for (int i = 0; i < servers.size(); i++) {
+                String port = serversPort.get(i);
+                service.submit(() -> {
+                    System.out.println("NEW Thread |  server : " + port);
+                    List<String> resultList = getServer().getStateOfGood(argsToSendPre);
+                    if (port.equals("9050")) {
+                        System.out.println("SLEEP SERVER : 9050");
+                        Thread.sleep(200);
+                    }
+
+                    return resultList;
+                });
+            }
+
+            System.out.println("Receiving ...");
+
+            for (int i = 0; i < servers.size() - falhas; i++) {
+                System.out.println("thread incoming ACK");
+                Future<List<String>> future = service.take();
+                result = future.get();
+
+                if (result.get(0).equals("ack")) {
+                    System.out.println("Sucesso ACK | server : " + result.get(1));
+                } else {
+                    System.out.println("Sucesso NO_ACK | server : " + result.get(1));
+                }
+
+                System.out.println("result = " + result.get(0));
+            }
+
+            WORKER_THREAD_POOL.shutdown();
+            WORKER_THREAD_POOL.awaitTermination(1000l, TimeUnit.SECONDS);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    private List<String> getStateOfGoodRead(String input, String goodId, String messageId, String tsInString, List<String> result) {
+        String[] args = new String[]{input, goodId, messageId};
+        List<String> argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args), messageId, "READ", tsInString);
+
+        try {
+
+            ExecutorService WORKER_THREAD_POOL = Executors.newFixedThreadPool(10);
+            CompletionService<List<String>> service
+                    = new ExecutorCompletionService<>(WORKER_THREAD_POOL);
+
+            for (int i = 0; i < servers.size(); i++) {
+                service.submit(() -> {
+                    System.out.println("Thread " + System.currentTimeMillis());
+                    List<String> resultList = getServer().getStateOfGood(argsToSend);
+                    return resultList;
+                });
+            }
+
+            System.out.println("WAITING ...");
+            for (int i = 0; i < servers.size(); i++) {
+                System.out.println("thread incoming");
+                Future<List<String>> future = service.take();
+                result = future.get();
+            }
+
+            WORKER_THREAD_POOL.shutdown();
+            WORKER_THREAD_POOL.awaitTermination(1000l, TimeUnit.SECONDS);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

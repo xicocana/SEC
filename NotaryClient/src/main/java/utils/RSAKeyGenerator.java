@@ -80,7 +80,7 @@ public class RSAKeyGenerator {
 
     public static PublicKey getPublicKeyFromKeyStore(String alias) throws Exception {
         String currentDir = System.getProperty("user.dir");
-        File initialFile = new File(currentDir + "/../src/main/resources/keys/keystore.jks");
+        File initialFile = new File(currentDir + "/classes/keys/keystore.jks");
         InputStream ins = new FileInputStream(initialFile);
 
 
@@ -95,7 +95,7 @@ public class RSAKeyGenerator {
 
     public static PrivateKey getPrivateKeyFromKeyStore(String alias, String passwd) throws Exception {
         String currentDir = System.getProperty("user.dir");
-        File initialFile = new File(currentDir + "/../src/main/resources/keys/keystore.jks");
+        File initialFile = new File(currentDir + "/classes/keys/keystore.jks");
         InputStream ins = new FileInputStream(initialFile);
 
 
@@ -135,7 +135,7 @@ public class RSAKeyGenerator {
     public static boolean verifySignWithCert( String secret ,String ...args) throws CertificateException, FileNotFoundException {
 
         String currentDir = System.getProperty("user.dir");
-        File initialFile = new File(currentDir + "/../src/main/resources/keys/cert.cer");
+        File initialFile = new File(currentDir + "/classes/keys/cert.cer");
         InputStream ins = new FileInputStream(initialFile);
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
         Certificate cer = cf.generateCertificate(ins);
