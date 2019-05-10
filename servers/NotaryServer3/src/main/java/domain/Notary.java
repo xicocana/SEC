@@ -102,8 +102,9 @@ public class Notary {
         return SingletonHolder.INSTANCE;
     }
 
-    public List<String> intentionToSell(String owner, String goodId, String secret, String message_id) {
-        System.out.println("Client " + owner + " called intentionToSell");
+    public List<String> intentionToSell(String owner, String goodId, String secret, String message_id, boolean ishack) {
+        String aux = ishack ? "ack" : "after_ack";
+        System.out.println("Client " + owner + " called intentionToSell | " + aux );
         List<String> result = new ArrayList<>();
         List<String> resultError;
 
@@ -114,6 +115,12 @@ public class Notary {
             if (RSAKeyGenerator.verifySign(owner, secret, msg)) {
                 if (!readMessageIdFile(owner, message_id)) {
                     writeMessageIdFile(owner, message_id);
+
+                    if (ishack){
+                        System.out.println("Going to send ACK");
+                        return Arrays.asList("ack", port);
+                    }
+
                     for (Good good : _userGoods) {
                         if (good.getOwner().equals(owner) && good.getId().equals(goodId)) {
                             good.setStatus(true);
@@ -150,17 +157,12 @@ public class Notary {
             e.printStackTrace();
         }
 
-        resultError = initializeErrorList();
+        resultError = initializeErrorList(ishack);
 
         return resultError;
     }
 
-    public List<String> getStateOfGood(String user, String goodId, String secret, String message_id, boolean ishack, String ts) {
-
-        if (ishack){
-            System.out.println("Going to send ACK");
-            return Arrays.asList("ack", port);
-        }
+    public List<String> getStateOfGood(String user, String goodId, String secret, String message_id, boolean ishack) {
 
         System.out.println("Recieved request on " + goodId + " status");
         List<String> result = new ArrayList<>();
@@ -176,6 +178,11 @@ public class Notary {
                     my_message_id = Integer.parseInt(getMyMessageId());
                     my_message_id++;
                     writeMessageIdFile("server", Integer.toString(my_message_id));
+
+                    if (ishack){
+                        System.out.println("Going to send ACK");
+                        return Arrays.asList("ack", port);
+                    }
 
                     for (Good good : _userGoods) {
                         if (good.getId().equals(goodId)) {
@@ -202,12 +209,12 @@ public class Notary {
             System.out.println("Error Signing the message");
         }
 
-        resultError = initializeErrorList();
+        resultError = initializeErrorList(ishack);
 
         return resultError;
     }
 
-    public List<String> transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2, String message_id_seller, String message_id_buyer) {
+    public List<String> transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2, String message_id_seller, String message_id_buyer, boolean ishack) {
         System.out.println("Client " + sellerId + " called transferGood");
         List<String> resultError;
         List<String> result = new ArrayList<>();
@@ -221,6 +228,12 @@ public class Notary {
                     my_message_id = Integer.parseInt(getMyMessageId());
                     my_message_id++;
                     writeMessageIdFile("server", Integer.toString(my_message_id));
+
+                    if (ishack){
+                        System.out.println("Going to send ACK");
+                        return Arrays.asList("ack", port);
+                    }
+
                     for (Good good : _userGoods) {
                         if (good.getId().equals(goodId) && good.getStatus() && good.getOwner().equals(sellerId)) {
                             // Tocar good entre os users
@@ -247,17 +260,20 @@ public class Notary {
             e.printStackTrace();
         }
 
-        resultError = initializeErrorList();
+        resultError = initializeErrorList(ishack);
 
         return resultError;
     }
 
-    private List<String> initializeErrorList() {
+    private List<String> initializeErrorList(boolean ishack) {
         //CREATE Error SIGN
         System.out.println("//Error Message ");
         List<String> resultError = new ArrayList<>();
         try {
-
+            if (ishack){
+                System.out.println("Going to send ACK");
+                return Arrays.asList("ack", port);
+            }
             String signedMessage = "false";
             resultError.add("ERROR");
             resultError.add(signGeneric(signatureKey, signedMessage));

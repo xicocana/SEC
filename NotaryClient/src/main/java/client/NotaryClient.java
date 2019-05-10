@@ -83,14 +83,12 @@ public class NotaryClient {
                     message_id++;
                     WriteReadUtils.writeUsedMessageId(pathToMessageIds, message_id);
 
-                    //Call SERVER METHOD
-                    args2 = new String[]{input, goodId, Integer.toString(message_id)};
-                    List<String> argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args2), Integer.toString(message_id));
+////                    //Call SERVER METHOD
+//                    args2 = new String[]{input, goodId, Integer.toString(message_id)};
+//                    List<String> argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args2), Integer.toString(message_id));
 
-                    for (int i = 0; i < activeServers; i++) {
-                        result = rr.getServer().intentionToSell(argsToSend);
-                        results.add(result);
-                    }
+                    result = rr.getIntentCommunication(input, goodId, Integer.toString(message_id));
+                    results.add(result);
 
                     if (result.size() == 5) {
                         if (verifyGeneric("server", result.get(0), result.get(1), result.get(2), result.get(3), result.get(4))) {
@@ -192,7 +190,7 @@ public class NotaryClient {
                         ws.importWS.clientWS.ClientWebServiceImpl clientWebservice = webService2.getClientWebServiceImplPort();
 
                         String sign = RSAKeyGenerator.writeSign(input, input + input, input, goodId, Integer.toString(message_id));
-                        argsToSend = Arrays.asList(name2, input, goodId, sign, Integer.toString(message_id));
+                        List<String> argsToSend = Arrays.asList(name2, input, goodId, sign, Integer.toString(message_id));
 
                         //Client(buyer) chama para outro cliente(seller)
                         result = clientWebservice.buyGood(argsToSend);

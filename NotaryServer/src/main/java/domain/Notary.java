@@ -102,8 +102,9 @@ public class Notary {
         return SingletonHolder.INSTANCE;
     }
 
-    public List<String> intentionToSell(String owner, String goodId, String secret, String message_id, boolean ishack) {
-        System.out.println("Client " + owner + " called intentionToSell");
+    public List<String> intentionToSell(String owner, String goodId, String secret, String message_id, boolean isAck) {
+        String aux = isAck ? "ack" : "after_ack";
+        System.out.println("Client " + owner + " called intentionToSell | " + aux );
         List<String> result = new ArrayList<>();
         List<String> resultError;
 
@@ -114,6 +115,12 @@ public class Notary {
             if (RSAKeyGenerator.verifySign(owner, secret, msg)) {
                 if (!readMessageIdFile(owner, message_id)) {
                     writeMessageIdFile(owner, message_id);
+
+                    if (isAck){
+                        System.out.println("Going to send ACK");
+                        return Arrays.asList("ack", port);
+                    }
+
                     for (Good good : _userGoods) {
                         if (good.getOwner().equals(owner) && good.getId().equals(goodId)) {
                             good.setStatus(true);
@@ -150,7 +157,7 @@ public class Notary {
             e.printStackTrace();
         }
 
-        resultError = initializeErrorList(ishack);
+        resultError = initializeErrorList(isAck);
 
         return resultError;
     }
@@ -221,6 +228,12 @@ public class Notary {
                     my_message_id = Integer.parseInt(getMyMessageId());
                     my_message_id++;
                     writeMessageIdFile("server", Integer.toString(my_message_id));
+
+                    if (ishack){
+                        System.out.println("Going to send ACK");
+                        return Arrays.asList("ack", port);
+                    }
+
                     for (Good good : _userGoods) {
                         if (good.getId().equals(goodId) && good.getStatus() && good.getOwner().equals(sellerId)) {
                             // Tocar good entre os users

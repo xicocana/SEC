@@ -76,9 +76,9 @@ public class Client {
                     if (result.get(0).equals("ERROR")) {
                         System.out.println("Error: Something REALLY Wrong with NotaryServer");
                     } else if (result.size() == 2) {
-                        if (RSAKeyGenerator.verifySignWithCert(result.get(0), new String[]{result.get(1)})) {
+                        if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1))) {
                             // Assinar o que vem do Server para enviar ao cliente(buyer)
-                            String sellerSignResponseFromServer = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, new String[]{result.get(0), result.get(1)});
+                            String sellerSignResponseFromServer = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, result.get(0), result.get(1));
 
 
                             //write messageid File to send buyer

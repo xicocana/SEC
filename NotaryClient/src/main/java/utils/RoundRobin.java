@@ -28,6 +28,10 @@ public class RoundRobin {
     private int pos = 0;
     private int ts = 0;
 
+    private final static int GET_STATE_OF_GOOD = 0;
+    private final static int INTENT = 1;
+    private final static int TRANSFER_GOOD = 2;
+
     public static synchronized RoundRobin getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new RoundRobin();
@@ -83,23 +87,68 @@ public class RoundRobin {
         String tsInString = Integer.toString(ts);
 
         int ackCounter = 0;
-        List<String> result = new ArrayList<>();
+        List<String> result ;
 
-        result = getStateOfGoodACK(input, goodId, messageId, tsInString, result);
+        result = getStateOfGoodACK(input, goodId, messageId);
         ackCounter = result.size();
-        if(ackCounter >= servers.size()-falhas){
-            result = getStateOfGoodRead(input, goodId, messageId, tsInString, result);
-        }else{
+        if (ackCounter >= servers.size() - falhas) {
+            result = getStateOfGoodRead(input, goodId, messageId);
+        } else {
             System.out.println("?");
         }
 
         return result;
     }
 
-    private List<String> getStateOfGoodACK(String input, String goodId, String messageId, String tsInString, List<String> result) {
+    private List<String> getStateOfGoodACK(String input, String goodId, String messageId) {
+        String[] argsPre = new String[]{input, goodId, messageId, ACK};
+        List<String> argsToSendPre = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, argsPre), messageId, ACK);
+
+        return genericACK(argsToSendPre, GET_STATE_OF_GOOD);
+    }
+
+    private List<String> getStateOfGoodRead(String input, String goodId, String messageId) {
+        String[] args = new String[]{input, goodId, messageId};
+        List<String> argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args), messageId, "READ");
+
+        return genericAfterAck(argsToSend, GET_STATE_OF_GOOD);
+    }
+
+    public List<String> getIntentCommunication(String input, String goodId, String messageId) {
+        //Call SERVER METHOD
+
+        int ackCounter = 0;
+        List<String> result;
+
+        result = intentACK(input, goodId, messageId);
+        ackCounter = result.size();
+        if (ackCounter >= servers.size() - falhas) {
+            result = intentRead(input, goodId, messageId);
+        } else {
+            System.out.println("?");
+        }
+
+        return result;
+    }
+
+    private List<String> intentACK(String input, String goodId, String messageId) {
+        String[] argsPre = new String[]{input, goodId, messageId, ACK};
+        List<String> argsToSendPre = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, argsPre), messageId , ACK );
+
+        return genericACK(argsToSendPre, INTENT);
+    }
+
+    private List<String> intentRead(String input, String goodId, String messageId) {
+        String[] args = new String[]{input, goodId, messageId};
+        List<String> argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args), messageId, "READ");
+
+        return genericAfterAck(argsToSend, INTENT);
+    }
+
+
+    private List<String> genericACK(List<String> argsToSendPre, int method) {
+        List<String> result = new ArrayList<>();
         try {
-            String[] argsPre = new String[]{input, goodId, messageId, ACK, tsInString};
-            List<String> argsToSendPre = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, argsPre), messageId, ACK, tsInString);
 
             ExecutorService WORKER_THREAD_POOL = Executors.newFixedThreadPool(10);
 
@@ -108,9 +157,26 @@ public class RoundRobin {
 
             for (int i = 0; i < servers.size(); i++) {
                 String port = serversPort.get(i);
+
                 service.submit(() -> {
+
                     System.out.println("NEW Thread |  server : " + port);
-                    List<String> resultList = getServer().getStateOfGood(argsToSendPre);
+                    List<String> resultList = new ArrayList<>();
+
+                    switch (method) {
+                        case GET_STATE_OF_GOOD:
+                            resultList = getServer().getStateOfGood(argsToSendPre);
+                            break;
+                        case INTENT:
+                            resultList = getServer().intentionToSell(argsToSendPre);
+                            break;
+                        case TRANSFER_GOOD:
+                            resultList = getServer().transferGood(argsToSendPre);
+                            break;
+                        default:
+                            break;
+                    }
+
                     resultList.add(port);
                     if (port.equals("9050")) {
                         System.out.println("SLEEP SERVER : 9050");
@@ -149,9 +215,8 @@ public class RoundRobin {
         return result;
     }
 
-    private List<String> getStateOfGoodRead(String input, String goodId, String messageId, String tsInString, List<String> result) {
-        String[] args = new String[]{input, goodId, messageId};
-        List<String> argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args), messageId, "READ", tsInString);
+    private List<String> genericAfterAck(List<String> argsToSendPre, int method) {
+        List<String> result;
         List<List<String>> TotalResults = new ArrayList<>();
         try {
 
@@ -161,9 +226,25 @@ public class RoundRobin {
 
             for (int i = 0; i < servers.size(); i++) {
                 String port = serversPort.get(i);
+
+
                 service.submit(() -> {
                     System.out.println("Thread " + System.currentTimeMillis());
-                    List<String> resultList = getServer().getStateOfGood(argsToSend);
+                    List<String> resultList = new ArrayList<>();
+                    switch (method) {
+                        case GET_STATE_OF_GOOD:
+                            resultList = getServer().getStateOfGood(argsToSendPre);
+                            break;
+                        case INTENT:
+                            resultList = getServer().intentionToSell(argsToSendPre);
+                            break;
+                        case TRANSFER_GOOD:
+                            resultList = getServer().transferGood(argsToSendPre);
+                            break;
+                        default:
+                            break;
+                    }
+
                     resultList.add(port);
                     return resultList;
                 });
@@ -195,10 +276,10 @@ public class RoundRobin {
         Map<String, Integer> cont = new HashMap<>();
         Entry<String, Integer> max = null;
 
-        if(method.equals("getStateOfGood")){
+        if (method.equals("getStateOfGood")) {
 
-            for(int i = 0; i<totalResults.size(); i++){
-                String key = totalResults.get(i).get(2) +":"+ totalResults.get(i).get(1);
+            for (int i = 0; i < totalResults.size(); i++) {
+                String key = totalResults.get(i).get(2) + ":" + totalResults.get(i).get(1);
                 Integer val = cont.get(key);
                 cont.put(key, val == null ? 1 : val + 1);
             }
@@ -211,15 +292,14 @@ public class RoundRobin {
             String maj = max.getKey();
             String[] os = maj.split(":");
 
-            for(List<String> e : totalResults){
-                if(e.get(2).equals(os[0]) && e.get(1).equals(os[1])){
+            for (List<String> e : totalResults) {
+                if (e.get(2).equals(os[0]) && e.get(1).equals(os[1])) {
                     consensu = e;
                     break;
                 }
             }
-        }
-        else{
-            for(int i = 0; i<totalResults.size(); i++){
+        } else {
+            for (int i = 0; i < totalResults.size(); i++) {
                 String key = totalResults.get(i).get(1);
                 Integer val = cont.get(key);
                 cont.put(key, val == null ? 1 : val + 1);
@@ -232,8 +312,8 @@ public class RoundRobin {
 
             String maj = max.getKey();
 
-            for(List<String> e : totalResults){
-                if(e.get(1).equals(maj)){
+            for (List<String> e : totalResults) {
+                if (e.get(1).equals(maj)) {
                     consensu = e;
                     break;
                 }
