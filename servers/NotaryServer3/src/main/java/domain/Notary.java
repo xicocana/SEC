@@ -102,8 +102,8 @@ public class Notary {
         return SingletonHolder.INSTANCE;
     }
 
-    public List<String> intentionToSell(String owner, String goodId, String secret, String message_id, boolean ishack) {
-        String aux = ishack ? "ack" : "after_ack";
+    public List<String> intentionToSell(String owner, String goodId, String secret, String message_id, boolean isAck) {
+        String aux = isAck ? "ack" : "after_ack";
         System.out.println("Client " + owner + " called intentionToSell | " + aux );
         List<String> result = new ArrayList<>();
         List<String> resultError;
@@ -116,7 +116,7 @@ public class Notary {
                 if (!readMessageIdFile(owner, message_id)) {
                     writeMessageIdFile(owner, message_id);
 
-                    if (ishack){
+                    if (isAck){
                         System.out.println("Going to send ACK");
                         return Arrays.asList("ack", port);
                     }
@@ -157,7 +157,7 @@ public class Notary {
             e.printStackTrace();
         }
 
-        resultError = initializeErrorList(ishack);
+        resultError = initializeErrorList(isAck);
 
         return resultError;
     }
@@ -168,9 +168,14 @@ public class Notary {
         List<String> result = new ArrayList<>();
         List<String> resultError;
 
-        try {
 
-            String[] msg = new String[]{user, goodId, message_id};
+        try {
+            String[] msg;
+            if(ishack){
+                msg = new String[]{user, goodId, message_id, "ack"};
+            }else{
+                msg = new String[]{user, goodId, message_id};
+            }
             //verifica assinatura dos clientes
             if (RSAKeyGenerator.verifySign(user, secret, msg)) {
                 if (!readMessageIdFile(user, message_id)) {
@@ -271,8 +276,8 @@ public class Notary {
         List<String> resultError = new ArrayList<>();
         try {
             if (ishack){
-                System.out.println("Going to send ACK");
-                return Arrays.asList("ack", port);
+                System.out.println("Going to send NACK");
+                return Arrays.asList("nack", port);
             }
             String signedMessage = "false";
             resultError.add("ERROR");

@@ -168,9 +168,14 @@ public class Notary {
         List<String> result = new ArrayList<>();
         List<String> resultError;
 
-        try {
 
-            String[] msg = new String[]{user, goodId, message_id};
+        try {
+            String[] msg;
+            if(ishack){
+                msg = new String[]{user, goodId, message_id, "ack"};
+            }else{
+                msg = new String[]{user, goodId, message_id};
+            }
             //verifica assinatura dos clientes
             if (RSAKeyGenerator.verifySign(user, secret, msg)) {
                 if (!readMessageIdFile(user, message_id)) {
@@ -271,8 +276,8 @@ public class Notary {
         List<String> resultError = new ArrayList<>();
         try {
             if (ishack){
-                System.out.println("Going to send ACK");
-                return Arrays.asList("ack", port);
+                System.out.println("Going to send NACK");
+                return Arrays.asList("nack", port);
             }
             String signedMessage = "false";
             resultError.add("ERROR");

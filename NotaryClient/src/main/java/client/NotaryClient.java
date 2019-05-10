@@ -63,6 +63,7 @@ public class NotaryClient {
         boolean flag = true;
 
         RoundRobin rr = RoundRobin.getInstance();
+        rr.setUser(input);
         int activeServers = rr.getActiveServers();
         List<String> result = new ArrayList<>();
         List<List<String>> results = new ArrayList<>();
@@ -82,10 +83,6 @@ public class NotaryClient {
                     message_id = var.equals("") ? 0 : Integer.parseInt(var);
                     message_id++;
                     WriteReadUtils.writeUsedMessageId(pathToMessageIds, message_id);
-
-////                    //Call SERVER METHOD
-//                    args2 = new String[]{input, goodId, Integer.toString(message_id)};
-//                    List<String> argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args2), Integer.toString(message_id));
 
                     result = rr.getIntentCommunication(input, goodId, Integer.toString(message_id));
                     results.add(result);
@@ -131,20 +128,15 @@ public class NotaryClient {
                     message_id++;
                     WriteReadUtils.writeUsedMessageId(pathToMessageIds, message_id);
 
-//                    //Call SERVER METHOD
-//                    args2 = new String[]{input, goodId, Integer.toString(message_id)};
-//                    argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args2), Integer.toString(message_id));
-
-
                     result = rr.getStateOfGoodCommunication(input, goodId, Integer.toString(message_id));
                     results.add(result);
 
                     try {
                         if (result.size() == 5) {
                             if (verifyGeneric("server", result.get(0), result.get(1), result.get(2), result.get(3))) {
-                                dirPath = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/server"+result.get(4)+".txt";
+                                dirPath = currentDir + "/classes/message-ids/" + input + "/other-users/server"+result.get(4)+".txt";
                                 if (!WriteReadUtils.readMessageIdFile(dirPath, result.get(3))) {
-                                    String path = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/server"+result.get(4)+".txt";
+                                    String path = currentDir + "/classes/message-ids/" + input + "/other-users/server"+result.get(4)+".txt";
                                     WriteReadUtils.writeUsedMessageId(path, Integer.parseInt(result.get(3)));
 
                                     System.out.println("-> " + goodId + " owner  : " + result.get(2));
