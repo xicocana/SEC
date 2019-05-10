@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.*;
 
 import ws.importWS.serverWS.NotaryWebService;
@@ -40,9 +43,8 @@ public class RoundRobin {
             String line = reader.readLine();
             while (line != null) {
                 if (line.startsWith(":")) {
-                    falhas = Integer.parseInt(line.substring(1, line.length() - 1));
+                    falhas = Integer.parseInt(line.substring(1, line.length()));
                 } else {
-
                     // line
                     URL url = null;
                     try {
@@ -50,15 +52,13 @@ public class RoundRobin {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-
                     NotaryWebServiceImplService client = new NotaryWebServiceImplService(url);
                     NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
                     servers.add(notaryWebservice);
                     serversPort.add(line.substring(17, 21));
-                    // read next line
-                    line = reader.readLine();
                 }
+                // read next line
+                line = reader.readLine();
             }
             reader.close();
         } catch (IOException e) {
@@ -86,10 +86,12 @@ public class RoundRobin {
         List<String> result = new ArrayList<>();
 
         result = getStateOfGoodACK(input, goodId, messageId, tsInString, result);
-
-
-        //TODO READ
-        result = getStateOfGoodRead(input, goodId, messageId, tsInString, result);
+        ackCounter = result.size();
+        if(ackCounter >= servers.size()-falhas){
+            result = getStateOfGoodRead(input, goodId, messageId, tsInString, result);
+        }else{
+            System.out.println("?");
+        }
 
         return result;
     }
@@ -109,6 +111,7 @@ public class RoundRobin {
                 service.submit(() -> {
                     System.out.println("NEW Thread |  server : " + port);
                     List<String> resultList = getServer().getStateOfGood(argsToSendPre);
+                    resultList.add(port);
                     if (port.equals("9050")) {
                         System.out.println("SLEEP SERVER : 9050");
                         Thread.sleep(200);
@@ -149,7 +152,7 @@ public class RoundRobin {
     private List<String> getStateOfGoodRead(String input, String goodId, String messageId, String tsInString, List<String> result) {
         String[] args = new String[]{input, goodId, messageId};
         List<String> argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args), messageId, "READ", tsInString);
-
+        List<List<String>> TotalResults = new ArrayList<>();
         try {
 
             ExecutorService WORKER_THREAD_POOL = Executors.newFixedThreadPool(10);
@@ -157,9 +160,11 @@ public class RoundRobin {
                     = new ExecutorCompletionService<>(WORKER_THREAD_POOL);
 
             for (int i = 0; i < servers.size(); i++) {
+                String port = serversPort.get(i);
                 service.submit(() -> {
                     System.out.println("Thread " + System.currentTimeMillis());
                     List<String> resultList = getServer().getStateOfGood(argsToSend);
+                    resultList.add(port);
                     return resultList;
                 });
             }
@@ -169,6 +174,7 @@ public class RoundRobin {
                 System.out.println("thread incoming");
                 Future<List<String>> future = service.take();
                 result = future.get();
+                TotalResults.add(result);
             }
 
             WORKER_THREAD_POOL.shutdown();
@@ -179,6 +185,61 @@ public class RoundRobin {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return result;
+
+        return Consensus(TotalResults, "getStateOfGood");
+    }
+
+    private List<String> Consensus(List<List<String>> totalResults, String method) {
+
+        List<String> consensu = new ArrayList<>();
+        Map<String, Integer> cont = new HashMap<>();
+        Entry<String, Integer> max = null;
+
+        if(method.equals("getStateOfGood")){
+
+            for(int i = 0; i<totalResults.size(); i++){
+                String key = totalResults.get(i).get(2) +":"+ totalResults.get(i).get(1);
+                Integer val = cont.get(key);
+                cont.put(key, val == null ? 1 : val + 1);
+            }
+
+            for (Entry<String, Integer> e : cont.entrySet()) {
+                if (max == null || e.getValue() > max.getValue())
+                    max = e;
+            }
+
+            String maj = max.getKey();
+            String[] os = maj.split(":");
+
+            for(List<String> e : totalResults){
+                if(e.get(2).equals(os[0]) && e.get(1).equals(os[1])){
+                    consensu = e;
+                    break;
+                }
+            }
+        }
+        else{
+            for(int i = 0; i<totalResults.size(); i++){
+                String key = totalResults.get(i).get(1);
+                Integer val = cont.get(key);
+                cont.put(key, val == null ? 1 : val + 1);
+            }
+
+            for (Entry<String, Integer> e : cont.entrySet()) {
+                if (max == null || e.getValue() > max.getValue())
+                    max = e;
+            }
+
+            String maj = max.getKey();
+
+            for(List<String> e : totalResults){
+                if(e.get(1).equals(maj)){
+                    consensu = e;
+                    break;
+                }
+            }
+        }
+
+        return consensu;
     }
 }

@@ -17,14 +17,16 @@ public class NotaryServer {
         System.out.println("Insert the server port : ");
         int port = scanner.nextInt();
 
+        System.out.println("Do you want to use CC? yes or no");
+        String value = scanner.next();
+
         String bindingURI = "http://localhost:" + port + "/notaryService";
         NotaryWebServiceImpl webService = new NotaryWebServiceImpl();
         Endpoint.publish(bindingURI, webService);
         System.out.println("Server started at: " + bindingURI);
         Notary notary = Notary.getInstance();
         notary.setPort(Integer.toString(port));
-        System.out.println("Do you want to use CC? yes or no");
-        String value = scanner.next();
+        
 
         if (value.equalsIgnoreCase("yes")){
             notary.startCC();

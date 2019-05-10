@@ -108,42 +108,4 @@ public class Client {
         String sellerSignResponseFromServer = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, new String[]{"false"});
         return Arrays.asList("false", sellerSignResponseFromServer);
     }
-
-    private void AntiSpamFunction(int seconds) {
-
-
-        Scanner scanner = new Scanner(System.in);
-        Random random = new Random();
-        int a = random.nextInt(100);
-        int b = random.nextInt(100);
-        System.out.println("What is " + a + " + " + b + " ?");
-        String input = scanner.next();
-
-        System.out.println("Initializing anti-spam timmer");
-
-        for (long stop = System.nanoTime() + TimeUnit.SECONDS.toNanos(seconds); stop > System.nanoTime(); ) {
-            /*
-             * Hammer the JVM with junk
-             */
-
-            int x = random.nextInt(100) + 100;
-            List<String> lista = new ArrayList<>();
-            for (int i = 0; i < x; i++) {
-                lista.add("A");
-            }
-            String conc = "";
-            for (int i = 0; i < lista.size(); i++) {
-                conc = conc + lista.get(i);
-            }
-        }
-        int res = a + b;
-
-        if (input.equals(Integer.toString(res))) {
-            System.out.println("Client unblocked");
-        } else {
-            AntiSpamFunction(10);
-        }
-
-    }
-
 }

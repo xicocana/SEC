@@ -64,10 +64,10 @@ public class NotaryClient {
 
         RoundRobin rr = RoundRobin.getInstance();
         int activeServers = rr.getActiveServers();
-
         List<String> result = new ArrayList<>();
         List<List<String>> results = new ArrayList<>();
         String[] args2;
+
         do {
             System.out.print("select option: ");
             int opt = scanner.nextInt();
@@ -139,18 +139,14 @@ public class NotaryClient {
 
 
                     result = rr.getStateOfGoodCommunication(input, goodId, Integer.toString(message_id));
-
-
                     results.add(result);
 
-
                     try {
-                        if (result.size() == 4) {
+                        if (result.size() == 5) {
                             if (verifyGeneric("server", result.get(0), result.get(1), result.get(2), result.get(3))) {
-
-                                dirPath = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/server.txt";
+                                dirPath = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/server"+result.get(4)+".txt";
                                 if (!WriteReadUtils.readMessageIdFile(dirPath, result.get(3))) {
-                                    String path = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/server.txt";
+                                    String path = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/server"+result.get(4)+".txt";
                                     WriteReadUtils.writeUsedMessageId(path, Integer.parseInt(result.get(3)));
 
                                     System.out.println("-> " + goodId + " owner  : " + result.get(2));
@@ -247,11 +243,10 @@ public class NotaryClient {
 
     private void AntiSpamFunction(int seconds) {
 
-
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
-        int a = random.nextInt(100);
-        int b = random.nextInt(100);
+        int a = random.nextInt(10);
+        int b = random.nextInt(10);
         System.out.println("What is " + a + " + " + b + " ?");
         String input = scanner.next();
 
@@ -261,7 +256,6 @@ public class NotaryClient {
             /*
              * Hammer the JVM with junk
              */
-
             int x = random.nextInt(100) + 100;
             List<String> lista = new ArrayList<>();
             for (int i = 0; i < x; i++) {
