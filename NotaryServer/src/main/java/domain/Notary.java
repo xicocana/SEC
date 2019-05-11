@@ -161,8 +161,8 @@ public class Notary {
         }
 
         if (result.isEmpty()) {
-            System.out.println("User " + owner + " os no Owner of good" + goodId);
-            throw new Exception("User " + owner + " os no Owner of good" + goodId);
+            System.out.println("User " + owner + " is not the owner of good " + goodId);
+            throw new Exception("User " + owner + " is not the owner of good " + goodId);
         }
 
         return result;
@@ -221,7 +221,7 @@ public class Notary {
 
 
         if (result.isEmpty()) {
-            throw new Exception("goodId : " + goodId + "doesnt exist");
+            throw new Exception("goodId : " + goodId + " doesnt exist");
         }
 
         return result;

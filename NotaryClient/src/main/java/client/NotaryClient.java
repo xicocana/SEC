@@ -76,6 +76,7 @@ public class NotaryClient {
             switch (opt) {
                 case 1:
                     try {
+                        AntiSpamFunction(10);
                         System.out.print("Please insert good ID: ");
                         goodId = scanner.next();
 
@@ -90,7 +91,6 @@ public class NotaryClient {
 
                         if (result.size() == 6) {
                             if (verifyGeneric("server", result.get(0), result.get(1), result.get(2), result.get(3), result.get(4))) {
-                                //TODO
                                 if (Boolean.valueOf(result.get(1))) {
                                     System.out.println("-> " + goodId + " is now for sale");
                                     System.out.println(" ");
@@ -113,7 +113,7 @@ public class NotaryClient {
                     break;
                 case 2:
                     try {
-                        //AntiSpamFunction(10);
+                        AntiSpamFunction(10);
                         System.out.print("Please insert good ID: ");
                         goodId = scanner.next();
 
@@ -148,6 +148,7 @@ public class NotaryClient {
 
                     break;
                 case 3:
+                    AntiSpamFunction(10);
                     System.out.print("Please insert sellerId: ");
                     String name2 = scanner.next();
                     System.out.print("Please insert goodId: ");
@@ -219,8 +220,8 @@ public class NotaryClient {
 
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
-        int a = random.nextInt(10);
-        int b = random.nextInt(10);
+        int a = random.nextInt(9999);
+        int b = random.nextInt(9999);
         System.out.println("What is " + a + " + " + b + " ?");
         String input = scanner.next();
 

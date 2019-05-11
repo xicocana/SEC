@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class Client {
 
@@ -73,7 +74,6 @@ public class Client {
                     WriteReadUtils.writeUsedMessageId(dirPath, my_message_id2);
 
                     // Chamar metodo TransferGood do NotaryServer
-
                     List<String> result = rr.transferGoodCommunication(sellerId, buyerId, goodId, secret, Integer.toString(my_message_id2), message_id_buyer );
 
 
