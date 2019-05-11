@@ -75,101 +75,77 @@ public class NotaryClient {
             String goodId;
             switch (opt) {
                 case 1:
-                    System.out.print("Please insert good ID: ");
-                    goodId = scanner.next();
-
-                    //write my msg to File
-                    var = WriteReadUtils.getMyMessageId(pathToMessageIds);
-                    message_id = var.equals("") ? 0 : Integer.parseInt(var);
-                    message_id++;
-                    WriteReadUtils.writeUsedMessageId(pathToMessageIds, message_id);
-
-                    result = rr.getIntentCommunication(input, goodId, Integer.toString(message_id));
-                    results.add(result);
-
-                    System.out.println("SIZE : " + result.size());
-
-                    for (String teste : result) {
-                        System.out.print("valor : " + teste + " | ");
-                    }
-
-                    if (result.size() == 6) {
-                        if (verifyGeneric("server", result.get(0), result.get(1), result.get(2), result.get(3), result.get(4))) {
-                            dirPath = currentDir + "/classes/message-ids/" + input + "/other-users/server" + result.get(5) + ".txt";
-                            //if (!WriteReadUtils.readMessageIdFile(dirPath, result.get(4))) {
-//                                String path = currentDir + "/classes/message-ids/" + input + "/other-users/server"+result.get(5)+".txt";
-//                                WriteReadUtils.writeUsedMessageId(path, Integer.parseInt(result.get(4)));
-                            //TODO
-                            System.out.println("MESSAGE_ID DO SERVER DEPOIS DO BUSINESS : " + result.get(4));
-                            if (Boolean.valueOf(result.get(1))) {
-                                System.out.println("-> " + goodId + " is now for sale");
-                                System.out.println(" ");
-                            } else {
-                                System.out.println("-> Something went wrong :( please try again later");
-                                System.out.println(" ");
-                            }
-//                            } else {
-//                                System.out.println("Replay Attack !!");
-//                            }
-                        } else {
-                            System.out.println("Error: NotaryServer Message Tampered");
-                        }
-                    } else if (result.size() == 3) {
-                        if (verifyGeneric("server", result.get(0), result.get(1))) {
-                            System.out.println("Error: Something Wrong with NotaryServer");
-                        } else {
-                            System.out.println("Error: NotaryServer Message Tampered");
-                        }
-                    } else {
-                        System.out.println("Error: Something REALLY Wrong with NotaryServer");
-                    }
-
-                    break;
-                case 2:
-                    AntiSpamFunction(10);
-                    System.out.print("Please insert good ID: ");
-                    goodId = scanner.next();
-
-                    //write my msg to File
-                    var = WriteReadUtils.getMyMessageId(pathToMessageIds);
-                    message_id = var.equals("") ? 0 : Integer.parseInt(var);
-                    message_id++;
-                    WriteReadUtils.writeUsedMessageId(pathToMessageIds, message_id);
-
-                    result = rr.getStateOfGoodCommunication(input, goodId, Integer.toString(message_id));
-                    results.add(result);
-
                     try {
-                        if (result.size() == 5) {
-                            if (verifyGeneric("server", result.get(0), result.get(1), result.get(2), result.get(3))) {
-                                dirPath = currentDir + "/classes/message-ids/" + input + "/other-users/server" + result.get(4) + ".txt";
-//                                if (!WriteReadUtils.readMessageIdFile(dirPath, result.get(3))) {
-//                                    String path = currentDir + "/classes/message-ids/" + input + "/other-users/server"+result.get(4)+".txt";
-//                                    WriteReadUtils.writeUsedMessageId(path, Integer.parseInt(result.get(3)));
+                        System.out.print("Please insert good ID: ");
+                        goodId = scanner.next();
 
-                                System.out.println("-> " + goodId + " owner  : " + result.get(2));
-                                String onSale = Boolean.valueOf(result.get(1)) ? "on-sale" : "not-on-sale";
-                                System.out.println("-> " + goodId + " status : " + onSale);
-                                System.out.println(" ");
-//                                } else {
-//                                    System.out.println("Replay Attack !!");
-//                                }
-                            } else {
-                                System.out.println("Error: NotaryServer Message Tampered");
-                            }
+                        //write my msg to File
+                        var = WriteReadUtils.getMyMessageId(pathToMessageIds);
+                        message_id = var.equals("") ? 0 : Integer.parseInt(var);
+                        message_id++;
+                        WriteReadUtils.writeUsedMessageId(pathToMessageIds, message_id);
 
-                        } else if (result.size() == 2) {
-                            if (verifyGeneric("server", result.get(0), result.get(1))) {
-                                System.out.println("Error: Something Wrong with NotaryServer");
+                        result = rr.getIntentCommunication(input, goodId, Integer.toString(message_id));
+                        results.add(result);
+
+                        if (result.size() == 6) {
+                            if (verifyGeneric("server", result.get(0), result.get(1), result.get(2), result.get(3), result.get(4))) {
+                                //TODO
+                                if (Boolean.valueOf(result.get(1))) {
+                                    System.out.println("-> " + goodId + " is now for sale");
+                                    System.out.println(" ");
+                                } else {
+                                    System.out.println("-> Something went wrong :( please try again later");
+                                    System.out.println(" ");
+                                }
                             } else {
                                 System.out.println("Error: NotaryServer Message Tampered");
                             }
                         } else {
                             System.out.println("Error: Something REALLY Wrong with NotaryServer");
                         }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                    } catch (Exception e) {
+                        System.out.println("AQUI");
+                        System.out.println(e.getMessage());
+                        System.out.println("AQUI2");
+                        System.out.println(e.getLocalizedMessage());
                     }
+                    break;
+                case 2:
+                    try {
+                        //AntiSpamFunction(10);
+                        System.out.print("Please insert good ID: ");
+                        goodId = scanner.next();
+
+                        //write my msg to File
+                        var = WriteReadUtils.getMyMessageId(pathToMessageIds);
+                        message_id = var.equals("") ? 0 : Integer.parseInt(var);
+                        message_id++;
+                        WriteReadUtils.writeUsedMessageId(pathToMessageIds, message_id);
+
+
+                        result = rr.getStateOfGoodCommunication(input, goodId, Integer.toString(message_id));
+                        results.add(result);
+
+
+                        if (result.size() == 5) {
+
+                            if (verifyGeneric("server", result.get(0), result.get(1), result.get(2), result.get(3))) {
+                                System.out.println("-> " + goodId + " owner  : " + result.get(2));
+                                String onSale = Boolean.valueOf(result.get(1)) ? "on-sale" : "not-on-sale";
+                                System.out.println("-> " + goodId + " status : " + onSale);
+                                System.out.println(" ");
+                            } else {
+                                System.out.println("Error: NotaryServer Message Tampered");
+                            }
+
+                        } else {
+                            System.out.println("Error: Something REALLY Wrong with NotaryServer");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     break;
                 case 3:
                     System.out.print("Please insert sellerId: ");
@@ -190,7 +166,7 @@ public class NotaryClient {
                         ws.importWS.clientWS.ClientWebServiceImpl clientWebservice = webService2.getClientWebServiceImplPort();
 
                         String sign = RSAKeyGenerator.writeSign(input, input + input, input, goodId, Integer.toString(message_id));
-                        List<String> argsToSend = Arrays.asList(name2, input, goodId, sign, Integer.toString(message_id));
+                        List<String> argsToSend = Arrays.asList(name2, input, goodId, sign, Integer.toString(message_id), Boolean.toString(withCC));
 
                         //Client(buyer) chama para outro cliente(seller)
                         result = clientWebservice.buyGood(argsToSend);

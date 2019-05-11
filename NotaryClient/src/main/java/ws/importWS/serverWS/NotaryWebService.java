@@ -8,6 +8,7 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.Action;
+import javax.xml.ws.FaultAction;
 import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
 
@@ -30,44 +31,59 @@ public interface NotaryWebService {
      * @param arg0
      * @return
      *     returns java.util.List<java.lang.String>
+     * @throws Exception_Exception
      */
     @WebMethod
     @WebResult(targetNamespace = "")
     @RequestWrapper(localName = "intentionToSell", targetNamespace = "http://Interfaces.ws/", className = "ws.importWS.serverWS.IntentionToSell")
     @ResponseWrapper(localName = "intentionToSellResponse", targetNamespace = "http://Interfaces.ws/", className = "ws.importWS.serverWS.IntentionToSellResponse")
-    @Action(input = "http://Interfaces.ws/NotaryWebService/intentionToSellRequest", output = "http://Interfaces.ws/NotaryWebService/intentionToSellResponse")
+    @Action(input = "http://Interfaces.ws/NotaryWebService/intentionToSellRequest", output = "http://Interfaces.ws/NotaryWebService/intentionToSellResponse", fault = {
+        @FaultAction(className = Exception_Exception.class, value = "http://Interfaces.ws/NotaryWebService/intentionToSell/Fault/Exception")
+    })
     public List<String> intentionToSell(
         @WebParam(name = "arg0", targetNamespace = "")
-        List<String> arg0);
+        List<String> arg0)
+        throws Exception_Exception
+    ;
 
     /**
      * 
      * @param arg0
      * @return
      *     returns java.util.List<java.lang.String>
+     * @throws Exception_Exception
      */
     @WebMethod
     @WebResult(targetNamespace = "")
     @RequestWrapper(localName = "getStateOfGood", targetNamespace = "http://Interfaces.ws/", className = "ws.importWS.serverWS.GetStateOfGood")
     @ResponseWrapper(localName = "getStateOfGoodResponse", targetNamespace = "http://Interfaces.ws/", className = "ws.importWS.serverWS.GetStateOfGoodResponse")
-    @Action(input = "http://Interfaces.ws/NotaryWebService/getStateOfGoodRequest", output = "http://Interfaces.ws/NotaryWebService/getStateOfGoodResponse")
+    @Action(input = "http://Interfaces.ws/NotaryWebService/getStateOfGoodRequest", output = "http://Interfaces.ws/NotaryWebService/getStateOfGoodResponse", fault = {
+        @FaultAction(className = Exception_Exception.class, value = "http://Interfaces.ws/NotaryWebService/getStateOfGood/Fault/Exception")
+    })
     public List<String> getStateOfGood(
         @WebParam(name = "arg0", targetNamespace = "")
-        List<String> arg0);
+        List<String> arg0)
+        throws Exception_Exception
+    ;
 
     /**
      * 
      * @param arg0
      * @return
      *     returns java.util.List<java.lang.String>
+     * @throws Exception_Exception
      */
     @WebMethod
     @WebResult(targetNamespace = "")
     @RequestWrapper(localName = "transferGood", targetNamespace = "http://Interfaces.ws/", className = "ws.importWS.serverWS.TransferGood")
     @ResponseWrapper(localName = "transferGoodResponse", targetNamespace = "http://Interfaces.ws/", className = "ws.importWS.serverWS.TransferGoodResponse")
-    @Action(input = "http://Interfaces.ws/NotaryWebService/transferGoodRequest", output = "http://Interfaces.ws/NotaryWebService/transferGoodResponse")
+    @Action(input = "http://Interfaces.ws/NotaryWebService/transferGoodRequest", output = "http://Interfaces.ws/NotaryWebService/transferGoodResponse", fault = {
+        @FaultAction(className = Exception_Exception.class, value = "http://Interfaces.ws/NotaryWebService/transferGood/Fault/Exception")
+    })
     public List<String> transferGood(
         @WebParam(name = "arg0", targetNamespace = "")
-        List<String> arg0);
+        List<String> arg0)
+        throws Exception_Exception
+    ;
 
 }

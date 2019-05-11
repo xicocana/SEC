@@ -25,6 +25,7 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     private final static QName _GetStateOfGood_QNAME = new QName("http://Interfaces.ws/", "getStateOfGood");
+    private final static QName _Exception_QNAME = new QName("http://Interfaces.ws/", "Exception");
     private final static QName _TransferGood_QNAME = new QName("http://Interfaces.ws/", "transferGood");
     private final static QName _IntentionToSell_QNAME = new QName("http://Interfaces.ws/", "intentionToSell");
     private final static QName _TransferGoodResponse_QNAME = new QName("http://Interfaces.ws/", "transferGoodResponse");
@@ -79,6 +80,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link Exception }
+     * 
+     */
+    public Exception createException() {
+        return new Exception();
+    }
+
+    /**
      * Create an instance of {@link TransferGood }
      * 
      */
@@ -93,6 +102,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://Interfaces.ws/", name = "getStateOfGood")
     public JAXBElement<GetStateOfGood> createGetStateOfGood(GetStateOfGood value) {
         return new JAXBElement<GetStateOfGood>(_GetStateOfGood_QNAME, GetStateOfGood.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Exception }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://Interfaces.ws/", name = "Exception")
+    public JAXBElement<Exception> createException(Exception value) {
+        return new JAXBElement<Exception>(_Exception_QNAME, Exception.class, null, value);
     }
 
     /**

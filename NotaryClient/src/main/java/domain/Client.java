@@ -6,14 +6,15 @@ import utils.WriteReadUtils;
 import ws.importWS.serverWS.NotaryWebService;
 import ws.importWS.serverWS.NotaryWebServiceImplService;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public class Client {
 
     private String _id;
+    private boolean withCC;
 
     private static class SingletonHolder {
         private static final Client INSTANCE = new Client();
@@ -46,8 +47,10 @@ public class Client {
         WriteReadUtils.createDir(dirPath);
     }
 
-    public List<String> buyGood(String sellerId, String buyerId, String goodId, String secret, String message_id_buyer) {
+    public List<String> buyGood(String sellerId, String buyerId, String goodId, String secret, String message_id_buyer, String withCC) {
         String currentDir = System.getProperty("user.dir");
+
+        this.withCC = Boolean.valueOf(withCC);
 
         RoundRobin rr = RoundRobin.getInstance();
         rr.setUser(sellerId);
@@ -60,27 +63,22 @@ public class Client {
 
                 String[] msg = new String[]{buyerId, goodId, message_id_buyer};
                 if (RSAKeyGenerator.verifySign(buyerId, secret, msg)) {
-                    NotaryWebServiceImplService client = new NotaryWebServiceImplService();
-                    NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
 
                     String dirPath2 = currentDir + "/classes/message-ids/" + sellerId + "/" + sellerId + ".txt";
 
                     String my_message_id = WriteReadUtils.getMyMessageId(dirPath2);
                     int my_message_id2 = my_message_id.equals("") ? 0 : Integer.parseInt(my_message_id) + 1;
-                    // Assinar o que vem do cliente(buyer) para enviar ao server
-                    String[] args = new String[]{sellerId, buyerId, goodId, Integer.toString(my_message_id2)};
-                    String sellerSign = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, args);
 
                     dirPath = currentDir + "/classes/message-ids/" + sellerId + "/" + sellerId + ".txt";
                     WriteReadUtils.writeUsedMessageId(dirPath, my_message_id2);
 
                     // Chamar metodo TransferGood do NotaryServer
 
-                    List<String> result = rr.transferGoodCommunication(sellerId, buyerId, goodId, secret, Integer.toString(my_message_id2), message_id_buyer);
+                    List<String> result = rr.transferGoodCommunication(sellerId, buyerId, goodId, secret, Integer.toString(my_message_id2), message_id_buyer );
 
 
                     if (result.size() == 4) {
-                        if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1))) {
+                        if (verifyGeneric("server", result.get(0), result.get(1))) {
                             // Assinar o que vem do Server para enviar ao cliente(buyer)
                             String sellerSignResponseFromServer = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, result.get(0), result.get(1));
 
@@ -104,12 +102,20 @@ public class Client {
             } else {
                 System.out.println("Replay Attack !!");
             }
-        } catch (CertificateException | IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         // Assinar o que vem do Server para enviar ao cliente(buyer)
         String sellerSignResponseFromServer = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, new String[]{"false"});
         return Arrays.asList("false", sellerSignResponseFromServer);
+    }
+
+    public boolean verifyGeneric(String owner, String secret, String... args) throws CertificateException, FileNotFoundException {
+        if (withCC && owner.equals("server")) {
+            return RSAKeyGenerator.verifySignWithCert(secret, args);
+        } else {
+            return RSAKeyGenerator.verifySign(owner, secret, args);
+        }
     }
 }

@@ -10,12 +10,12 @@ import java.util.List;
 public interface NotaryWebService {
 
     @WebMethod
-    List<String> intentionToSell(List<String> args);
+    List<String> intentionToSell(List<String> args) throws Exception;
 
     @WebMethod
-    List<String> getStateOfGood(List<String> args) ;
+    List<String> getStateOfGood(List<String> args) throws Exception;
 
     @WebMethod
-    List<String> transferGood(List<String> args);
+    List<String> transferGood(List<String> args) throws Exception;
 
 }

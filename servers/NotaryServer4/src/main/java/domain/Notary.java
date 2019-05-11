@@ -27,8 +27,6 @@ public class Notary {
     private long p11_session;
     private long signatureKey;
 
-    private   ArrayList<String> _users = new ArrayList<>();
-
     private String port = "";
 
     //DEFAULT WITH CC
@@ -57,13 +55,14 @@ public class Notary {
 
         String newpath = pathToGoods.substring(0, pathToGoods.length() - 4) + transaction_counter + ".txt";
 
-         try {
+        try {
             String pathToUsers = currentDir + "/classes/notary-folder/users.txt";
             reader = new BufferedReader(new FileReader(pathToUsers));
             String line = reader.readLine();
             while (line != null) {
                 // line
 
+                ArrayList<String> _users = new ArrayList<>();
                 _users.add(line);
                 // read next line
                 line = reader.readLine();
@@ -102,193 +101,186 @@ public class Notary {
         return SingletonHolder.INSTANCE;
     }
 
-    public List<String> intentionToSell(String owner, String goodId, String secret, String message_id, boolean isAck) {
+    public List<String> intentionToSell(String owner, String goodId, String secret, String message_id, boolean isAck) throws Exception {
         String aux = isAck ? "ack" : "after_ack";
-        System.out.println("Client " + owner + " called intentionToSell | " + aux );
+        System.out.println("Client " + owner + " called intentionToSell | " + aux);
         List<String> result = new ArrayList<>();
-        List<String> resultError;
 
-        try {
-
-            String[] msg;
-            if(isAck){
-                msg = new String[]{owner, goodId, message_id, "ack"};
-            }else{
-                msg = new String[]{owner, goodId, message_id};
-            }
-
-            //verifica assinatura dos clientes
-            if (RSAKeyGenerator.verifySign(owner, secret, msg)) {
-                if (!readMessageIdFile(owner, message_id)) {
-                    writeMessageIdFile(owner, message_id);
-
-                    this.WriteNewFile();
-
-                    my_message_id = Integer.parseInt(getMyMessageId());
-                    my_message_id++;
-                    writeMessageIdFile("server", Integer.toString(my_message_id));
-
-                    if (isAck){
-                        System.out.println("Going to send ACK");
-                        return Arrays.asList("ack", port, Integer.toString(my_message_id));
-                    }
-
-                    for (Good good : _userGoods) {
-                        if (good.getOwner().equals(owner) && good.getId().equals(goodId)) {
-                            good.setStatus(true);
-
-
-                            //CREATE SIGN
-                            String signedMessage = true + good.getOwner() + good.getId() + my_message_id;
-                            result.add(signGeneric(signatureKey, signedMessage));
-                            //
-
-                            result.add("true");
-                            result.add(good.getOwner());
-                            result.add(good.getId());
-                            result.add(Integer.toString(my_message_id));
-                            result.add(port);
-
-                            return result;
-                        }
-                    }
-                } else {
-                    System.out.println("Replay Attack !!");
-                }
-
-
-            } else {
-                System.out.println("Error: Message Tampered");
-            }
-
-        } catch (Exception e) {
-            System.out.println("Caught exception on intentToSell:");
-            e.printStackTrace();
+        String[] msg;
+        if (isAck) {
+            msg = new String[]{owner, goodId, message_id, "ack"};
+        } else {
+            msg = new String[]{owner, goodId, message_id};
         }
 
-        resultError = initializeErrorList(isAck);
+        //verifica assinatura dos clientes
+        if (RSAKeyGenerator.verifySign(owner, secret, msg)) {
+            if (!readMessageIdFile(owner, message_id)) {
+                writeMessageIdFile(owner, message_id);
 
-        return resultError;
+                this.WriteNewFile();
+
+                my_message_id = Integer.parseInt(getMyMessageId());
+                my_message_id++;
+                writeMessageIdFile("server", Integer.toString(my_message_id));
+
+                if (isAck) {
+                    System.out.println("Going to send ACK");
+                    return Arrays.asList("ack", port, Integer.toString(my_message_id));
+                }
+
+                for (Good good : _userGoods) {
+                    if (good.getOwner().equals(owner) && good.getId().equals(goodId)) {
+                        good.setStatus(true);
+
+
+                        //CREATE SIGN
+                        String signedMessage = true + good.getOwner() + good.getId() + my_message_id;
+                        result.add(signGeneric(signatureKey, signedMessage));
+                        //
+
+                        result.add("true");
+                        result.add(good.getOwner());
+                        result.add(good.getId());
+                        result.add(Integer.toString(my_message_id));
+                        result.add(port);
+
+                        return result;
+                    }
+                }
+            } else {
+                System.out.println("Replay Attack !!");
+                throw new Exception("Error: Message Tampered");
+            }
+
+
+        } else {
+            System.out.println("Error: Message Tampered");
+            throw new Exception("Error: Message Tampered");
+
+        }
+
+        if (result.isEmpty()) {
+            throw new Exception("goodId : " + goodId + "doesnt exist");
+        }
+
+        return result;
     }
 
-    public List<String> getStateOfGood(String user, String goodId, String secret, String message_id, boolean ishack) {
+    public List<String> getStateOfGood(String user, String goodId, String secret, String message_id, boolean isAck) throws Exception {
 
         System.out.println("Recieved request on " + goodId + " status");
         List<String> result = new ArrayList<>();
-        List<String> resultError;
 
 
-        try {
-            String[] msg;
-            if(ishack){
-                msg = new String[]{user, goodId, message_id, "ack"};
-            }else{
-                msg = new String[]{user, goodId, message_id};
-            }
-            //verifica assinatura dos clientes
-            if (RSAKeyGenerator.verifySign(user, secret, msg)) {
-                if (!readMessageIdFile(user, message_id)) {
-                    writeMessageIdFile(user, message_id);
-                    my_message_id = Integer.parseInt(getMyMessageId());
-                    my_message_id++;
-                    writeMessageIdFile("server", Integer.toString(my_message_id));
+        String[] msg;
 
-                    if (ishack){
-                        System.out.println("Going to send ACK");
-                        return Arrays.asList("ack", port,Integer.toString(my_message_id));
-                    }
-
-                    for (Good good : _userGoods) {
-                        if (good.getId().equals(goodId)) {
-                            //CREATE SIGN
-                            String signedMessage = good.getStatus() + good.getOwner() + my_message_id;
-                            result.add(signGeneric(signatureKey, signedMessage));
-                            //
-                            result.add(Boolean.toString(good.getStatus()));
-                            result.add(good.getOwner());
-                            result.add(Integer.toString(my_message_id));
-
-                            result.add(port);
-
-                            return result;
-                        }
-                    }
-                } else {
-                    System.out.println("Replay Attack !!");
-                }
-            } else {
-                System.out.println("Error: Message Tampered");
-            }
-
-        } catch (PKCS11Exception | IOException e) {
-            e.printStackTrace();
-            System.out.println("Error Signing the message");
+        if (isAck) {
+            msg = new String[]{user, goodId, message_id, "ack"};
+        } else {
+            msg = new String[]{user, goodId, message_id};
         }
 
-        resultError = initializeErrorList(ishack);
+        //verifica assinatura dos clientes
+        if (RSAKeyGenerator.verifySign(user, secret, msg)) {
+            if (!readMessageIdFile(user, message_id)) {
 
-        return resultError;
+                writeMessageIdFile(user, message_id);
+                my_message_id = Integer.parseInt(getMyMessageId());
+                my_message_id++;
+                writeMessageIdFile("server", Integer.toString(my_message_id));
+
+                if (isAck) {
+                    System.out.println("Going to send ACK");
+                    return Arrays.asList("ack", port, Integer.toString(my_message_id));
+                }
+
+                for (Good good : _userGoods) {
+                    if (good.getId().equals(goodId)) {
+                        //CREATE SIGN
+                        String signedMessage = good.getStatus() + good.getOwner() + my_message_id;
+                        result.add(signGeneric(signatureKey, signedMessage));
+                        //
+                        result.add(Boolean.toString(good.getStatus()));
+                        result.add(good.getOwner());
+                        result.add(Integer.toString(my_message_id));
+
+                        result.add(port);
+                        return result;
+                    }
+                }
+            } else {
+                System.out.println("Replay Attack !!");
+                throw new Exception("Replay Attack !!");
+            }
+        } else {
+            System.out.println("Error: Message Tampered");
+            throw new Exception("Error: Message Tampered");
+        }
+
+
+        if (result.isEmpty()) {
+            throw new Exception("goodId : " + goodId + "doesnt exist");
+        }
+
+        return result;
     }
 
-    public List<String> transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2, String message_id_seller, String message_id_buyer, boolean ishack) {
+    public List<String> transferGood(String sellerId, String buyerId, String goodId, String secret, String secret2, String message_id_seller, String message_id_buyer, boolean ishack) throws Exception {
         System.out.println("Client " + sellerId + " called transferGood");
-        List<String> resultError;
+        ;
         List<String> result = new ArrayList<>();
 
-        try {
-            String[] msg;
-            if(ishack){
-                msg =  new String[]{sellerId, buyerId, goodId, message_id_seller, "ack"};
-            }else{
-                msg = new String[]{sellerId, buyerId, goodId, message_id_seller};
-            }
 
-            //String[] msg = new String[]{sellerId, buyerId, goodId, message_id_seller};
-            String[] msg2 = new String[]{buyerId, goodId, message_id_buyer};
-            if ((RSAKeyGenerator.verifySign(sellerId, secret, msg)) && (RSAKeyGenerator.verifySign(buyerId, secret2, msg2))) {
-                System.out.println("uuuuuuuuuuuuuuuSELLERuuuuuuuuuuuuuuuuuuuuser : " + message_id_seller);
-                if (!readMessageIdFile(sellerId, message_id_seller)) {
-                    writeMessageIdFile(sellerId, message_id_seller);
-                    my_message_id = Integer.parseInt(getMyMessageId());
-                    my_message_id++;
-                    writeMessageIdFile("server", Integer.toString(my_message_id));
-
-                    if (ishack){
-                        System.out.println("Going to send ACK");
-                        return Arrays.asList("ack", port,Integer.toString(my_message_id));
-                    }
-
-                    for (Good good : _userGoods) {
-                        if (good.getId().equals(goodId) && good.getStatus() && good.getOwner().equals(sellerId)) {
-                            // Tocar good entre os users
-                            good.setOwner(buyerId);
-                            good.setStatus(false);
-                            this.WriteNewFile();
-                            //CREATE SIGN
-                            String signedMessage = "true";
-                            //
-                            result.add(signGeneric(signatureKey, signedMessage));
-                            result.add("true");
-                            result.add(Integer.toString(my_message_id));
-                            result.add(port);
-                            return result;
-
-                        }
-                    }
-                } else {
-                    System.out.println("Replay Attack !!");
-                }
-            } else {
-                System.out.println("Error: Message Tampered");
-            }
-        } catch (Exception e) {
-            System.out.println("Caught exception while writing new transfers file :");
-            e.printStackTrace();
+        String[] msg;
+        if (ishack) {
+            msg = new String[]{sellerId, buyerId, goodId, message_id_seller, "ack"};
+        } else {
+            msg = new String[]{sellerId, buyerId, goodId, message_id_seller};
         }
 
-        resultError = initializeErrorList(ishack);
+        String[] msg2 = new String[]{buyerId, goodId, message_id_buyer};
+        if ((RSAKeyGenerator.verifySign(sellerId, secret, msg)) && (RSAKeyGenerator.verifySign(buyerId, secret2, msg2))) {
+            if (!readMessageIdFile(sellerId, message_id_seller)) {
+                writeMessageIdFile(sellerId, message_id_seller);
+                my_message_id = Integer.parseInt(getMyMessageId());
+                my_message_id++;
+                writeMessageIdFile("server", Integer.toString(my_message_id));
 
-        return resultError;
+                if (ishack) {
+                    System.out.println("Going to send ACK");
+                    return Arrays.asList("ack", port, Integer.toString(my_message_id));
+                }
+
+                for (Good good : _userGoods) {
+                    if (good.getId().equals(goodId) && good.getStatus() && good.getOwner().equals(sellerId)) {
+                        // Tocar good entre os users
+                        good.setOwner(buyerId);
+                        good.setStatus(false);
+                        this.WriteNewFile();
+                        //CREATE SIGN
+                        String signedMessage = "true";
+                        //
+                        result.add(signGeneric(signatureKey, signedMessage));
+                        result.add("true");
+                        result.add(Integer.toString(my_message_id));
+                        result.add(port);
+                        return result;
+
+                    }else{
+                        throw new Exception("Strange behaviour !");
+                    }
+                }
+            } else {
+                System.out.println("Replay Attack !!");
+                throw new Exception("Replay Attack !!");
+            }
+        } else {
+            System.out.println("Error: Message Tampered");
+            throw new Exception("Error: Message Tampered");
+        }
+
+        return result;
     }
 
     private List<String> initializeErrorList(boolean ishack) {
@@ -296,7 +288,7 @@ public class Notary {
         System.out.println("//Error Message ");
         List<String> resultError = new ArrayList<>();
         try {
-            if (ishack){
+            if (ishack) {
                 System.out.println("Going to send NACK");
                 return Arrays.asList("nack", port);
             }
@@ -378,8 +370,7 @@ public class Notary {
     public static X509Certificate getCertFromByteArray(byte[] certificateEncoded) throws CertificateException {
         CertificateFactory f = CertificateFactory.getInstance("X.509");
         InputStream in = new ByteArrayInputStream(certificateEncoded);
-        X509Certificate cert = (X509Certificate) f.generateCertificate(in);
-        return cert;
+        return (X509Certificate) f.generateCertificate(in);
     }
 
     public void WriteNewFile() throws FileNotFoundException, UnsupportedEncodingException {
