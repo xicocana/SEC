@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.*;
 
+import ws.importWS.serverWS.GetStateOfGood;
 import ws.importWS.serverWS.NotaryWebService;
 import ws.importWS.serverWS.NotaryWebServiceImplService;
 
@@ -161,7 +162,7 @@ public class RoundRobin {
         if (transferGoodACK( sellerId,  buyerId,  goodId,  secret ,  messageId2,  message_id_buyer)) {
             int newId = Integer.parseInt(messageId2) + 1;
             WriteReadUtils.writeUsedMessageId(pathToMessageIds, newId);
-            result = transferGoodRead( sellerId,  buyerId,  goodId,  secret ,  messageId2,  message_id_buyer);
+            result = transferGoodRead( sellerId,  buyerId,  goodId,  secret ,  Integer.toString(newId),  message_id_buyer);
         } else {
             System.out.println("?");
         }
@@ -306,19 +307,21 @@ public class RoundRobin {
                 System.out.println("thread incoming");
                 Future<List<String>> future = service.take();
                 result = future.get();
+                if(!result.get(0).equals("ERROR")){
+                    //escrever msg id do server
+                    String path = currentDir + "/classes/message-ids/" + input + "/other-users/server"+result.get(result.size()- 1) +".txt";
+                    int positionOfMessage = method == INTENT ? 4 : method == GET_STATE_OF_GOOD ? 3 : 2;
 
-                //escrever msg id do server
-                String path = currentDir + "/classes/message-ids/" + input + "/other-users/server"+result.get(result.size()- 1) +".txt";
-                int positionOfMessage = method == INTENT  ? 4 : method == GET_STATE_OF_GOOD ? 3 : 2;
-
-                if (!WriteReadUtils.readMessageIdFile(path, result.get(positionOfMessage))) {
-                    WriteReadUtils.writeUsedMessageId(path,Integer.parseInt(result.get(positionOfMessage)) );
-                    System.out.println("MESSAGE_ID DO SERVER QUANDO ENVIA ACK : " + result.get(positionOfMessage));
-                    TotalResults.add(result);
+                    if (!WriteReadUtils.readMessageIdFile(path, result.get(positionOfMessage))) {
+                        WriteReadUtils.writeUsedMessageId(path,Integer.parseInt(result.get(positionOfMessage)) );
+                        System.out.println("MESSAGE_ID DO SERVER QUANDO ENVIA ACK : " + result.get(positionOfMessage));
+                        TotalResults.add(result);
+                    }else{
+                        System.out.println("Replay Attack !!");
+                    }
                 }else{
-                    System.out.println("Replay Attack !!");
+                    System.out.println("deu bostinha");
                 }
-
             }
 
             WORKER_THREAD_POOL.shutdown();

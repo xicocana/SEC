@@ -36,7 +36,7 @@ public class NotaryClient {
         withCC = value.equalsIgnoreCase("yes");
 
         String currentDir = System.getProperty("user.dir");
-        String dirPath = currentDir + "/classses/message-ids/" + input + "/other-users/";
+        String dirPath = currentDir + "/classes/message-ids/" + input + "/other-users/";
         WriteReadUtils.createDir(dirPath);
 
         Client notaryClient = new Client();

@@ -246,6 +246,7 @@ public class Notary {
             //String[] msg = new String[]{sellerId, buyerId, goodId, message_id_seller};
             String[] msg2 = new String[]{buyerId, goodId, message_id_buyer};
             if ((RSAKeyGenerator.verifySign(sellerId, secret, msg)) && (RSAKeyGenerator.verifySign(buyerId, secret2, msg2))) {
+                System.out.println("uuuuuuuuuuuuuuuSELLERuuuuuuuuuuuuuuuuuuuuser : " + message_id_seller);
                 if (!readMessageIdFile(sellerId, message_id_seller)) {
                     writeMessageIdFile(sellerId, message_id_seller);
                     my_message_id = Integer.parseInt(getMyMessageId());
@@ -303,6 +304,7 @@ public class Notary {
             resultError.add("ERROR");
             resultError.add(signGeneric(signatureKey, signedMessage));
             resultError.add("false");
+            resultError.add(port);
         } catch (PKCS11Exception e) {
             e.printStackTrace();
         }

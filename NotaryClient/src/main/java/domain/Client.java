@@ -79,9 +79,7 @@ public class Client {
                     List<String> result = rr.transferGoodCommunication(sellerId, buyerId, goodId, secret, Integer.toString(my_message_id2), message_id_buyer);
 
 
-                    if (result.isEmpty() || result.get(0).equals("ERROR")) {
-                        System.out.println("Error: Something REALLY Wrong with NotaryServer");
-                    } else if (result.size() == 2) {
+                    if (result.size() == 4) {
                         if (RSAKeyGenerator.verifySignWithCert(result.get(0), result.get(1))) {
                             // Assinar o que vem do Server para enviar ao cliente(buyer)
                             String sellerSignResponseFromServer = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, result.get(0), result.get(1));
