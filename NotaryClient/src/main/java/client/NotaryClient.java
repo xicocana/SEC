@@ -36,7 +36,7 @@ public class NotaryClient {
         withCC = value.equalsIgnoreCase("yes");
 
         String currentDir = System.getProperty("user.dir");
-        String dirPath = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/";
+        String dirPath = currentDir + "/classses/message-ids/" + input + "/other-users/";
         WriteReadUtils.createDir(dirPath);
 
         Client notaryClient = new Client();
@@ -48,7 +48,7 @@ public class NotaryClient {
         Endpoint.publish(bindingURI, webService);
 
         System.out.println("Server started at: " + bindingURI);
-        String pathToMessageIds = currentDir + "/../src/main/resources/message-ids/" + input + "/" + input + ".txt";
+        String pathToMessageIds = currentDir + "/classes/message-ids/" + input + "/" + input + ".txt";
 
         String var = WriteReadUtils.getMyMessageId(pathToMessageIds);
         int message_id = var.equals("") ? 0 : Integer.parseInt(var);
@@ -87,26 +87,34 @@ public class NotaryClient {
                     result = rr.getIntentCommunication(input, goodId, Integer.toString(message_id));
                     results.add(result);
 
-                    if (result.size() == 5) {
+                    System.out.println("SIZE : " + result.size());
+
+                    for (String teste : result) {
+                        System.out.print("valor : " + teste + " | ");
+                    }
+
+                    if (result.size() == 6) {
                         if (verifyGeneric("server", result.get(0), result.get(1), result.get(2), result.get(3), result.get(4))) {
-                            dirPath = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/server.txt";
-                            if (!WriteReadUtils.readMessageIdFile(dirPath, result.get(4))) {
-                                String path = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/server.txt";
-                                WriteReadUtils.writeUsedMessageId(path, Integer.parseInt(result.get(4)));
-                                if (Boolean.valueOf(result.get(1))) {
-                                    System.out.println("-> " + goodId + " is now for sale");
-                                    System.out.println(" ");
-                                } else {
-                                    System.out.println("-> Something went wrong :( please try again later");
-                                    System.out.println(" ");
-                                }
+                            dirPath = currentDir + "/classes/message-ids/" + input + "/other-users/server" + result.get(5) + ".txt";
+                            //if (!WriteReadUtils.readMessageIdFile(dirPath, result.get(4))) {
+//                                String path = currentDir + "/classes/message-ids/" + input + "/other-users/server"+result.get(5)+".txt";
+//                                WriteReadUtils.writeUsedMessageId(path, Integer.parseInt(result.get(4)));
+                            //TODO
+                            System.out.println("MESSAGE_ID DO SERVER DEPOIS DO BUSINESS : " + result.get(4));
+                            if (Boolean.valueOf(result.get(1))) {
+                                System.out.println("-> " + goodId + " is now for sale");
+                                System.out.println(" ");
                             } else {
-                                System.out.println("Replay Attack !!");
+                                System.out.println("-> Something went wrong :( please try again later");
+                                System.out.println(" ");
                             }
+//                            } else {
+//                                System.out.println("Replay Attack !!");
+//                            }
                         } else {
                             System.out.println("Error: NotaryServer Message Tampered");
                         }
-                    } else if (result.size() == 2) {
+                    } else if (result.size() == 3) {
                         if (verifyGeneric("server", result.get(0), result.get(1))) {
                             System.out.println("Error: Something Wrong with NotaryServer");
                         } else {
@@ -134,18 +142,18 @@ public class NotaryClient {
                     try {
                         if (result.size() == 5) {
                             if (verifyGeneric("server", result.get(0), result.get(1), result.get(2), result.get(3))) {
-                                dirPath = currentDir + "/classes/message-ids/" + input + "/other-users/server"+result.get(4)+".txt";
-                                if (!WriteReadUtils.readMessageIdFile(dirPath, result.get(3))) {
-                                    String path = currentDir + "/classes/message-ids/" + input + "/other-users/server"+result.get(4)+".txt";
-                                    WriteReadUtils.writeUsedMessageId(path, Integer.parseInt(result.get(3)));
+                                dirPath = currentDir + "/classes/message-ids/" + input + "/other-users/server" + result.get(4) + ".txt";
+//                                if (!WriteReadUtils.readMessageIdFile(dirPath, result.get(3))) {
+//                                    String path = currentDir + "/classes/message-ids/" + input + "/other-users/server"+result.get(4)+".txt";
+//                                    WriteReadUtils.writeUsedMessageId(path, Integer.parseInt(result.get(3)));
 
-                                    System.out.println("-> " + goodId + " owner  : " + result.get(2));
-                                    String onSale = Boolean.valueOf(result.get(1)) ? "on-sale" : "not-on-sale";
-                                    System.out.println("-> " + goodId + " status : " + onSale);
-                                    System.out.println(" ");
-                                } else {
-                                    System.out.println("Replay Attack !!");
-                                }
+                                System.out.println("-> " + goodId + " owner  : " + result.get(2));
+                                String onSale = Boolean.valueOf(result.get(1)) ? "on-sale" : "not-on-sale";
+                                System.out.println("-> " + goodId + " status : " + onSale);
+                                System.out.println(" ");
+//                                } else {
+//                                    System.out.println("Replay Attack !!");
+//                                }
                             } else {
                                 System.out.println("Error: NotaryServer Message Tampered");
                             }
@@ -191,9 +199,9 @@ public class NotaryClient {
                             if (verifyGeneric("server", result.get(0), result.get(1)) &&
                                     verifyGeneric(name2, result.get(2), result.get(0), result.get(1))) {
 
-                                dirPath = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/server.txt";
+                                dirPath = currentDir + "/classes/message-ids/" + input + "/other-users/server.txt";
                                 if (!WriteReadUtils.readMessageIdFile(dirPath, result.get(3))) {
-                                    String path = currentDir + "/../src/main/resources/message-ids/" + input + "/other-users/" + name2 + ".txt";
+                                    String path = currentDir + "/classes/message-ids/" + input + "/other-users/" + name2 + ".txt";
                                     WriteReadUtils.writeUsedMessageId(path, Integer.parseInt(result.get(3)));
 
                                     System.out.println("-> Purchase successful");

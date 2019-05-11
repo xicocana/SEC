@@ -115,7 +115,7 @@ public class RoundRobin {
         return genericACK(argsToSendPre, GET_STATE_OF_GOOD);
     }
 
-    private List<String> getStateOfGoodRead(String input, String goodId, String messageId) {
+    private List<String> getStateOfGoodRead(String input, String goodId, String messageId) throws IOException {
         String[] args = new String[]{input, goodId, messageId};
         List<String> argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args), messageId, "READ");
 
@@ -126,11 +126,13 @@ public class RoundRobin {
             throws NumberFormatException, IOException {
         //Call SERVER METHOD
 
-        int ackCounter = 0;
         List<String> result = new ArrayList<>();
 
         if (intentACK(input, goodId, messageId)) {
-            result = intentRead(input, goodId, messageId);
+            int newId = Integer.parseInt(messageId) + 1;
+            System.out.println("MESSAGE_ID AFTER INTENT TO SELL ACK : " + newId);
+            WriteReadUtils.writeUsedMessageId(pathToMessageIds, newId);
+            result = intentRead(input, goodId, Integer.toString(newId));
         } else {
             System.out.println("?");
         }
@@ -145,13 +147,46 @@ public class RoundRobin {
         return genericACK(argsToSendPre, INTENT);
     }
 
-    private List<String> intentRead(String input, String goodId, String messageId) {
+    private List<String> intentRead(String input, String goodId, String messageId) throws IOException {
         String[] args = new String[]{input, goodId, messageId};
         List<String> argsToSend = Arrays.asList(input, goodId, RSAKeyGenerator.writeSign(input, input + input, args), messageId, "READ");
 
         return genericAfterAck(argsToSend, INTENT);
     }
 
+    public List<String> transferGoodCommunication(String sellerId, String buyerId, String goodId, String secret , String messageId2, String message_id_buyer)
+            throws NumberFormatException, IOException {
+        //Call SERVER METHOD
+        List<String> result = new ArrayList<>();
+        if (transferGoodACK( sellerId,  buyerId,  goodId,  secret ,  messageId2,  message_id_buyer)) {
+            int newId = Integer.parseInt(messageId2) + 1;
+            WriteReadUtils.writeUsedMessageId(pathToMessageIds, newId);
+            result = transferGoodRead( sellerId,  buyerId,  goodId,  secret ,  messageId2,  message_id_buyer);
+        } else {
+            System.out.println("?");
+        }
+
+        return result;
+    }
+
+    private boolean transferGoodACK(String sellerId, String buyerId, String goodId, String secret , String messageId2, String message_id_buyer) throws NumberFormatException, IOException {
+        String[] args = new String[]{sellerId, buyerId, goodId, messageId2, ACK};
+        String sellerSign = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, args);
+
+        List<String> argsToSendPre = Arrays.asList(sellerId, buyerId, goodId, sellerSign, secret, messageId2, message_id_buyer,ACK);
+
+
+        return genericACK(argsToSendPre, TRANSFER_GOOD);
+    }
+
+    private List<String> transferGoodRead(String sellerId, String buyerId, String goodId, String secret , String messageId2, String message_id_buyer) throws IOException {
+        String[] args = new String[]{sellerId, buyerId, goodId, messageId2};
+        String sellerSign = RSAKeyGenerator.writeSign(sellerId, sellerId + sellerId, args);
+
+        List<String> argsToSendPre = Arrays.asList(sellerId, buyerId, goodId, sellerSign, secret, messageId2, message_id_buyer,"READ");
+
+        return genericAfterAck(argsToSendPre, TRANSFER_GOOD);
+    }
 
     private boolean genericACK(List<String> argsToSendPre, int method) throws NumberFormatException, IOException {
         List<String> result = new ArrayList<>();
@@ -194,12 +229,13 @@ public class RoundRobin {
             System.out.println("Receiving ...");
 
             for (int i = 0; i < servers.size() - falhas; i++) {
-                System.out.println("thread incoming ACK");
                 Future<List<String>> future = service.take();
                 result = future.get();
+
                 //escrever msg id do server
-                String path = currentDir + "/classes/message-ids/" + input + "/other-users/server.txt";
-                WriteReadUtils.writeUsedMessageId(path, Integer.parseInt(result.get(1)));
+                String path = currentDir + "/classes/message-ids/" + input + "/other-users/server"+result.get(1)+".txt";
+                WriteReadUtils.writeUsedMessageId(path, Integer.parseInt(result.get(2)));
+                System.out.println("MESSAGE_ID DO SERVER QUANDO ENVIA ACK : " + result.get(2));
                 TotalResults.add(result);
 
                 if (result.get(0).equals("ack")) {
@@ -207,8 +243,6 @@ public class RoundRobin {
                 } else {
                     System.out.println("Sucesso NO_ACK | server : " + result.get(1));
                 }
-
-                System.out.println("result = " + result.get(0));
             }
 
             WORKER_THREAD_POOL.shutdown();
@@ -233,7 +267,7 @@ public class RoundRobin {
         return ackCounter==servers.size()-falhas;
     }
 
-    private List<String> genericAfterAck(List<String> argsToSendPre, int method) {
+    private List<String> genericAfterAck(List<String> argsToSendPre, int method) throws IOException {
         List<String> result;
         List<List<String>> TotalResults = new ArrayList<>();
         try {
@@ -263,7 +297,6 @@ public class RoundRobin {
                             break;
                     }
 
-                    resultList.add(port);
                     return resultList;
                 });
             }
@@ -273,15 +306,25 @@ public class RoundRobin {
                 System.out.println("thread incoming");
                 Future<List<String>> future = service.take();
                 result = future.get();
-                TotalResults.add(result);
+
+                //escrever msg id do server
+                String path = currentDir + "/classes/message-ids/" + input + "/other-users/server"+result.get(result.size()- 1) +".txt";
+                int positionOfMessage = method == INTENT  ? 4 : method == GET_STATE_OF_GOOD ? 3 : 2;
+
+                if (!WriteReadUtils.readMessageIdFile(path, result.get(positionOfMessage))) {
+                    WriteReadUtils.writeUsedMessageId(path,Integer.parseInt(result.get(positionOfMessage)) );
+                    System.out.println("MESSAGE_ID DO SERVER QUANDO ENVIA ACK : " + result.get(positionOfMessage));
+                    TotalResults.add(result);
+                }else{
+                    System.out.println("Replay Attack !!");
+                }
+
             }
 
             WORKER_THREAD_POOL.shutdown();
             WORKER_THREAD_POOL.awaitTermination(1000l, TimeUnit.SECONDS);
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
 
@@ -317,8 +360,8 @@ public class RoundRobin {
                 }
             }
         } else {
-            for (int i = 0; i < totalResults.size(); i++) {
-                String key = totalResults.get(i).get(1);
+            for (List<String> totalResult : totalResults) {
+                String key = totalResult.get(1);
                 Integer val = cont.get(key);
                 cont.put(key, val == null ? 1 : val + 1);
             }

@@ -110,25 +110,33 @@ public class Notary {
 
         try {
 
-            String[] msg = new String[]{owner, goodId, message_id};
+            String[] msg;
+            if(isAck){
+                msg = new String[]{owner, goodId, message_id, "ack"};
+            }else{
+                msg = new String[]{owner, goodId, message_id};
+            }
+
             //verifica assinatura dos clientes
             if (RSAKeyGenerator.verifySign(owner, secret, msg)) {
                 if (!readMessageIdFile(owner, message_id)) {
                     writeMessageIdFile(owner, message_id);
 
+                    this.WriteNewFile();
+
+                    my_message_id = Integer.parseInt(getMyMessageId());
+                    my_message_id++;
+                    writeMessageIdFile("server", Integer.toString(my_message_id));
+
                     if (isAck){
                         System.out.println("Going to send ACK");
-                        return Arrays.asList("ack", port);
+                        return Arrays.asList("ack", port, Integer.toString(my_message_id));
                     }
 
                     for (Good good : _userGoods) {
                         if (good.getOwner().equals(owner) && good.getId().equals(goodId)) {
                             good.setStatus(true);
-                            this.WriteNewFile();
 
-                            my_message_id = Integer.parseInt(getMyMessageId());
-                            my_message_id++;
-                            writeMessageIdFile("server", Integer.toString(my_message_id));
 
                             //CREATE SIGN
                             String signedMessage = true + good.getOwner() + good.getId() + my_message_id;
@@ -139,6 +147,7 @@ public class Notary {
                             result.add(good.getOwner());
                             result.add(good.getId());
                             result.add(Integer.toString(my_message_id));
+                            result.add(port);
 
                             return result;
                         }
@@ -186,7 +195,7 @@ public class Notary {
 
                     if (ishack){
                         System.out.println("Going to send ACK");
-                        return Arrays.asList("ack", port);
+                        return Arrays.asList("ack", port,Integer.toString(my_message_id));
                     }
 
                     for (Good good : _userGoods) {
@@ -198,6 +207,8 @@ public class Notary {
                             result.add(Boolean.toString(good.getStatus()));
                             result.add(good.getOwner());
                             result.add(Integer.toString(my_message_id));
+
+                            result.add(port);
 
                             return result;
                         }
@@ -225,7 +236,14 @@ public class Notary {
         List<String> result = new ArrayList<>();
 
         try {
-            String[] msg = new String[]{sellerId, buyerId, goodId, message_id_seller};
+            String[] msg;
+            if(ishack){
+                msg =  new String[]{sellerId, buyerId, goodId, message_id_seller, "ack"};
+            }else{
+                msg = new String[]{sellerId, buyerId, goodId, message_id_seller};
+            }
+
+            //String[] msg = new String[]{sellerId, buyerId, goodId, message_id_seller};
             String[] msg2 = new String[]{buyerId, goodId, message_id_buyer};
             if ((RSAKeyGenerator.verifySign(sellerId, secret, msg)) && (RSAKeyGenerator.verifySign(buyerId, secret2, msg2))) {
                 if (!readMessageIdFile(sellerId, message_id_seller)) {
@@ -236,7 +254,7 @@ public class Notary {
 
                     if (ishack){
                         System.out.println("Going to send ACK");
-                        return Arrays.asList("ack", port);
+                        return Arrays.asList("ack", port,Integer.toString(my_message_id));
                     }
 
                     for (Good good : _userGoods) {
@@ -250,6 +268,8 @@ public class Notary {
                             //
                             result.add(signGeneric(signatureKey, signedMessage));
                             result.add("true");
+                            result.add(Integer.toString(my_message_id));
+                            result.add(port);
                             return result;
 
                         }
