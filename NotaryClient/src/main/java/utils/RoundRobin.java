@@ -265,7 +265,7 @@ public class RoundRobin {
                 ackCounter++;
             }
         }
-        return ackCounter == servers.size() - falhas + failedServers;
+        return ackCounter == servers.size() - falhas;
     }
 
     private List<String> genericAfterAck(List<String> argsToSendPre, int method) throws Exception {

@@ -142,6 +142,7 @@ public class Notary {
                     if (good.getOwner().equals(owner) && good.getId().equals(goodId)) {
                         good.setStatus(true);
 
+                        this.WriteNewFile();
 
                         //CREATE SIGN
                         String signedMessage = true + good.getOwner() + good.getId() + my_message_id;

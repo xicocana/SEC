@@ -52,6 +52,10 @@ manulmente alterar o owner da good0 para user1 no server2
 correr getsateofgood da good0 -> numero de acks NOT-OK
 
 
+```sh
+ambos os testes funcionam para qualquer metodo remoto 
+```
+
 
 
 
