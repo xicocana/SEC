@@ -1,4 +1,5 @@
 /home/xicocana/Documents/tagus/sec/proj/SEC/NotaryServer/src/main/java/ws/serverWS/IntentionToSellResponse.java
+/home/xicocana/Documents/tagus/sec/proj/SEC/NotaryServer/src/main/java/utils/TransactionManager.java
 /home/xicocana/Documents/tagus/sec/proj/SEC/NotaryServer/src/main/java/ws/serverWS/Test.java
 /home/xicocana/Documents/tagus/sec/proj/SEC/NotaryServer/src/main/java/ws/serverWS/NotaryWebServiceImplService.java
 /home/xicocana/Documents/tagus/sec/proj/SEC/NotaryServer/src/main/java/ws/serverWS/GetNotaryIdResponse.java
@@ -8,6 +9,7 @@
 /home/xicocana/Documents/tagus/sec/proj/SEC/NotaryServer/src/main/java/ws/serverWS/GetNotaryId.java
 /home/xicocana/Documents/tagus/sec/proj/SEC/NotaryServer/src/main/java/ws/serverWS/GetUsersResponse.java
 /home/xicocana/Documents/tagus/sec/proj/SEC/NotaryServer/src/main/java/ws/serverWS/TransferGoodResponse.java
+/home/xicocana/Documents/tagus/sec/proj/SEC/NotaryServer/src/main/java/utils/Transaction.java
 /home/xicocana/Documents/tagus/sec/proj/SEC/NotaryServer/src/main/java/ws/Implementacao/NotaryWebServiceImpl.java
 /home/xicocana/Documents/tagus/sec/proj/SEC/NotaryServer/src/main/java/ws/serverWS/NotaryWebService.java
 /home/xicocana/Documents/tagus/sec/proj/SEC/NotaryServer/src/main/java/ws/serverWS/IntentionToSell.java

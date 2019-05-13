@@ -3,6 +3,8 @@ package domain;
 import pteidlib.*;
 import sun.security.pkcs11.wrapper.*;
 import utils.RSAKeyGenerator;
+import utils.Transaction;
+import utils.TransactionManager;
 
 import java.io.*;
 import java.lang.reflect.Method;
@@ -15,6 +17,8 @@ import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.stream.Stream;
 
+import org.json.simple.parser.ParseException;
+
 public class Notary {
 
     private ArrayList<Good> _userGoods = new ArrayList<>();
@@ -26,10 +30,11 @@ public class Notary {
     private PKCS11 pkcs11;
     private long p11_session;
     private long signatureKey;
+    private TransactionManager tm;
 
     private String port = "";
 
-    //DEFAULT WITH CC
+    // DEFAULT WITH CC
     private boolean withCC = true;
 
     public String getPort() {
@@ -50,12 +55,15 @@ public class Notary {
 
     private Notary() {
         BufferedReader reader;
-        transaction_counter = Objects.requireNonNull(new File(currentDir + "/classes/notary-folder/").list()).length - 1;
+        transaction_counter = Objects.requireNonNull(new File(currentDir + "/classes/notary-folder/").list()).length
+                - 1;
         my_message_id = Integer.parseInt(getMyMessageId());
 
         String newpath = pathToGoods.substring(0, pathToGoods.length() - 4) + transaction_counter + ".txt";
 
         try {
+            tm = new TransactionManager();
+
             String pathToUsers = currentDir + "/classes/notary-folder/users.txt";
             reader = new BufferedReader(new FileReader(pathToUsers));
             String line = reader.readLine();
@@ -68,7 +76,7 @@ public class Notary {
                 line = reader.readLine();
             }
             reader.close();
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             System.out.println("Caught exception while reading users file:");
             e.printStackTrace();
         }
@@ -111,6 +119,7 @@ public class Notary {
             msg = new String[]{owner, goodId, message_id, "ack"};
         } else {
             msg = new String[]{owner, goodId, message_id};
+            tm.newReceviedTransaction(Integer.toString(transaction_counter), owner, "NA", goodId, "confirmed", "intentionToSell", secret, "NA");
         }
 
         //verifica assinatura dos clientes
@@ -238,6 +247,7 @@ public class Notary {
             msg = new String[]{sellerId, buyerId, goodId, message_id_seller, "ack"};
         } else {
             msg = new String[]{sellerId, buyerId, goodId, message_id_seller};
+            tm.newReceviedTransaction(Integer.toString(transaction_counter), sellerId, buyerId, goodId, "confirmed", "transferGood", secret2, secret);
         }
 
         String[] msg2 = new String[]{buyerId, goodId, message_id_buyer};

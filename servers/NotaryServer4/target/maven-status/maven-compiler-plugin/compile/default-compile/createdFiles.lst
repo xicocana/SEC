@@ -7,6 +7,7 @@ serverWS/ObjectFactory.class
 domain/Good.class
 serverWS/Test.class
 serverWS/GetNotaryIdResponse.class
+utils/Transaction.class
 domain/Notary$SingletonHolder.class
 ws/Interfaces/NotaryWebService.class
 serverWS/IntentionToSellResponse.class
@@ -18,6 +19,7 @@ serverWS/GetStateOfGoodResponse.class
 serverWS/TransferGood.class
 domain/Notary.class
 serverWS/GetNotaryId.class
+utils/TransactionManager.class
 serverWS/NotaryWebServiceImplService.class
 serverWS/NotaryWebService.class
 serverWS/TransferGoodResponse.class
