@@ -24,12 +24,12 @@ java  -Djava.library.path=/usr/local/lib/ -jar NotaryServer-1.0-SNAPSHOT-jar-wit
 Depois de compilar o projecto copiar o modulo NotaryServer N vezes para a pasta servers incrementando o nome da pasta(p.e. : NotaryServer, NotaryServer2, ...)
 
 ## DEMO TESTS
-
+```sh
 f - numero de falhas toleraveis
 N - numero de servers, tal que N > 3f
-
+```
 ## SERVER DOWN
-
+```sh
 inicializar N servers
 inicializar 2 clients
 correr getStateOfGood -> all ok
@@ -37,9 +37,9 @@ matar f servers
 correr getStateOfGood -> all ok
 matar outro server
 correr getStateOfGood -> not ok
-
+```
 ## ALTERAR GOOD ENTRE BUYERS MANUALMENTE
-
+```sh
 (NOTA: os servers necessitam de ser reiniciados para fazer load dos ficheiros manipulados manualmente)
 
 inicializar 4 servers para tolerar 1 falha
@@ -50,7 +50,7 @@ manulmente alterar o owner da good0 para user1 no server1
 correr getsateofgood da good0 -> verificar que pertence ao user0
 manulmente alterar o owner da good0 para user1 no server2
 correr getsateofgood da good0 -> numero de acks NOT-OK
-
+```
 
 ```sh
 ambos os testes funcionam para qualquer metodo remoto 
