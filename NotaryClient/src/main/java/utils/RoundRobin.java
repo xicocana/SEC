@@ -26,6 +26,7 @@ public class RoundRobin {
     private List<String> serversPort = new ArrayList<>();
     private int falhas = 0;
     private String input = "";
+    private int failedServers = 0;
 
     private int pos = 0;
     private int ts = 0;
@@ -60,12 +61,7 @@ public class RoundRobin {
                     falhas = Integer.parseInt(line.substring(1, line.length()));
                 } else {
                     // line
-                    URL url = null;
-                    try {
-                        url = new URL(line);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    URL url = new URL(line);
                     NotaryWebServiceImplService client = new NotaryWebServiceImplService(url);
                     NotaryWebService notaryWebservice = client.getNotaryWebServiceImplPort();
                     servers.add(notaryWebservice);
@@ -75,9 +71,9 @@ public class RoundRobin {
                 line = reader.readLine();
             }
             reader.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("Caught exception while reading users file:");
-            e.printStackTrace();
+            failedServers ++;
         }
     }
 
@@ -204,29 +200,34 @@ public class RoundRobin {
             for (int i = 0; i < servers.size(); i++) {
                 String port = serversPort.get(i);
 
-                service.submit(() -> {
+                try{
 
-                    //System.out.println("NEW Thread |  server : " + port);
-                    List<String> resultList = new ArrayList<>();
+                    service.submit(() -> {
 
-                    switch (method) {
-                        case GET_STATE_OF_GOOD:
-                            resultList = getServer().getStateOfGood(argsToSendPre);
-                            break;
-                        case INTENT:
-                            resultList = getServer().intentionToSell(argsToSendPre);
-                            break;
-                        case TRANSFER_GOOD:
-                            resultList = getServer().transferGood(argsToSendPre);
-                            break;
-                        default:
-                            break;
-                    }
+                        //System.out.println("NEW Thread |  server : " + port);
+                        List<String> resultList = new ArrayList<>();
 
-                    resultList.add(port);
+                        switch (method) {
+                            case GET_STATE_OF_GOOD:
+                                resultList = getServer().getStateOfGood(argsToSendPre);
+                                break;
+                            case INTENT:
+                                resultList = getServer().intentionToSell(argsToSendPre);
+                                break;
+                            case TRANSFER_GOOD:
+                                resultList = getServer().transferGood(argsToSendPre);
+                                break;
+                            default:
+                                break;
+                        }
 
-                    return resultList;
-                });
+                        resultList.add(port);
+
+                        return resultList;
+                    });
+                }catch(Exception e){
+                    System.out.println("some servers appear to be down");
+                }
             }
 
             //System.out.println("Receiving ...");
@@ -264,7 +265,7 @@ public class RoundRobin {
                 ackCounter++;
             }
         }
-        return ackCounter == servers.size() - falhas;
+        return ackCounter == servers.size() - falhas + failedServers;
     }
 
     private List<String> genericAfterAck(List<String> argsToSendPre, int method) throws Exception {
