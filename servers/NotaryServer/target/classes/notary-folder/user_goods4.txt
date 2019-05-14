@@ -1,3 +1,3 @@
-good0:user0:false
+good0:user0:true
 good1:user2:false
 good3:user4:false

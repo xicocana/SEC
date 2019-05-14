@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+import java.nio.charset.Charset;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -61,7 +61,9 @@ public class TransactionManager {
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		long currentTimeStamp = timestamp.getTime();
 		String timestampString = Long.toString(currentTimeStamp);
-		Transaction transaction = new Transaction(timestampString,transactionId, sellerId, buyerId, goodId, status, method, seller_secret, buyer_secret);
+		String seller_secret_limpo = new String(seller_secret.getBytes(Charset.forName("UTF-8")));
+		String buyer_secret_limpo = new String(buyer_secret.getBytes(Charset.forName("UTF-8")));
+		Transaction transaction = new Transaction(timestampString,transactionId, sellerId, buyerId, goodId, status, method, seller_secret_limpo, buyer_secret_limpo);
 		addNewTransactionToState(transaction);
 	}
 
